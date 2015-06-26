@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Prototype</title>
+    </head>
+    <body>
+        <h1>Prototype</h1>
+        <main id="log"></main>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var el = document.getElementById('log');
+                var source = new EventSource('/stream');
+                source.addEventListener('test', function (event) {
+                    console.log(event.data);
+                    el.innerText += '\n' + event.data;
+                }, false);
+            });
+        </script>
+    </body>
+</html>
