@@ -12,7 +12,7 @@
                 var source = new EventSource('/stream');
                 source.addEventListener('test', function (event) {
                     console.log(event.data);
-                    el.innerText += '\n' + event.data;
+                    el.textContent += '\n' + event.data;
                 }, false);
             });
         </script>
