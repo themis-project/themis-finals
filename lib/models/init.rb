@@ -4,7 +4,7 @@ module Themis
             require 'data_mapper'
 
             DataMapper::Logger.new $stdout, :info
-            DataMapper::setup :default, ENV['DATABASE_URI']
+            DataMapper::setup :default, Themis::Configuration::get_database_uri
 
             require './lib/models/team'
             require './lib/models/service'
