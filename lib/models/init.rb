@@ -1,10 +1,11 @@
 module Themis
     module Models
         def self.init
+            require 'rubygems'
             require 'data_mapper'
 
             DataMapper::Logger.new $stdout, :info
-            DataMapper::setup :default, Themis::Configuration::get_database_uri
+            DataMapper.setup :default, Themis::Configuration::get_database_uri
 
             require './lib/models/team'
             require './lib/models/service'
@@ -17,8 +18,11 @@ module Themis
             require './lib/models/service-state'
             require './lib/models/realtime-service-state'
             require './lib/models/flag-poll'
+            require './lib/models/game-state'
+            require './lib/models/post'
+            require './lib/models/scoreboard-state'
 
-            DataMapper::finalize
+            DataMapper.finalize
         end
     end
 end
