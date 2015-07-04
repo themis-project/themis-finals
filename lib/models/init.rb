@@ -18,7 +18,7 @@ module Themis
             require './lib/models/service-state'
             require './lib/models/realtime-service-state'
             require './lib/models/flag-poll'
-            require './lib/models/game-state'
+            require './lib/models/contest-state'
             require './lib/models/post'
             require './lib/models/scoreboard-state'
 

@@ -10,7 +10,6 @@ module Themis
             property :name, String, :length => 100
             property :network, String, :length => 18 # e.g. 10.0.1.0/24
             property :host, String, :length => 15 # e.g. 10.0.1.2
-            property :avatar, String, :length => 100
 
             has n, :services
             has n, :scores

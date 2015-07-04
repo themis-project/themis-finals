@@ -1,4 +1,5 @@
 require './lib/configuration/team'
+require './lib/configuration/service'
 require './lib/configuration/redis_connection'
 require './lib/configuration/contest_flow'
 
@@ -13,6 +14,17 @@ module Themis
 
         def self.get_teams
             @_teams
+        end
+
+
+        def self.service(name, &block)
+            service_dsl = ServiceDSL.new name
+            service_dsl.instance_eval &block
+            @_services << service_dsl.service
+        end
+
+        def self.get_services
+            @_services
         end
 
 
@@ -58,6 +70,7 @@ module Themis
 
         protected
         @_teams = []
+        @_services = []
         @_database_uri = nil
         @_beanstalkd_uri = nil
         @_redis_connection = nil

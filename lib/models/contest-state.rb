@@ -3,7 +3,7 @@ require 'data_mapper'
 
 module Themis
     module Models
-        class GameState
+        class ContestState
             include DataMapper::Resource
 
             property :id, Serial
