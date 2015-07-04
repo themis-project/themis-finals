@@ -63,7 +63,7 @@ module Themis
             @_contest_flow = contest_flow_dsl.contest_flow
         end
 
-        def get_contest_flow
+        def self.get_contest_flow
             @_contest_flow
         end
 

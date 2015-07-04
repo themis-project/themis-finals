@@ -40,3 +40,11 @@ task :init_contest do
         :last_attacks => nil)
     scoreboard_state.save
 end
+
+
+# task :test_generate_flag do
+#     require './config'
+#     require './lib/utils/flag_generator'
+
+#     puts Themis::Utils::generate_flag
+# end
