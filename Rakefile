@@ -46,5 +46,5 @@ end
 #     require './config'
 #     require './lib/utils/flag_generator'
 
-#     puts Themis::Utils::generate_flag
+#     puts Themis::Utils::FlagGenerator::get_flag
 # end
