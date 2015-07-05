@@ -52,8 +52,11 @@ module Themis
             @_redis_connection = redis_connection_dsl.redis_connection
         end
 
-        def self.get_redis_connection
-            @_redis_connection
+        def self.get_redis_options
+            return {
+                host: @_redis_connection.host,
+                port: @_redis_connection.port
+            }
         end
 
 

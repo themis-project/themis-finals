@@ -9,7 +9,7 @@ module Themis
             # Setup log formatter
             logger.datetime_format = '%Y-%m-%d %H:%M:%S'
             logger.formatter = proc do |severity, datetime, progname, msg|
-                "[#{datetime}] #{severity} -- #{msg}"
+                "[#{datetime}] #{severity} -- #{msg}\n"
             end
 
             # Setup log level
