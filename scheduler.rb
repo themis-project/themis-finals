@@ -1,7 +1,7 @@
 require './config'
 require './lib/models/init'
-require './lib/backend/init'
+require './lib/scheduler/init'
 
 
 Themis::Models::init
-Themis::Backend::run
+Themis::Scheduler::run
