@@ -7,13 +7,11 @@ module Themis
             include DataMapper::Resource
 
             property :id, Serial
-            property :number, Integer
-
-            belongs_to :team
+            property :name, String, :length => 50
+            property :alias, String, :length => 50
 
             has n, :flags
-            has n, :service_states
-            has n, :realtime_service_states
+            has n, :team_service_states
         end
     end
 end

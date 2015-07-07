@@ -15,6 +15,7 @@ module Themis
             property :seed, String, :length => 500
 
             belongs_to :service
+            belongs_to :team
             belongs_to :round
 
             has n, :attacks

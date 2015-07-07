@@ -3,7 +3,7 @@ require 'data_mapper'
 
 module Themis
     module Models
-        class ServiceState
+        class TeamServiceState
             include DataMapper::Resource
 
             property :id, Serial
@@ -11,6 +11,7 @@ module Themis
             property :updated_at, DateTime
 
             belongs_to :service
+            belongs_to :team
         end
     end
 end

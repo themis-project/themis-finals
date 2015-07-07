@@ -1,23 +1,23 @@
 module Themis
     module Configuration
         class Service
-            attr_accessor :name, :num
+            attr_accessor :alias, :name
 
-            def initialize(name)
-                @name = name
-                @num = nil
+            def initialize(service_alias)
+                @alias = service_alias
+                @name = nil
             end
         end
 
         class ServiceDSL
             attr_reader :service
 
-            def initialize(name)
-                @service = Service.new name
+            def initialize(service_alias)
+                @service = Service.new service_alias
             end
 
-            def num(num)
-                @service.num = num
+            def name(name)
+                @service.name = name
             end
         end
     end

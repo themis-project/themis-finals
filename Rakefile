@@ -18,14 +18,14 @@ task :init_contest do
             name: team_opts.name,
             network: team_opts.network,
             host: team_opts.host)
-
-        Themis::Configuration.get_services.each do |service_opts|
-            service = Themis::Models::Service.create(
-                number: service_opts.num)
-            team.services << service
-        end
-
         team.save
+    end
+
+    Themis::Configuration.get_services.each do |service_opts|
+        service = Themis::Models::Service.create(
+            name: service_opts.name,
+            alias: service_opts.alias)
+        service.save
     end
 
     contest_state = Themis::Models::ContestState.create(

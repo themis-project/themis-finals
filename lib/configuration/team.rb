@@ -1,9 +1,10 @@
 module Themis
     module Configuration
         class Team
-            attr_accessor :name, :network, :host
+            attr_accessor :alias, :name, :network, :host
 
-            def initialize(name)
+            def initialize(team_alias)
+                @alias = team_alias
                 @name = name
                 @network = nil
                 @host = nil
@@ -13,8 +14,12 @@ module Themis
         class TeamDSL
             attr_reader :team
 
-            def initialize(name)
-                @team = Team.new name
+            def initialize(team_alias)
+                @team = Team.new team_alias
+            end
+
+            def name(name)
+                @team.name = name
             end
 
             def network(network)
