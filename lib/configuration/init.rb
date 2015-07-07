@@ -37,11 +37,11 @@ module Themis
         end
 
 
-        def self.beanstalkd_uri(beanstalkd_uri)
+        def self.beanstalk_uri(beanstalkd_uri)
             @_beanstalkd_uri = beanstalkd_uri
         end
 
-        def self.get_beanstalkd_uri
+        def self.get_beanstalk_uri
             @_beanstalkd_uri
         end
 
