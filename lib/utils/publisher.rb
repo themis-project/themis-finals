@@ -1,17 +1,18 @@
 require 'redis'
 require 'hiredis'
+require 'em-synchrony'
 require './lib/utils/logger'
 
 
-# TODO: Add support for em-synchrony
 # TODO: Deal with Redis::ConnectionError exception
 
 module Themis
     module Utils
         class Publisher
-            def initialize
+            def initialize(synchronize = false)
                 @_client = nil
                 @_logger = Themis::Utils::get_logger
+                @_synchronize = synchronize
             end
 
             def publish(channel, message, max_retries = 3)
@@ -36,7 +37,9 @@ module Themis
             protected
             def ensure_connection
                 return unless @_client.nil?
-                @_client = Redis.new Themis::Configuration::get_redis_options
+                opts = Themis::Configuration::get_redis_options
+                opts[:driver] = :synchrony if @_synchronize
+                @_client = Redis.new **opts
             end
         end
     end

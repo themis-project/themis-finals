@@ -1,5 +1,6 @@
 require './lib/utils/logger'
 require 'beaneater'
+require './lib/controllers/contest'
 
 
 module Themis
@@ -19,7 +20,20 @@ module Themis
             tubes_namespace = 'volgactf'
 
             beanstalk.jobs.register "#{tubes_namespace}.main" do |job|
-                logger.info "Performing job #{job}"
+                begin
+                    case job.body
+                    when 'push'
+                        Themis::Controllers::Contest::push_flags
+                    when 'poll'
+                        Themis::Controllers::Contest::poll_flags
+                    when 'update'
+                        Themis::Controllers::Contest::update_score
+                    else
+                        logger.warn "Unknown job #{job.body}"
+                    end
+                rescue Exception => e
+                    logger.error "#{e}"
+                end
             end
 
             Themis::Models::Service.all.each do |service|
