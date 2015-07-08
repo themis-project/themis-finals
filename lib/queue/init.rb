@@ -16,8 +16,20 @@ module Themis
             beanstalk = Beaneater.new Themis::Configuration::get_beanstalk_uri
             logger.info 'Connected to beanstalk server'
 
-            beanstalk.jobs.register 'volgactf.main' do |job|
+            tubes_namespace = 'volgactf'
+
+            beanstalk.jobs.register "#{tubes_namespace}.main" do |job|
                 logger.info "Performing job #{job}"
+            end
+
+            Themis::Models::Service.all.each do |service|
+                beanstalk.jobs.register "#{tubes_namespace}.service.#{service.alias}.push" do |job|
+                    logger.info "Performing job #{job}"
+                end
+
+                beanstalk.jobs.register "#{tubes_namespace}.service.#{service.alias}.pull" do |job|
+                    logger.info "Performing job #{job}"
+                end
             end
 
             begin
