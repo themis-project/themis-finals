@@ -13,7 +13,7 @@ module Themis
         end
 
         def self.run
-            logger = Themis::Utils::get_logger
+            logger = Themis::Utils::Logger::get
             beanstalk = Beaneater.new Themis::Configuration::get_beanstalk_uri
             logger.info 'Connected to beanstalk server'
 

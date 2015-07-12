@@ -2,7 +2,7 @@ module Themis
     module Controllers
         module Contest
             def self.push_flags
-                logger = Themis::Utils::get_logger
+                logger = Themis::Utils::Logger::get
                 round_num = Themis::Models::Round.all.count + 1
                 last_round = Themis::Models::Round.last
                 unless last_round.nil?

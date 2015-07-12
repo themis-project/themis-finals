@@ -11,7 +11,7 @@ module Themis
         class Publisher
             def initialize(synchronize = false)
                 @_client = nil
-                @_logger = Themis::Utils::get_logger
+                @_logger = Themis::Utils::Logger::get
                 @_synchronize = synchronize
             end
 

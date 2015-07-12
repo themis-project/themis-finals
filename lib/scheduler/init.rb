@@ -6,7 +6,7 @@ require './lib/queue/init'
 module Themis
     module Scheduler
         def self.run
-            logger = Themis::Utils::get_logger
+            logger = Themis::Utils::Logger::get
             contest_flow = Themis::Configuration::get_contest_flow
             EM.run do
                 EM.add_periodic_timer contest_flow.push_period do
