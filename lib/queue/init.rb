@@ -37,12 +37,8 @@ module Themis
             end
 
             Themis::Models::Service.all.each do |service|
-                beanstalk.jobs.register "#{tubes_namespace}.service.#{service.alias}.push" do |job|
-                    logger.info "Performing job #{job}"
-                end
-
-                beanstalk.jobs.register "#{tubes_namespace}.service.#{service.alias}.pull" do |job|
-                    logger.info "Performing job #{job}"
+                beanstalk.jobs.register "#{tubes_namespace}.service.#{service.alias}.report" do |job|
+                    logger.info "Performing job #{job.body}"
                 end
             end
 
