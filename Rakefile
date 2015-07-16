@@ -42,6 +42,19 @@ task :init_contest do
 end
 
 
+task :start_contest do
+    require './config'
+    require './lib/models/init'
+
+    Themis::Models::init
+
+    contest_state = Themis::Models::ContestState.create(
+        state: :contest,
+        created_at: DateTime.now)
+    contest_state.save
+end
+
+
 # task :test_generate_flag do
 #     require './config'
 #     require './lib/utils/flag_generator'
