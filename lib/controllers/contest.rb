@@ -55,9 +55,62 @@ module Themis
             end
 
             def self.poll_flags
+                logger = Themis::Utils::Logger::get
+                beanstalk = Beaneater.new Themis::Configuration::get_beanstalk_uri
+
+                living_flags = Themis::Models::Flag.all(
+                    :expired_at.not => nil,
+                    :expired_at.gt => DateTime.now)
+
+                all_teams = Themis::Models::Team.all
+                all_services = Themis::Models::Service.all
+
+                all_teams.each do |team|
+                    all_services.each do |service|
+                        service_flags = living_flags.select do |flag|
+                            flag.team == team and flag.service == service
+                        end
+
+                        poll_flags = service_flags.sample Themis::Configuration::get_contest_flow.poll_count
+
+                        poll_flags.each do |flag|
+                            poll = Themis::Models::FlagPoll.create(
+                                state: :unknown,
+                                created_at: DateTime.now,
+                                updated_at: nil,
+                                flag: flag)
+                            poll.save
+
+                            logger.debug "Polling flag '#{flag.flag}' from service #{service.name} of '#{team.name}'"
+                            tube = beanstalk.tubes["volgactf.service.#{service.alias}.listen"]
+                            tube.put({
+                                operation: 'pull',
+                                request_id: poll.id,
+                                endpoint: team.host,
+                                flag: flag.flag,
+                                flag_id: flag.seed
+                            }.to_json)
+                        end
+                    end
+                end
+
+                beanstalk.close
             end
 
-            def self.update_score
+            def self.prolong_flag_lifetimes
+                living_flags = Themis::Models::Flag.all(
+                    :expired_at.not => nil,
+                    :expired_at.gt => DateTime.now)
+
+                prolong = Themis::Configuration::get_contest_flow.poll_period
+
+                living_flags.each do |flag|
+                    flag.expired_at = flag.expired_at.to_time + prolong
+                    flag.save
+                end
+            end
+
+            def self.update_scores
             end
         end
     end
