@@ -69,7 +69,18 @@ module Themis
                                 end
                             end
                         when 'pull'
-                            logger.info "Performing job #{job.body}"
+                            poll = Themis::Models::FlagPoll.first(:id => job_data['request_id'])
+                            unless poll.nil?
+                                if job_data['status'] == Themis::Checker::Result::UP
+                                    poll.state = :success
+                                else
+                                    poll.state = :error
+                                end
+
+                                poll.updated_at = DateTime.now
+                                poll.save
+                                logger.info "Performed job #{job.body}"
+                            end
                         else
                             logger.warn "Unknown job #{job.body}"
                         end
