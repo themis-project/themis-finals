@@ -1,6 +1,9 @@
 require 'beaneater'
 require 'json'
 require './lib/utils/flag_generator'
+require './lib/controllers/round'
+require './lib/controllers/flag'
+require './lib/controllers/score'
 
 
 module Themis
@@ -8,17 +11,10 @@ module Themis
         module Contest
             def self.push_flags
                 logger = Themis::Utils::Logger::get
-                round_num = Themis::Models::Round.all.count + 1
-                last_round = Themis::Models::Round.last
-                unless last_round.nil?
-                    last_round.finished_at = DateTime.now
-                    last_round.save
-                end
 
+                round = Themis::Controllers::Round::start_new
+                round_num = Themis::Models::Round.all.count
                 logger.info "Round #{round_num}"
-                round = Themis::Models::Round.create(
-                    started_at: DateTime.now)
-                round.save
 
                 beanstalk = Beaneater.new Themis::Configuration::get_beanstalk_uri
 
@@ -58,9 +54,7 @@ module Themis
                 logger = Themis::Utils::Logger::get
                 beanstalk = Beaneater.new Themis::Configuration::get_beanstalk_uri
 
-                living_flags = Themis::Models::Flag.all(
-                    :expired_at.not => nil,
-                    :expired_at.gt => DateTime.now)
+                living_flags = Themis::Controllers::Flag::get_living
 
                 all_teams = Themis::Models::Team.all
                 all_services = Themis::Models::Service.all
@@ -98,19 +92,34 @@ module Themis
             end
 
             def self.prolong_flag_lifetimes
-                living_flags = Themis::Models::Flag.all(
-                    :expired_at.not => nil,
-                    :expired_at.gt => DateTime.now)
-
                 prolong = Themis::Configuration::get_contest_flow.poll_period
 
-                living_flags.each do |flag|
+                Themis::Controllers::Flag::get_living.each do |flag|
                     flag.expired_at = flag.expired_at.to_time + prolong
                     flag.save
                 end
             end
 
             def self.update_scores
+                Themis::Controllers::Flag::get_expired.each do |flag|
+                    polls = Themis::Models::FlagPoll.all(flag: flag)
+
+                    Themis::Controllers::Score::charge_availability flag, polls
+
+                    attacks = flag.attacks
+                    if attacks.count == 0
+                        if polls.count(state: :error) == 0
+                            Themis::Controllers::Score::charge_defence flag
+                        end
+                    else
+                        attacks.each do |attack|
+                            Themis::Controllers::Score::charge_attack flag, attack
+                        end
+                    end
+
+                    flag.considered_at = DateTime.now
+                    flag.save
+                end
             end
         end
     end
