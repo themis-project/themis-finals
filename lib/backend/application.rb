@@ -39,6 +39,17 @@ module Themis
 
                 r.to_json
             end
+
+            get '/services' do
+                r = Themis::Models::Service.map do |service|
+                    {
+                        id: service.id,
+                        name: service.name
+                    }
+                end
+
+                r.to_json
+            end
         end
     end
 end
