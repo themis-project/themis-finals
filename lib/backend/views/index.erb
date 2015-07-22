@@ -9,7 +9,7 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 var el = document.getElementById('log');
-                var source = new EventSource('/stream');
+                var source = new EventSource('/api/stream');
                 source.addEventListener('test', function (event) {
                     console.log(event.data);
                     el.textContent += '\n' + event.data;
