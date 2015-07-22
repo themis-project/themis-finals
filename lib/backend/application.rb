@@ -1,5 +1,6 @@
 require 'sinatra/base'
 require './lib/backend/event-stream'
+require 'json'
 
 
 module Themis
@@ -25,6 +26,18 @@ module Themis
                         out << "event: test\ndata: #{message}\n\n"
                     end
                 end
+            end
+
+            get '/teams' do
+                r = Themis::Models::Team.map do |team|
+                    {
+                        id: team.id,
+                        name: team.name,
+                        network: team.network
+                    }
+                end
+
+                r.to_json
             end
         end
     end
