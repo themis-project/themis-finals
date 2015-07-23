@@ -32,8 +32,7 @@ module Themis
                 r = Themis::Models::Team.map do |team|
                     {
                         id: team.id,
-                        name: team.name,
-                        network: team.network
+                        name: team.name
                     }
                 end
 
