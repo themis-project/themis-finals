@@ -1,0 +1,26 @@
+{
+  "name": "themis-finals",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "gulp": "gulp",
+    "bower": "bower"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aspyatkin/themis-finals.git"
+  },
+  "author": "Alexander Pyatkin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aspyatkin/themis-finals/issues"
+  },
+  "homepage": "https://github.com/aspyatkin/themis-finals#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "bower": "^1.4.1",
+    "gulp": "^3.9.0"
+  }
+}
