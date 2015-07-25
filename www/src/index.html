@@ -2,8 +2,43 @@
 <html>
     <head>
         <title>Themis Finals</title>
+        <link rel="stylesheet" href="/assets/css/vendor/material.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     </head>
     <body>
-        <h1>Themis Finals</h1>
+        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+            <header class="mdl-layout__header">
+                <div class="mdl-layout__header-row">
+                    <span class="mdl-layout-title">VolgaCTF 2015 Finals</span>
+                    <div class="mdl-layout-spacer"></div>
+                    <nav class="mdl-navigation mdl-layout--large-screen-only">
+                        <a class="mdl-navigation__link" href="/">Main</a>
+                        <a class="mdl-navigation__link" href="/scoreboard">Scoreboard</a>
+                        <a class="mdl-navigation__link" href="/news">News</a>
+                        <a class="mdl-navigation__link" href="/logs">Logs</a>
+                    </nav>
+                </div>
+            </header>
+
+            <div class="mdl-layout__drawer">
+                <span class="mdl-layout-title">VolgaCTF 2015 Finals</span>
+                <nav class="mdl-navigation">
+                    <a class="mdl-navigation__link" href="/">Main</a>
+                    <a class="mdl-navigation__link" href="/scoreboard">Scoreboard</a>
+                    <a class="mdl-navigation__link" href="/news">News</a>
+                    <a class="mdl-navigation__link" href="/logs">Logs</a>
+                </nav>
+            </div>
+
+            <main class="mdl-layout__content">
+                <div class="page-content" id="main"></div>
+            </main>
+
+            <footer class="mdl-mini-footer">
+            </footer>
+        </div>
+
+        <script src="/assets/js/vendor/material.js"></script>
+        <script src="/assets/js/bundle.js"></script>
     </body>
 </html>

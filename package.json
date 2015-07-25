@@ -18,11 +18,19 @@
     "url": "https://github.com/aspyatkin/themis-finals/issues"
   },
   "homepage": "https://github.com/aspyatkin/themis-finals#readme",
-  "dependencies": {},
+  "dependencies": {
+    "material-design-lite": "^1.0.1",
+    "react": "^0.13.3"
+  },
   "devDependencies": {
     "babel": "^5.8.5",
+    "babelify": "^6.1.3",
     "bower": "^1.4.1",
+    "browserify": "^11.0.0",
     "del": "^1.2.0",
-    "gulp": "^3.9.0"
+    "gulp": "^3.9.0",
+    "gulp-babel": "^5.1.0",
+    "gulp-if": "^1.2.5",
+    "vinyl-source-stream": "^1.1.0"
   }
 }
