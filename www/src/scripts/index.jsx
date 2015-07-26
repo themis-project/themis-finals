@@ -1,16 +1,21 @@
 import React from 'react'
 import Router from 'react-router'
 
-var [ Route, DefaultRoute, NotFoundRoute ] = [
+var [ Route, DefaultRoute, NotFoundRoute, Link ] = [
     Router.Route,
     Router.DefaultRoute,
-    Router.NotFoundRoute
+    Router.NotFoundRoute,
+    Router.Link
 ]
 
 
 class IndexPage extends React.Component {
     render() {
-        return <h2>Index</h2>
+        return (
+            <div>
+                <h2>Index</h2>
+            </div>
+        )
     }
 }
 
@@ -47,7 +52,7 @@ var routes = (
         <DefaultRoute handler={IndexPage}/>
         <NotFoundRoute handler={NotFoundPage} />
 
-        <Route path="scoreboard" handler={ScoreboardPage}/>
+        <Route name="scoreboard" path="scoreboard" handler={ScoreboardPage}/>
         <Route path="news" handler={NewsPage}/>
         <Route path="logs" handler={LogsPage}/>
     </Route>
@@ -71,7 +76,12 @@ function ready(callback) {
 
 
 ready(() => {
-    Router.run(routes, Router.HistoryLocation, (Handler) => {
+    var router = Router.create({
+        routes: routes,
+        location: Router.HistoryLocation
+    })
+
+    router.run((Handler) => {
         React.render(<Handler/>, document.getElementById('main'))
     })
 })
