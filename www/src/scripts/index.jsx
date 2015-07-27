@@ -1,13 +1,5 @@
 import React from 'react'
-import Router from 'react-router'
-
-var [ Route, DefaultRoute, NotFoundRoute, Link, RouteHandler ] = [
-    Router.Route,
-    Router.DefaultRoute,
-    Router.NotFoundRoute,
-    Router.Link,
-    Router.RouteHandler
-]
+import Router, { Route, DefaultRoute, NotFoundRoute, Link, RouteHandler } from 'react-router'
 
 
 class IndexPage extends React.Component {
