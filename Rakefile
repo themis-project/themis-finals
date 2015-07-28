@@ -101,6 +101,21 @@ namespace :contest do
 end
 
 
+task :print_config do
+    require './config'
+    require 'yaml'
+
+    puts Themis::Configuration::get_database_uri.to_yaml
+    puts Themis::Configuration::get_beanstalk_uri.to_yaml
+    puts Themis::Configuration::get_redis_options.to_yaml
+    puts Themis::Configuration::get_contest_flow.to_yaml
+    puts Themis::Configuration::get_services.to_yaml
+    puts Themis::Configuration::get_teams.to_yaml
+
+    Themis::Configuration::get_network.teams
+    puts Themis::Configuration::get_network.to_yaml
+end
+
 # task :test_publisher do
 #     require './config'
 #     require './lib/utils/publisher'

@@ -1,5 +1,15 @@
 module Themis
     module Configuration
+        def self.service(name, &block)
+            service_dsl = ServiceDSL.new name
+            service_dsl.instance_eval &block
+            @_services << service_dsl.service
+        end
+
+        def self.get_services
+            @_services
+        end
+
         class Service
             attr_accessor :alias, :name
 
@@ -20,5 +30,8 @@ module Themis
                 @service.name = name
             end
         end
+
+        protected
+        @_services = []
     end
 end

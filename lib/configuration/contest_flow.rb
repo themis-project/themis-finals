@@ -1,5 +1,15 @@
 module Themis
     module Configuration
+        def self.contest_flow(&block)
+            contest_flow_dsl = ContestFlowDSL.new
+            contest_flow_dsl.instance_eval &block
+            @_contest_flow = contest_flow_dsl.contest_flow
+        end
+
+        def self.get_contest_flow
+            @_contest_flow
+        end
+
         class ContestFlow
             attr_accessor :flag_lifetime, :push_period,
                           :poll_period, :poll_count, :update_period,
@@ -54,5 +64,8 @@ module Themis
                 @contest_flow.generator_secret = generator_secret
             end
         end
+
+        protected
+        @_contest_flow = nil
     end
 end

@@ -71,6 +71,7 @@ GEM
     redis (3.2.1)
     ruby-enum (0.4.0)
       i18n
+    ruby-ip (0.9.3)
     sinatra (1.4.6)
       rack (~> 1.4)
       rack-protection (~> 1.4)
@@ -98,6 +99,7 @@ DEPENDENCIES
   json
   rake
   redis
+  ruby-ip
   sinatra
   themis-checker-result
   thin

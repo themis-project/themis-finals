@@ -1,5 +1,15 @@
 module Themis
     module Configuration
+        def self.team(name, &block)
+            team_dsl = TeamDSL.new name
+            team_dsl.instance_eval &block
+            @_teams << team_dsl.team
+        end
+
+        def self.get_teams
+            @_teams
+        end
+
         class Team
             attr_accessor :alias, :name, :network, :host
 
@@ -30,5 +40,8 @@ module Themis
                 @team.host = host
             end
         end
+
+        protected
+        @_teams = []
     end
 end
