@@ -1,6 +1,8 @@
 require 'sinatra/base'
 require './lib/backend/event-stream'
 require 'json'
+require 'ip'
+require './lib/controllers/identity'
 
 
 module Themis
@@ -26,6 +28,26 @@ module Themis
                         out << "event: test\ndata: #{message}\n\n"
                     end
                 end
+            end
+
+            get '/identity' do
+                remote_ip = IP.new env['HTTP_X_FORWARDED_FOR']
+                identity = nil
+
+                identity_team = Themis::Controllers::IdentityController.is_team remote_ip
+                unless identity_team.nil?
+                    identity = { name: 'team', id: identity_team.id }
+                end
+
+                if identity.nil? and Themis::Controllers::IdentityController.is_guest remote_ip
+                    identity = { name: 'guest' }
+                end
+
+                if identity.nil? and Themis::Controllers::IdentityController.is_internal remote_ip
+                    identity = { name: 'internal' }
+                end
+
+                identity.to_json
             end
 
             get '/teams' do
