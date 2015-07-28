@@ -47,7 +47,7 @@ gulp.task('clean_scripts', (callback) => {
 
 gulp.task('scripts', ['clean_scripts'], () => {
     return browserify({
-        entries: 'www/src/scripts/index.jsx',
+        entries: 'www/src/scripts/app.jsx',
         extensions: ['.jsx'],
         debug: true
     })
