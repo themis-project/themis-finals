@@ -5,6 +5,15 @@ require 'ip'
 require './lib/controllers/identity'
 
 
+module Rack
+    class Request
+        def trusted_proxy?(ip)
+            ip =~ /^127\.0\.0\.1$/
+        end
+    end
+end
+
+
 module Themis
     module Backend
         class Application < Sinatra::Base
@@ -31,7 +40,7 @@ module Themis
             end
 
             get '/identity' do
-                remote_ip = IP.new env['HTTP_X_FORWARDED_FOR']
+                remote_ip = IP.new request.ip
                 identity = nil
 
                 identity_team = Themis::Controllers::IdentityController.is_team remote_ip
