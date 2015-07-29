@@ -1,6 +1,5 @@
 import gulp from 'gulp';
 import del from 'del';
-import babel from 'gulp-babel';
 import browserify from 'browserify';
 import babelify from 'babelify';
 import source from 'vinyl-source-stream';
@@ -10,9 +9,7 @@ var paths = {
     html: [
         'www/src/index.html'
     ],
-    scripts: [
-        'www/src/scripts/app.jsx'
-    ],
+    scripts: 'www/src/scripts/app.jsx',
     vendor: {
         scripts: [
             'node_modules/material-design-lite/material.js'
@@ -47,7 +44,7 @@ gulp.task('clean_scripts', (callback) => {
 
 gulp.task('scripts', ['clean_scripts'], () => {
     return browserify({
-        entries: 'www/src/scripts/app.jsx',
+        entries: paths.scripts,
         extensions: ['.jsx'],
         debug: true
     })
