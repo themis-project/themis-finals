@@ -2,7 +2,7 @@ import React from 'react'
 import Router, { Route, DefaultRoute, NotFoundRoute, Link, RouteHandler, HistoryLocation } from 'react-router'
 
 import injectTapEventPlugin from 'react-tap-event-plugin'
-import mui, { AppBar } from 'material-ui'
+import mui, { AppBar, Tab, Tabs } from 'material-ui'
 
 import Index from './index'
 import Scoreboard from './scoreboard'
@@ -15,11 +15,21 @@ import dataManager from './data-manager'
 
 let ThemeManager = new mui.Styles.ThemeManager()
 
-
 class App extends React.Component {
+    constructor() {
+        super()
+        this.onTabActivate = this.onTabActivate.bind(this)
+    }
+
+    static get contextTypes() {
+        return {
+            router: React.PropTypes.func
+        }
+    }
+
     static get childContextTypes() {
         return {
-            muiTheme:React.PropTypes.object
+            muiTheme: React.PropTypes.object
         }
     }
 
@@ -29,16 +39,29 @@ class App extends React.Component {
         }
     }
 
+    onTabActivate(activeTab) {
+        this.context.router.transitionTo(activeTab.props.route)
+    }
+
     render() {
+        let ndx = 0;
+        let routeNames = ['index', 'scoreboard', 'news', 'logs']
+        for (let i=0; i<routeNames.length; ++i) {
+            if (this.context.router.isActive(routeNames[i], '', '')) {
+                ndx = i;
+                break;
+            }
+        }
+
         return (
             <div>
                 <AppBar title="VolgaCTF 2015 Finals"/>
-                <nav>
-                    <Link to="index">Index</Link>
-                    <Link to="scoreboard">Scoreboard</Link>
-                    <Link to="news">News</Link>
-                    <Link to="logs">Logs</Link>
-                </nav>
+                <Tabs initialSelectedIndex={ndx}>
+                    <Tab label="Index" route="index" onActive={this.onTabActivate}/>
+                    <Tab label="Scoreboard" route="scoreboard" onActive={this.onTabActivate}/>
+                    <Tab label="News" route="news" onActive={this.onTabActivate}/>
+                    <Tab label="Logs" route="logs" onActive={this.onTabActivate}/>
+                </Tabs>
                 <main>
                     <RouteHandler/>
                 </main>
