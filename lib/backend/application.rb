@@ -1,4 +1,5 @@
 require 'sinatra/base'
+require 'sinatra/json'
 require './lib/backend/event-stream'
 require 'json'
 require 'ip'
@@ -56,7 +57,7 @@ module Themis
                     identity = { name: 'internal' }
                 end
 
-                identity.to_json
+                json identity
             end
 
             get '/teams' do
@@ -67,7 +68,7 @@ module Themis
                     }
                 end
 
-                r.to_json
+                json r
             end
 
             get '/services' do
@@ -78,7 +79,7 @@ module Themis
                     }
                 end
 
-                r.to_json
+                json r
             end
         end
     end
