@@ -7,9 +7,9 @@ module Themis
             include DataMapper::Resource
 
             property :id, Serial
-            property :name, String, :length => 100
-            property :network, String, :length => 18 # e.g. 10.0.1.0/24
-            property :host, String, :length => 15 # e.g. 10.0.1.2
+            property :name, String, length: 100, required: true, unique_index: true
+            property :network, String, length: 18, required: true, unique_index: true
+            property :host, String, length: 15, required: true, unique_index: true
 
             has n, :team_service_states
             has n, :scores

@@ -7,10 +7,10 @@ module Themis
             include DataMapper::Resource
 
             property :id, Serial
-            property :title, String, :length => 100
-            property :description, Text
-            property :created_at, DateTime
-            property :updated_at, DateTime
+            property :title, String, length: 100, required: true
+            property :description, Text, required: true
+            property :created_at, DateTime, required: true
+            property :updated_at, DateTime, required: true
         end
     end
 end

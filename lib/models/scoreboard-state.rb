@@ -7,10 +7,10 @@ module Themis
             include DataMapper::Resource
 
             property :id, Serial
-            property :state, Enum[:enabled, :disabled], :default => :enabled
-            property :created_at, DateTime
-            property :calculated_scores, Text
-            property :last_attacks, Text
+            property :state, Enum[:enabled, :disabled], default: :enabled, required: true
+            property :created_at, DateTime, required: true
+            property :calculated_scores, Text, required: true
+            property :last_attacks, Text, required: true
         end
     end
 end

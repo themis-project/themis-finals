@@ -7,7 +7,7 @@ module Themis
             include DataMapper::Resource
 
             property :id, Serial
-            property :started_at, DateTime
+            property :started_at, DateTime, required: true
             property :finished_at, DateTime
         end
     end
