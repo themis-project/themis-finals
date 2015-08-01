@@ -10,6 +10,8 @@ import News from './news'
 import Logs from './logs'
 import NotFound from './not-found'
 
+import 'whatwg-fetch'
+
 let ThemeManager = new mui.Styles.ThemeManager()
 
 
@@ -54,7 +56,7 @@ function ready(callback) {
 }
 
 
-var routes = (
+let routes = (
     <Route handler={App}>
         <DefaultRoute name="index" handler={Index}/>
         <NotFoundRoute handler={NotFound}/>
@@ -72,6 +74,23 @@ function render() {
 }
 
 ready(() => {
+    fetch('/api/identity')
+    .then((response) => {
+        if (response.status >= 200 && response.status < 300) {
+            return response.json()
+        } else {
+            let err = new Error(response.statusText)
+            err.response = response
+            throw err
+        }
+    })
+    .then((data) => {
+        console.log('Request succeeded', data)
+    })
+    .catch((err) => {
+        console.log('Request failed', err)
+    })
+
     injectTapEventPlugin()
     render()
 })
