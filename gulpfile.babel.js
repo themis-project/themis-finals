@@ -11,18 +11,14 @@ var paths = {
     ],
     scripts: 'www/src/scripts/app.jsx',
     vendor: {
-        scripts: [
-            'node_modules/material-design-lite/material.js'
-        ],
-        stylesheets: [
-            'node_modules/material-design-lite/material.css'
-        ]
+        scripts: [],
+        stylesheets: []
     }
 };
 
 
 function isProduction() {
-    return process.env['ENV'] === 'production';
+    return process.env['NODE_ENV'] === 'production';
 }
 
 
