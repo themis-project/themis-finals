@@ -81,6 +81,20 @@ module Themis
 
                 json r
             end
+
+            get '/posts' do
+                r = Themis::Models::Post.map do |post|
+                    {
+                        id: post.id,
+                        title: post.title,
+                        description: post.description,
+                        created_at: post.created_at,
+                        updated_at: post.updated_at
+                    }
+                end
+
+                json r
+            end
         end
     end
 end

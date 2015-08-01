@@ -10,7 +10,8 @@ import News from './news'
 import Logs from './logs'
 import NotFound from './not-found'
 
-import 'whatwg-fetch'
+import dataManager from './data-manager'
+
 
 let ThemeManager = new mui.Styles.ThemeManager()
 
@@ -74,21 +75,18 @@ function render() {
 }
 
 ready(() => {
-    fetch('/api/identity')
-    .then((response) => {
-        if (response.status >= 200 && response.status < 300) {
-            return response.json()
-        } else {
-            let err = new Error(response.statusText)
-            err.response = response
-            throw err
-        }
-    })
+    Promise
+    .all([dataManager.getIdentity(), dataManager.getTeams(),
+          dataManager.getServices(), dataManager.getPosts()])
     .then((data) => {
-        console.log('Request succeeded', data)
+        let [identity, teams, services, posts] = data
+        console.log('Identity', identity)
+        console.log('Teams', teams)
+        console.log('Services', services)
+        console.log('Posts', posts)
     })
     .catch((err) => {
-        console.log('Request failed', err)
+        console.log('Error', err)
     })
 
     injectTapEventPlugin()
