@@ -108,6 +108,20 @@ module Themis
 
                 json r
             end
+
+            get '/team/services' do
+                r = Themis::Models::TeamServiceState.map do |team_service_state|
+                    {
+                        id: team_service_state.id,
+                        team_id: team_service_state.team_id,
+                        service_id: team_service_state.service_id,
+                        state: team_service_state.state,
+                        updated_at: team_service_state.updated_at
+                    }
+                end
+
+                json r
+            end
         end
     end
 end
