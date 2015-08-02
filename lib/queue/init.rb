@@ -19,7 +19,7 @@ module Themis
             beanstalk = Beaneater.new Themis::Configuration::get_beanstalk_uri
             logger.info 'Connected to beanstalk server'
 
-            tubes_namespace = 'volgactf'
+            tubes_namespace = 'themis'
 
             beanstalk.jobs.register "#{tubes_namespace}.main" do |job|
                 begin

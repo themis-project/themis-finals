@@ -37,7 +37,7 @@ module Themis
                         flag.save
 
                         logger.debug "Pushing flag '#{flag_str}' to service #{service.name} of '#{team.name}'"
-                        tube = beanstalk.tubes["volgactf.service.#{service.alias}.listen"]
+                        tube = beanstalk.tubes["themis.service.#{service.alias}.listen"]
                         tube.put({
                             operation: 'push',
                             endpoint: team.host,
@@ -76,7 +76,7 @@ module Themis
                             poll.save
 
                             logger.debug "Polling flag '#{flag.flag}' from service #{service.name} of '#{team.name}'"
-                            tube = beanstalk.tubes["volgactf.service.#{service.alias}.listen"]
+                            tube = beanstalk.tubes["themis.service.#{service.alias}.listen"]
                             tube.put({
                                 operation: 'pull',
                                 request_id: poll.id,

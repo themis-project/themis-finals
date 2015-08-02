@@ -11,17 +11,17 @@ module Themis
             EM.run do
                 EM.add_periodic_timer contest_flow.push_period do
                     logger.info 'Push'
-                    Themis::Queue::enqueue 'volgactf.main', 'push'
+                    Themis::Queue::enqueue 'themis.main', 'push'
                 end
 
                 EM.add_periodic_timer contest_flow.poll_period do
                     logger.info 'Poll'
-                    Themis::Queue::enqueue 'volgactf.main', 'poll'
+                    Themis::Queue::enqueue 'themis.main', 'poll'
                 end
 
                 EM.add_periodic_timer contest_flow.update_period do
                     logger.info 'Update'
-                    Themis::Queue::enqueue 'volgactf.main', 'update'
+                    Themis::Queue::enqueue 'themis.main', 'update'
                 end
 
                 Signal.trap 'INT' do
