@@ -95,6 +95,19 @@ module Themis
 
                 json r
             end
+
+            get '/team/scores' do
+                r = Themis::Models::TotalScore.map do |total_score|
+                    {
+                        id: total_score.id,
+                        team_id: total_score.team_id,
+                        defence_points: total_score.defence_points.to_f,
+                        attack_points: total_score.attack_points.to_f
+                    }
+                end
+
+                json r
+            end
         end
     end
 end
