@@ -10,18 +10,19 @@ module Themis
             contest_flow = Themis::Configuration::get_contest_flow
             EM.run do
                 EM.add_periodic_timer contest_flow.push_period do
-                    logger.info 'Push'
                     Themis::Queue::enqueue 'themis.main', 'push'
                 end
 
                 EM.add_periodic_timer contest_flow.poll_period do
-                    logger.info 'Poll'
                     Themis::Queue::enqueue 'themis.main', 'poll'
                 end
 
                 EM.add_periodic_timer contest_flow.update_period do
-                    logger.info 'Update'
                     Themis::Queue::enqueue 'themis.main', 'update'
+                end
+
+                EM.add_periodic_timer contest_flow.update_period do
+                    Themis::Queue::enqueue 'themis.main', 'control_complete'
                 end
 
                 Signal.trap 'INT' do

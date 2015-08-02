@@ -100,6 +100,20 @@ module Themis
                 end
             end
 
+            def self.control_complete
+                living_flags = Themis::Controllers::Flag::get_living
+                expired_flags = Themis::Controllers::Flag::get_expired
+
+                if living_flags.count == 0 and expired_flags.count == 0
+                    contest_state = Themis::Models::ContestState.create(
+                        state: :completed,
+                        created_at: DateTime.now)
+                    contest_state.save
+
+                    Themis::Controllers::Round::end_last
+                end
+            end
+
             def self.update_scores
                 Themis::Controllers::Flag::get_expired.each do |flag|
                     polls = Themis::Models::FlagPoll.all(flag: flag)

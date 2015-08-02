@@ -7,7 +7,7 @@ module Themis
             include DataMapper::Resource
 
             property :id, Serial
-            property :state, Enum[:preparation, :contest, :break, :completion, :end], default: :preparation, required: true
+            property :state, Enum[:initial, :running, :paused, :await_complete, :completed], default: :initial, required: true
             property :created_at, DateTime, required: true
         end
     end

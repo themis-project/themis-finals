@@ -19,15 +19,13 @@ def change_contest_state(command)
     state = nil
     case command
     when :start
-        state = :contest
+        state = :running
     when :resume
-        state = :contest
+        state = :running
     when :pause
-        state = :break
-    when :complete
-        state = :completion
-    when :finish
-        state = :end
+        state = :paused
+    when :complete_async
+        state = :await_complete
     end
 
     unless state.nil?
@@ -62,7 +60,7 @@ namespace :contest do
         end
 
         contest_state = Themis::Models::ContestState.create(
-            state: :preparation,
+            state: :initial,
             created_at: DateTime.now)
         contest_state.save
 
@@ -90,13 +88,8 @@ namespace :contest do
     end
 
     desc 'Start completion of contest'
-    task :complete do
-        change_contest_state :complete
-    end
-
-    desc 'Finish contest'
-    task :finish do
-        change_contest_state :finish
+    task :complete_async do
+        change_contest_state :complete_async
     end
 end
 

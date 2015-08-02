@@ -26,22 +26,27 @@ module Themis
                     case job.body
                     when 'push'
                         contest_state = Themis::Models::ContestState.last
-                        if not contest_state.nil? and contest_state.state == :contest
+                        if not contest_state.nil? and contest_state.state == :running
                             Themis::Controllers::Contest::push_flags
                         end
                     when 'poll'
                         contest_state = Themis::Models::ContestState.last
                         unless contest_state.nil?
-                            if [:contest, :completion].include? contest_state.state
+                            if [:running, :await_complete].include? contest_state.state
                                 Themis::Controllers::Contest::poll_flags
-                            elsif contest_state.state == :break
+                            elsif contest_state.state == :paused
                                 Themis::Controllers::Contest::prolong_flag_lifetimes
                             end
                         end
                     when 'update'
                         contest_state = Themis::Models::ContestState.last
-                        if not contest_state.nil? and [:contest, :completion].include? contest_state.state
+                        if not contest_state.nil? and [:running, :await_complete].include? contest_state.state
                             Themis::Controllers::Contest::update_scores
+                        end
+                    when 'control_complete'
+                        contest_state = Themis::Models::ContestState.last
+                        if not contest_state.nil? and contest_state.state == :await_complete
+                            Themis::Controllers::Contest::control_complete
                         end
                     else
                         logger.warn "Unknown job #{job.body}"
