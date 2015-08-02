@@ -121,6 +121,47 @@ module Themis
                     flag.save
                 end
             end
+
+            def self.update_team_service_state(team, service, status)
+                case status
+                when Themis::Checker::Result::UP
+                    service_state = :up
+                when Themis::Checker::Result::CORRUPT
+                    service_state = :corrupt
+                when Themis::Checker::Result::MUMBLE
+                    service_state = :mumble
+                when Themis::Checker::Result::DOWN
+                    service_state = :down
+                when Themis::Checker::Result::INTERNAL_ERROR
+                    service_state = :internal_error
+                else
+                    service_state = :unknown
+                end
+
+                team_service_history_state = Themis::Models::TeamServiceHistoryState.create(
+                    state: service_state,
+                    created_at: DateTime.now,
+                    team: team,
+                    service: service)
+                team_service_history_state.save
+
+                team_service_state = Themis::Models::TeamServiceState.first(
+                    service: service,
+                    team: team)
+                if team_service_state.nil?
+                    team_service_state = Themis::Models::TeamServiceState.create(
+                        state: service_state,
+                        created_at: DateTime.now,
+                        updated_at: DateTime.now,
+                        team: team,
+                        service: service)
+                else
+                    team_service_state.state = service_state
+                    team_service_state.updated_at = DateTime.now
+                end
+
+                team_service_state.save
+            end
         end
     end
 end

@@ -16,6 +16,7 @@ module Themis
             require './lib/models/flag'
             require './lib/models/total-score'
             require './lib/models/team-service-state'
+            require './lib/models/team-service-history-state'
             require './lib/models/flag-poll'
             require './lib/models/contest-state'
             require './lib/models/post'

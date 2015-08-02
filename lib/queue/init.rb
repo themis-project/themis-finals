@@ -79,6 +79,15 @@ module Themis
 
                                 poll.updated_at = DateTime.now
                                 poll.save
+
+                                flag = poll.flag
+                                unless flag.nil?
+                                    Themis::Controllers::Contest::update_team_service_state(
+                                        flag.team,
+                                        flag.service,
+                                        job_data['status'])
+                                end
+
                                 logger.info "Performed job #{job.body}"
                             end
                         else
