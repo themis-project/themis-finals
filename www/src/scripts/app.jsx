@@ -9,6 +9,7 @@ import Scoreboard from './scoreboard'
 import News from './news'
 import Logs from './logs'
 import NotFound from './not-found'
+import ContestState from './contest-state'
 
 import dataManager from './data-manager'
 
@@ -62,6 +63,7 @@ class App extends React.Component {
                     <Tab label="News" route="news" onActive={this.onTabActivate}/>
                     <Tab label="Logs" route="logs" onActive={this.onTabActivate}/>
                 </Tabs>
+                <ContestState/>
                 <main>
                     <RouteHandler/>
                 </main>
@@ -98,15 +100,10 @@ function render() {
 }
 
 ready(() => {
-    Promise
-    .all([dataManager.getIdentity(), dataManager.getTeams(),
-          dataManager.getServices(), dataManager.getPosts()])
-    .then((data) => {
-        let [identity, teams, services, posts] = data
+    dataManager
+    .getIdentity()
+    .then((identity) => {
         console.log('Identity', identity)
-        console.log('Teams', teams)
-        console.log('Services', services)
-        console.log('Posts', posts)
     })
     .catch((err) => {
         console.log('Error', err)

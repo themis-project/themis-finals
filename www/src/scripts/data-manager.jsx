@@ -1,6 +1,11 @@
 import 'whatwg-fetch'
 // import 'es6-promise'
 
+import Team from './models/team'
+import Service from './models/service'
+import Post from './models/post'
+import TeamScore from './models/team-score'
+import TeamServiceState from './models/team-service-state'
 
 
 class DataManager {
@@ -9,6 +14,9 @@ class DataManager {
         this.teams = null
         this.services = null
         this.posts = null
+        this.contestState = null
+        this.teamScores = null
+        this.teamServiceStates = null
     }
 
     getIdentity() {
@@ -53,7 +61,9 @@ class DataManager {
                     }
                 })
                 .then((data) => {
-                    this.teams = data
+                    this.teams = data.map((props) => {
+                        return new Team(props)
+                    })
                     resolve(this.teams)
                 })
                 .catch((err) => {
@@ -79,7 +89,9 @@ class DataManager {
                     }
                 })
                 .then((data) => {
-                    this.services = data
+                    this.services = data.map((props) => {
+                        return new Service(props)
+                    })
                     resolve(this.services)
                 })
                 .catch((err) => {
@@ -105,8 +117,92 @@ class DataManager {
                     }
                 })
                 .then((data) => {
-                    this.posts = data
+                    this.posts = data.map((props) => {
+                        return new Post(props)
+                    })
                     resolve(this.posts)
+                })
+                .catch((err) => {
+                    reject(err)
+                })
+            }
+        })
+    }
+
+    getContestState() {
+        return new Promise((resolve, reject) => {
+            if (this.contestState !== null) {
+                resolve(this.contestState)
+            } else {
+               fetch('/api/contest')
+                .then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json()
+                    } else {
+                        let err = new Error(response.statusText)
+                        err.response = response
+                        throw err
+                    }
+                })
+                .then((data) => {
+                    this.contestState = data
+                    resolve(this.contestState)
+                })
+                .catch((err) => {
+                    reject(err)
+                })
+            }
+        })
+    }
+
+    getTeamScores() {
+        return new Promise((resolve, reject) => {
+            if (this.teamScores !== null) {
+                resolve(this.teamScores)
+            } else {
+               fetch('/api/team/scores')
+                .then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json()
+                    } else {
+                        let err = new Error(response.statusText)
+                        err.response = response
+                        throw err
+                    }
+                })
+                .then((data) => {
+                    this.teamScores = data.map((props) => {
+                        return new TeamScore(props)
+                    })
+                    resolve(this.teamScores)
+                })
+                .catch((err) => {
+                    reject(err)
+                })
+            }
+        })
+    }
+
+    getTeamServiceStates() {
+        return new Promise((resolve, reject) => {
+            if (this.teamServiceStates !== null) {
+                resolve(this.teamServiceStates)
+            } else {
+               fetch('/api/team/services')
+                .then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json()
+                    } else {
+                        let err = new Error(response.statusText)
+                        err.response = response
+                        throw err
+                    }
+                })
+                .then((data) => {
+                    this.teamServiceStates = data.map((props) => {
+                        return new TeamServiceState(props)
+                    })
+                    resolve(this.teamServiceStates)
                 })
                 .catch((err) => {
                     reject(err)

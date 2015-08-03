@@ -60,6 +60,25 @@ module Themis
                 json identity
             end
 
+            get '/contest' do
+                round = Themis::Models::Round.count
+                state = Themis::Models::ContestState.last
+                r = {}
+                if round == 0
+                    r['round'] = nil
+                else
+                    r['round'] = round
+                end
+
+                if state.nil?
+                    r['state'] = nil
+                else
+                    r['state'] = state.state
+                end
+
+                json r
+            end
+
             get '/teams' do
                 r = Themis::Models::Team.map do |team|
                     {
