@@ -87,6 +87,8 @@ GEM
       sinatra (~> 1.4.0)
       tilt (>= 1.3, < 3)
     stringex (1.5.1)
+    themis-attack-result (1.0.0)
+      ruby-enum
     themis-checker-result (1.0.0)
       ruby-enum
     thin (1.6.3)
@@ -112,6 +114,7 @@ DEPENDENCIES
   ruby-ip
   sinatra
   sinatra-contrib
+  themis-attack-result
   themis-checker-result
   thin
 

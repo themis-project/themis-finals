@@ -141,6 +141,12 @@ module Themis
 
                 json r
             end
+
+            post '/submit' do
+                pass unless request.content_type == 'application/json'
+                r = {}
+                json r
+            end
         end
     end
 end
