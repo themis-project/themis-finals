@@ -179,6 +179,10 @@ module Themis
                     halt 400, json([Themis::Attack::Result::ERR_CONTEST_PAUSED])
                 end
 
+                if state.state == :completed
+                    halt 400, json([Themis::Attack::Result::ERR_CONTEST_COMPLETED])
+                end
+
                 r = payload.map do |flag|
                     Themis::Controllers::Attack::process team, flag
                 end
