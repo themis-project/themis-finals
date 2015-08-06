@@ -4,6 +4,8 @@ require './lib/backend/event-stream'
 require 'json'
 require 'ip'
 require './lib/controllers/identity'
+require 'themis/attack/result'
+require './lib/controllers/attack'
 
 
 module Rack
@@ -143,8 +145,48 @@ module Themis
             end
 
             post '/submit' do
-                pass unless request.content_type == 'application/json'
-                r = {}
+                if request.content_type != 'application/json'
+                    halt 400, json([Themis::Attack::Result::ERR_INVALID_FORMAT])
+                end
+
+                remote_ip = IP.new request.ip
+                identity = nil
+
+                team = Themis::Controllers::IdentityController.is_team remote_ip
+                if team.nil?
+                    halt 400, json([Themis::Attack::Result::ERR_INVALID_FORMAT])
+                end
+
+                payload = nil
+
+                begin
+                    request.body.rewind
+                    payload = JSON.parse request.body.read
+                rescue => e
+                    halt 400, json([Themis::Attack::Result::ERR_INVALID_FORMAT])
+                end
+
+                unless payload.respond_to? 'map'
+                    halt 400, json([Themis::Attack::Result::ERR_INVALID_FORMAT])
+                end
+
+                state = Themis::Models::ContestState.last
+                if state.nil? or state.state == :initial
+                    halt 400, json([Themis::Attack::Result::ERR_CONTEST_NOT_STARTED])
+                end
+
+                if state.state == :paused
+                    halt 400, json([Themis::Attack::Result::ERR_CONTEST_PAUSED])
+                end
+
+                r = payload.map do |flag|
+                    Themis::Controllers::Attack::process team, flag
+                end
+
+                if r.count == 0
+                    halt 400, json([Themis::Attack::Result::ERR_GENERIC])
+                end
+
                 json r
             end
         end
