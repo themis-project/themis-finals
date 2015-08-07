@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/aspyatkin/themis-finals#readme",
   "dependencies": {
+    "array.prototype.find": "^1.0.0",
     "es6-promise": "^2.3.0",
     "material-ui": "^0.10.2",
     "react": "^0.13.3",

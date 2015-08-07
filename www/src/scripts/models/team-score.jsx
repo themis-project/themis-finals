@@ -5,4 +5,8 @@ export default class TeamScore {
         this.defencePoints = props.defence_points
         this.attackPoints = props.attack_points
     }
+
+    get totalPoints() {
+        return this.defencePoints + this.attackPoints
+    }
 }
