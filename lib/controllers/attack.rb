@@ -5,24 +5,55 @@ module Themis
     module Controllers
         module Attack
             def self.process(team, data)
+                attempt = Themis::Models::AttackAttempt.create(
+                    occured_at: DateTime.now,
+                    request: data.to_s,
+                    response: Themis::Attack::Result::ERR_GENERIC,
+                    team: team)
+
+                threshold = Time.now - Themis::Configuration::get_contest_flow.attack_limit_period
+
+                attempt_count = Themis::Models::AttackAttempt.count(
+                    :occured_at.gte => threshold.to_datetime,
+                    :team => team)
+
+                if attempt_count > Themis::Configuration::get_contest_flow.attack_limit_attempts
+                    r = Themis::Attack::Result::ERR_ATTEMPTS_LIMIT
+                    attempt.response = r
+                    attempt.save
+                    return r
+                end
+
                 unless data.respond_to? 'match'
-                    return Themis::Attack::Result::ERR_INVALID_FORMAT
+                    r = Themis::Attack::Result::ERR_INVALID_FORMAT
+                    attempt.response = r
+                    attempt.save
+                    return r
                 end
 
                 match = data.match /^[\da-f]{32}=$/
                 if match.nil?
-                    return Themis::Attack::Result::ERR_INVALID_FORMAT
+                    r = Themis::Attack::Result::ERR_INVALID_FORMAT
+                    attempt.response = r
+                    attempt.save
+                    return r
                 end
 
                 flag = Themis::Models::Flag.first(:flag => match[0],
                                                   :pushed_at.not => nil)
 
                 if flag.nil?
-                    return Themis::Attack::Result::ERR_FLAG_NOT_FOUND
+                    r = Themis::Attack::Result::ERR_FLAG_NOT_FOUND
+                    attempt.response = r
+                    attempt.save
+                    return r
                 end
 
                 if flag.team == team
-                    return Themis::Attack::Result::ERR_FLAG_YOURS
+                    r = Themis::Attack::Result::ERR_FLAG_YOURS
+                    attempt.response = r
+                    attempt.save
+                    return r
                 end
 
                 team_service_state = Themis::Models::TeamServiceState.first(
@@ -30,16 +61,25 @@ module Themis
                     service: flag.service)
 
                 if team_service_state.nil? or team_service_state.state != :up
-                    return Themis::Attack::Result::ERR_SERVICE_NOT_UP
+                    r = Themis::Attack::Result::ERR_SERVICE_NOT_UP
+                    attempt.response = r
+                    attempt.save
+                    return r
                 end
 
                 if flag.expired_at < DateTime.now
-                    return Themis::Attack::Result::ERR_FLAG_EXPIRED
+                    r = Themis::Attack::Result::ERR_FLAG_EXPIRED
+                    attempt.response = r
+                    attempt.save
+                    return r
                 end
 
                 attack = Themis::Models::Attack.first(team: team, flag: flag)
                 unless attack.nil?
-                    return Themis::Attack::Result::ERR_FLAG_SUBMITTED
+                    r = Themis::Attack::Result::ERR_FLAG_SUBMITTED
+                    attempt.response = r
+                    attempt.save
+                    return r
                 end
 
                 attack = Themis::Models::Attack.create(
@@ -48,7 +88,10 @@ module Themis
                     flag: flag)
                 attack.save
 
-                Themis::Attack::Result::SUCCESS_FLAG_ACCEPTED
+                r = Themis::Attack::Result::SUCCESS_FLAG_ACCEPTED
+                attempt.response = r
+                attempt.save
+                return r
             end
         end
     end
