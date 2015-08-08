@@ -18,7 +18,7 @@ module Themis
                                                   :pushed_at.not => nil)
 
                 if flag.nil?
-                    return Themis::Attack::Result::ERR_INVALID_FORMAT
+                    return Themis::Attack::Result::ERR_FLAG_NOT_FOUND
                 end
 
                 if flag.team == team

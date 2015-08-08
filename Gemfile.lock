@@ -87,7 +87,7 @@ GEM
       sinatra (~> 1.4.0)
       tilt (>= 1.3, < 3)
     stringex (1.5.1)
-    themis-attack-result (1.0.0)
+    themis-attack-result (3.0.0)
       ruby-enum
     themis-checker-result (1.0.0)
       ruby-enum

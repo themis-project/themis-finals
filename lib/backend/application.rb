@@ -146,7 +146,7 @@ module Themis
 
             post '/submit' do
                 if request.content_type != 'application/json'
-                    halt 400, json([Themis::Attack::Result::ERR_INVALID_FORMAT])
+                    halt 400, json(Themis::Attack::Result::ERR_INVALID_FORMAT)
                 end
 
                 remote_ip = IP.new request.ip
@@ -154,7 +154,7 @@ module Themis
 
                 team = Themis::Controllers::IdentityController.is_team remote_ip
                 if team.nil?
-                    halt 400, json([Themis::Attack::Result::ERR_INVALID_FORMAT])
+                    halt 400, json(Themis::Attack::Result::ERR_INVALID_IDENTITY)
                 end
 
                 payload = nil
@@ -163,24 +163,24 @@ module Themis
                     request.body.rewind
                     payload = JSON.parse request.body.read
                 rescue => e
-                    halt 400, json([Themis::Attack::Result::ERR_INVALID_FORMAT])
+                    halt 400, json(Themis::Attack::Result::ERR_INVALID_FORMAT)
                 end
 
                 unless payload.respond_to? 'map'
-                    halt 400, json([Themis::Attack::Result::ERR_INVALID_FORMAT])
+                    halt 400, json(Themis::Attack::Result::ERR_INVALID_FORMAT)
                 end
 
                 state = Themis::Models::ContestState.last
                 if state.nil? or state.state == :initial
-                    halt 400, json([Themis::Attack::Result::ERR_CONTEST_NOT_STARTED])
+                    halt 400, json(Themis::Attack::Result::ERR_CONTEST_NOT_STARTED)
                 end
 
                 if state.state == :paused
-                    halt 400, json([Themis::Attack::Result::ERR_CONTEST_PAUSED])
+                    halt 400, json(Themis::Attack::Result::ERR_CONTEST_PAUSED)
                 end
 
                 if state.state == :completed
-                    halt 400, json([Themis::Attack::Result::ERR_CONTEST_COMPLETED])
+                    halt 400, json(Themis::Attack::Result::ERR_CONTEST_COMPLETED)
                 end
 
                 r = payload.map do |flag|
@@ -188,7 +188,7 @@ module Themis
                 end
 
                 if r.count == 0
-                    halt 400, json([Themis::Attack::Result::ERR_GENERIC])
+                    halt 400, json(Themis::Attack::Result::ERR_INVALID_FORMAT)
                 end
 
                 json r
