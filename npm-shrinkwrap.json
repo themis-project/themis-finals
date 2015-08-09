@@ -2,6 +2,16 @@
   "name": "themis-finals",
   "version": "0.0.1",
   "dependencies": {
+    "array.prototype.find": {
+      "version": "1.0.0",
+      "from": "array.prototype.find@*",
+      "resolved": "https://registry.npmjs.org/array.prototype.find/-/array.prototype.find-1.0.0.tgz"
+    },
+    "es6-promise": {
+      "version": "2.3.0",
+      "from": "es6-promise@*",
+      "resolved": "https://registry.npmjs.org/es6-promise/-/es6-promise-2.3.0.tgz"
+    },
     "material-ui": {
       "version": "0.10.2",
       "from": "material-ui@*",
