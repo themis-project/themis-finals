@@ -22,10 +22,6 @@ module Themis
         class Application < Sinatra::Base
             disable :run
 
-            get '/' do
-                erb :index
-            end
-
             get '/stream' do
                 event_stream = EventStream.new 'test'
 
