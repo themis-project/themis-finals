@@ -1,94 +1,118 @@
-require 'beaneater'
 require 'json'
 require './lib/utils/flag_generator'
 require './lib/controllers/round'
 require './lib/controllers/flag'
 require './lib/controllers/score'
+require './lib/utils/queue'
+require 'themis/checker/result'
 
 
 module Themis
     module Controllers
         module Contest
-            def self.push_flags
-                logger = Themis::Utils::Logger::get
+            @logger = Themis::Utils::Logger::get
 
+            def self.push_flag(team, service, round)
+                seed, flag_str = Themis::Utils::FlagGenerator::get_flag
+                flag = Themis::Models::Flag.create(
+                    flag: flag_str,
+                    created_at: DateTime.now,
+                    pushed_at: nil,
+                    expired_at: nil,
+                    considered_at: nil,
+                    seed: seed,
+                    service: service,
+                    team: team,
+                    round: round)
+                flag.save
+
+                @logger.info "Pushing flag '#{flag_str}' to service #{service.name} of '#{team.name}' ..."
+                job_data = {
+                    operation: 'push',
+                    endpoint: team.host,
+                    flag_id: seed,
+                    flag: flag_str
+                }.to_json
+                Themis::Utils::Queue::enqueue "themis.service.#{service.alias}.listen", job_data
+            end
+
+            def self.push_flags
                 round = Themis::Controllers::Round::start_new
                 round_num = Themis::Models::Round.all.count
-                logger.info "Round #{round_num}"
+                @logger.info "Round #{round_num} started!"
 
-                beanstalk = Beaneater.new Themis::Configuration::get_beanstalk_uri
-
-                all_teams = Themis::Models::Team.all
                 all_services = Themis::Models::Service.all
 
-                all_teams.each do |team|
+                Themis::Models::Team.all.each do |team|
                     all_services.each do |service|
-                        seed, flag_str = Themis::Utils::FlagGenerator::get_flag
-                        flag = Themis::Models::Flag.create(
-                            flag: flag_str,
-                            created_at: DateTime.now,
-                            pushed_at: nil,
-                            expired_at: nil,
-                            considered_at: nil,
-                            seed: seed,
-                            service: service,
-                            team: team,
-                            round: round)
-                        flag.save
-
-                        logger.debug "Pushing flag '#{flag_str}' to service #{service.name} of '#{team.name}'"
-                        tube = beanstalk.tubes["themis.service.#{service.alias}.listen"]
-                        tube.put({
-                            operation: 'push',
-                            endpoint: team.host,
-                            flag_id: seed,
-                            flag: flag_str
-                        }.to_json)
+                        begin
+                            push_flag team, service, round
+                        rescue => e
+                            @logger.error "#{e}"
+                        end
                     end
                 end
+            end
 
-                beanstalk.close
+            def self.handle_push(flag, status, seed)
+                if status == Themis::Checker::Result::UP
+                    flag.pushed_at = DateTime.now
+                    expires = Time.now + Themis::Configuration.get_contest_flow.flag_lifetime
+                    flag.expired_at = expires.to_datetime
+                    flag.seed = seed
+                    flag.save
+                    @logger.info "Successfully pushed flag #{flag.flag}!"
+
+                    poll_flag flag
+                else
+                    @logger.info "Failed to push flag #{flag.flag} (status code #{status})!"
+                end
+            end
+
+            def self.poll_flag(flag)
+                team = flag.team
+                service = flag.service
+
+                poll = Themis::Models::FlagPoll.create(
+                    state: :unknown,
+                    created_at: DateTime.now,
+                    updated_at: nil,
+                    flag: flag)
+                poll.save
+
+                @logger.info "Polling flag '#{flag.flag}' from service #{service.name} of '#{team.name}' ..."
+                job_data = {
+                    operation: 'pull',
+                    request_id: poll.id,
+                    endpoint: team.host,
+                    flag: flag.flag,
+                    flag_id: flag.seed
+                }.to_json
+                Themis::Utils::Queue::enqueue "themis.service.#{service.alias}.listen", job_data
             end
 
             def self.poll_flags
-                logger = Themis::Utils::Logger::get
-                beanstalk = Beaneater.new Themis::Configuration::get_beanstalk_uri
-
                 living_flags = Themis::Controllers::Flag::get_living
 
-                all_teams = Themis::Models::Team.all
                 all_services = Themis::Models::Service.all
 
-                all_teams.each do |team|
+                Themis::Models::Team.all.each do |team|
                     all_services.each do |service|
                         service_flags = living_flags.select do |flag|
                             flag.team == team and flag.service == service
                         end
 
-                        poll_flags = service_flags.sample Themis::Configuration::get_contest_flow.poll_count
+                        flags = service_flags.sample Themis::Configuration::get_contest_flow.poll_count
 
-                        poll_flags.each do |flag|
-                            poll = Themis::Models::FlagPoll.create(
-                                state: :unknown,
-                                created_at: DateTime.now,
-                                updated_at: nil,
-                                flag: flag)
-                            poll.save
-
-                            logger.debug "Polling flag '#{flag.flag}' from service #{service.name} of '#{team.name}'"
-                            tube = beanstalk.tubes["themis.service.#{service.alias}.listen"]
-                            tube.put({
-                                operation: 'pull',
-                                request_id: poll.id,
-                                endpoint: team.host,
-                                flag: flag.flag,
-                                flag_id: flag.seed
-                            }.to_json)
+                        flags.each do |flag|
+                            begin
+                                poll_flag flag
+                            rescue => e
+                                @logger.error "#{e}"
+                            end
                         end
                     end
                 end
-
-                beanstalk.close
             end
 
             def self.prolong_flag_lifetimes
@@ -97,6 +121,28 @@ module Themis
                 Themis::Controllers::Flag::get_living.each do |flag|
                     flag.expired_at = flag.expired_at.to_time + prolong
                     flag.save
+                end
+            end
+
+            def self.handle_poll(poll, status)
+                if status == Themis::Checker::Result::UP
+                    poll.state = :success
+                else
+                    poll.state = :error
+                end
+
+                poll.updated_at = DateTime.now
+                poll.save
+
+                flag = poll.flag
+                unless flag.nil?
+                    update_team_service_state(flag.team, flag.service, status)
+                end
+
+                if status == Themis::Checker::Result::UP
+                    @logger.info "Successfully pulled flag #{flag.flag}!"
+                else
+                    @logger.info "Failed to pull flag #{flag.flag} (status code #{status})!"
                 end
             end
 

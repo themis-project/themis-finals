@@ -2,22 +2,15 @@ require './lib/utils/logger'
 require 'beaneater'
 require './lib/controllers/contest'
 require 'json'
-require 'themis/checker/result'
 
 
 module Themis
     module Queue
-        def self.enqueue(channel, data, opts = {})
-            beanstalk = Beaneater.new Themis::Configuration::get_beanstalk_uri
-            tube = beanstalk.tubes[channel]
-            tube.put data, **opts
-            beanstalk.close
-        end
+        @logger = Themis::Utils::Logger::get
 
         def self.run
-            logger = Themis::Utils::Logger::get
             beanstalk = Beaneater.new Themis::Configuration::get_beanstalk_uri
-            logger.info 'Connected to beanstalk server'
+            @logger.info 'Connected to beanstalk server'
 
             tubes_namespace = 'themis'
 
@@ -49,10 +42,10 @@ module Themis
                             Themis::Controllers::Contest::control_complete
                         end
                     else
-                        logger.warn "Unknown job #{job.body}"
+                        @logger.warn "Unknown job #{job.body}"
                     end
-                rescue Exception => e
-                    logger.error "#{e}"
+                rescue => e
+                    @logger.error "#{e}"
                 end
             end
 
@@ -63,43 +56,23 @@ module Themis
                         case job_data['operation']
                         when 'push'
                             flag = Themis::Models::Flag.first(:flag => job_data['flag'])
-                            unless flag.nil?
-                                if job_data['status'] == Themis::Checker::Result::UP
-                                    flag.pushed_at = DateTime.now
-                                    expires = Time.now + Themis::Configuration.get_contest_flow.flag_lifetime
-                                    flag.expired_at = expires.to_datetime
-                                    flag.seed = job_data['flag_id']
-                                    flag.save
-                                    logger.info "Performed job #{job.body}"
-                                end
+                            if flag.nil?
+                                @logger.error "Failed to find flag #{job_data['flag']}!"
+                            else
+                                Themis::Controllers::Contest::handle_push flag, job_data['status'], job_data['flag_id']
                             end
                         when 'pull'
                             poll = Themis::Models::FlagPoll.first(:id => job_data['request_id'])
-                            unless poll.nil?
-                                if job_data['status'] == Themis::Checker::Result::UP
-                                    poll.state = :success
-                                else
-                                    poll.state = :error
-                                end
-
-                                poll.updated_at = DateTime.now
-                                poll.save
-
-                                flag = poll.flag
-                                unless flag.nil?
-                                    Themis::Controllers::Contest::update_team_service_state(
-                                        flag.team,
-                                        flag.service,
-                                        job_data['status'])
-                                end
-
-                                logger.info "Performed job #{job.body}"
+                            if poll.nil?
+                                @logger.error "Failed to find poll #{job_data['request_id']}"
+                            else
+                                Themis::Controllers::Contest::handle_poll poll, job_data['status']
                             end
                         else
-                            logger.warn "Unknown job #{job.body}"
+                            @logger.error "Unknown job #{job.body}"
                         end
-                    rescue Exception => e
-                        logger.error "#{e}"
+                    rescue => e
+                        @logger.error "#{e}"
                     end
                 end
             end
@@ -107,10 +80,10 @@ module Themis
             begin
                 beanstalk.jobs.process!
             rescue Interrupt
-                logger.info 'Received shutdown signal'
+                @logger.info 'Received shutdown signal'
             end
             beanstalk.close
-            logger.info 'Disconnected from beanstalk server'
+            @logger.info 'Disconnected from beanstalk server'
         end
     end
 end
