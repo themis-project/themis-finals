@@ -1,5 +1,4 @@
 require 'json'
-require './lib/utils/flag_generator'
 require './lib/controllers/round'
 require './lib/controllers/flag'
 require './lib/controllers/score'
@@ -13,25 +12,14 @@ module Themis
             @logger = Themis::Utils::Logger::get
 
             def self.push_flag(team, service, round)
-                seed, flag_str = Themis::Utils::FlagGenerator::get_flag
-                flag = Themis::Models::Flag.create(
-                    flag: flag_str,
-                    created_at: DateTime.now,
-                    pushed_at: nil,
-                    expired_at: nil,
-                    considered_at: nil,
-                    seed: seed,
-                    service: service,
-                    team: team,
-                    round: round)
-                flag.save
+                flag = Themis::Controllers::Flag::issue team, service, round
 
-                @logger.info "Pushing flag '#{flag_str}' to service #{service.name} of '#{team.name}' ..."
+                @logger.info "Pushing flag '#{flag.flag}' to service #{service.name} of '#{team.name}' ..."
                 job_data = {
                     operation: 'push',
                     endpoint: team.host,
-                    flag_id: seed,
-                    flag: flag_str
+                    flag_id: flag.seed,
+                    flag: flag.flag
                 }.to_json
                 Themis::Utils::Queue::enqueue "themis.service.#{service.alias}.listen", job_data
             end
@@ -78,7 +66,6 @@ module Themis
                     created_at: DateTime.now,
                     updated_at: nil,
                     flag: flag)
-                poll.save
 
                 @logger.info "Polling flag '#{flag.flag}' from service #{service.name} of '#{team.name}' ..."
                 job_data = {
@@ -154,7 +141,6 @@ module Themis
                     contest_state = Themis::Models::ContestState.create(
                         state: :completed,
                         created_at: DateTime.now)
-                    contest_state.save
 
                     Themis::Controllers::Round::end_last
                 end
@@ -203,7 +189,6 @@ module Themis
                     created_at: DateTime.now,
                     team: team,
                     service: service)
-                team_service_history_state.save
 
                 team_service_state = Themis::Models::TeamServiceState.first(
                     service: service,
@@ -218,9 +203,8 @@ module Themis
                 else
                     team_service_state.state = service_state
                     team_service_state.updated_at = DateTime.now
+                    team_service_state.save
                 end
-
-                team_service_state.save
             end
         end
     end

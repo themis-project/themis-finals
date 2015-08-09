@@ -7,7 +7,7 @@ module Themis
             include DataMapper::Resource
 
             property :id, Serial
-            property :flag, String, length: 40, required: true, index: true, unique: true
+            property :flag, String, length: 40, required: true, index: true, unique_index: true
             property :created_at, DateTime, required: true
             property :pushed_at, DateTime
             property :expired_at, DateTime

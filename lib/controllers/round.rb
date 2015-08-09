@@ -3,11 +3,7 @@ module Themis
         module Round
             def self.start_new
                 end_last
-
-                new_round = Themis::Models::Round.create(
-                    started_at: DateTime.now)
-                new_round.save
-                new_round
+                return Themis::Models::Round.create started_at: DateTime.now
             end
 
             def self.end_last

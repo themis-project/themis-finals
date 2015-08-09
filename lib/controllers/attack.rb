@@ -74,21 +74,17 @@ module Themis
                     return r
                 end
 
-                attack = Themis::Models::Attack.first(team: team, flag: flag)
-                unless attack.nil?
+                r = nil
+                begin
+                    attack = Themis::Models::Attack.create(
+                        occured_at: DateTime.now,
+                        team: team,
+                        flag: flag)
+                    r = Themis::Attack::Result::SUCCESS_FLAG_ACCEPTED
+                rescue ::DataObjects::IntegrityError => e
                     r = Themis::Attack::Result::ERR_FLAG_SUBMITTED
-                    attempt.response = r
-                    attempt.save
-                    return r
                 end
 
-                attack = Themis::Models::Attack.create(
-                    occured_at: DateTime.now,
-                    team: team,
-                    flag: flag)
-                attack.save
-
-                r = Themis::Attack::Result::SUCCESS_FLAG_ACCEPTED
                 attempt.response = r
                 attempt.save
                 return r
