@@ -16,9 +16,10 @@ export default class Scoreboard extends React.Component {
     componentDidMount() {
         Promise
         .all([dataManager.getTeams(), dataManager.getServices(),
-              dataManager.getTeamScores(), dataManager.getTeamServiceStates()])
+              dataManager.getTeamScores(), dataManager.getTeamServiceStates(),
+              dataManager.getTeamAttacks()])
         .then((data) => {
-            let [teams, services, teamScores, teamServiceStates] = data
+            let [teams, services, teamScores, teamServiceStates, teamAttacks] = data
 
             let headerCols = {
                 position: { content: '#' },

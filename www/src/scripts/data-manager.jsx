@@ -6,6 +6,7 @@ import Service from './models/service'
 import Post from './models/post'
 import TeamScore from './models/team-score'
 import TeamServiceState from './models/team-service-state'
+import TeamAttack from './models/team-attack'
 
 
 class DataManager {
@@ -17,6 +18,7 @@ class DataManager {
         this.contestState = null
         this.teamScores = null
         this.teamServiceStates = null
+        this.teamAttacks = null
     }
 
     getIdentity() {
@@ -203,6 +205,34 @@ class DataManager {
                         return new TeamServiceState(props)
                     })
                     resolve(this.teamServiceStates)
+                })
+                .catch((err) => {
+                    reject(err)
+                })
+            }
+        })
+    }
+
+    getTeamAttacks() {
+        return new Promise((resolve, reject) => {
+            if (this.teamAttacks !== null) {
+                resolve(this.teamAttacks)
+            } else {
+               fetch('/api/team/attacks')
+                .then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json()
+                    } else {
+                        let err = new Error(response.statusText)
+                        err.response = response
+                        throw err
+                    }
+                })
+                .then((data) => {
+                    this.teamAttacks = data.map((props) => {
+                        return new TeamAttack(props)
+                    })
+                    resolve(this.teamAttacks)
                 })
                 .catch((err) => {
                     reject(err)
