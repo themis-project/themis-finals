@@ -140,6 +140,18 @@ module Themis
                 json r
             end
 
+            get '/team/attacks' do
+                r = Themis::Controllers::Attack::get_recent.map do |attack|
+                    {
+                        id: attack.id,
+                        occured_at: attack.occured_at,
+                        team_id: attack.team_id
+                    }
+                end
+
+                json r
+            end
+
             post '/submit' do
                 if request.content_type != 'application/json'
                     halt 400, json(Themis::Attack::Result::ERR_INVALID_FORMAT)

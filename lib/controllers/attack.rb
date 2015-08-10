@@ -4,6 +4,18 @@ require 'themis/attack/result'
 module Themis
     module Controllers
         module Attack
+            def self.get_recent
+                attacks = []
+                Themis::Models::Team.all.each do |team|
+                    attack = Themis::Models::Attack.last :team => team
+                    if attack != nil
+                        attacks << attack
+                    end
+                end
+
+                attacks
+            end
+
             def self.process(team, data)
                 attempt = Themis::Models::AttackAttempt.create(
                     occured_at: DateTime.now,
