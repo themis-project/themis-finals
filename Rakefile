@@ -63,8 +63,8 @@ namespace :contest do
         Themis::Models::ScoreboardState.create(
             state: :enabled,
             created_at: DateTime.now,
-            calculated_scores: nil,
-            last_attacks: nil)
+            total_scores: {},
+            attacks: {})
     end
 
     desc 'Start contest'

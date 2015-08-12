@@ -5,6 +5,7 @@ module Themis
             require 'data_mapper'
 
             DataMapper::Logger.new $stdout, :info
+            DataMapper::Model.raise_on_save_failure = true
             DataMapper.setup :default, Themis::Configuration::get_database_uri
 
             require './lib/models/team'
