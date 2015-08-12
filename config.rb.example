@@ -1,0 +1,58 @@
+require './lib/configuration/init'
+
+
+module Themis
+    module Configuration
+        database_uri 'postgres://postgres:100cf32c205cbe9f41af3c738d12a4ee@127.0.0.1:5432/themis'
+
+        beanstalk_uri '127.0.0.1:11300'
+
+        redis_connection do
+            host '127.0.0.1'
+            port 6379
+        end
+
+        network do
+            internal '10.0.0.0/24'  # internal network (for contest organizers)
+            guest '10.0.21.0/24', '10.0.22.0/24'  # guest network (for visualization system)
+        end
+
+        contest_flow do
+            flag_lifetime 300  # flag lives for 300 seconds
+            push_period 120  # push new flags every 120 seconds
+            poll_period 60  # poll submitted flags every 60 seconds
+            poll_count 2  # poll 2 flags at once
+            update_period 60  # update scores every 60 seconds
+            attack_limits 200, 60  # max 200 attack attempts for the last 60 seconds
+            generator_secret 'hell-yeah'  # an IV for flag generator
+        end
+
+        team 'team_1' do  # this is an internal alias
+            name 'Team #1'  # team displayed name
+            network '10.0.1.0/24'  # team network
+            host '10.0.1.3'  # game box address
+        end
+
+        team 'team_2' do
+            name 'Team #2'
+            network '10.0.2.0/24'
+            host '10.0.2.3'
+        end
+
+        team 'team_3' do
+            name 'Team #3'
+            network '10.0.3.0/24'
+            host '10.0.3.3'
+        end
+        # and so on for teams
+
+        service 'service_1' do  # this is an internal alias
+            name 'Service #1'  # service displayed name
+        end
+
+        service 'service_2' do
+            name 'Service #2'
+        end
+        # and so on for services
+    end
+end
