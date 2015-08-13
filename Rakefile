@@ -13,58 +13,28 @@ end
 def change_contest_state(command)
     require './config'
     require './lib/models/init'
+    require './lib/controllers/contest-state'
 
     Themis::Models::init
 
-    state = nil
     case command
+    when :init
+        Themis::Controllers::ContestState::init
     when :start
-        state = :running
+        Themis::Controllers::ContestState::start
     when :resume
-        state = :running
+        Themis::Controllers::ContestState::resume
     when :pause
-        state = :paused
+        Themis::Controllers::ContestState::pause
     when :complete_async
-        state = :await_complete
-    end
-
-    unless state.nil?
-        Themis::Models::ContestState.create(
-            state: state,
-            created_at: DateTime.now)
+        Themis::Controllers::ContestState::complete_async
     end
 end
 
 namespace :contest do
     desc 'Init contest'
     task :init do
-        require './config'
-        require './lib/models/init'
-
-        Themis::Models::init
-
-        Themis::Configuration.get_teams.each do |team_opts|
-            Themis::Models::Team.create(
-                name: team_opts.name,
-                network: team_opts.network,
-                host: team_opts.host)
-        end
-
-        Themis::Configuration.get_services.each do |service_opts|
-            Themis::Models::Service.create(
-                name: service_opts.name,
-                alias: service_opts.alias)
-        end
-
-        Themis::Models::ContestState.create(
-            state: :initial,
-            created_at: DateTime.now)
-
-        Themis::Models::ScoreboardState.create(
-            state: :enabled,
-            created_at: DateTime.now,
-            total_scores: {},
-            attacks: {})
+        change_contest_state :init
     end
 
     desc 'Start contest'
@@ -85,6 +55,34 @@ namespace :contest do
     desc 'Start completion of contest'
     task :complete_async do
         change_contest_state :complete_async
+    end
+end
+
+
+def change_scoreboard_state(state)
+    require './config'
+    require './lib/models/init'
+    require './lib/controllers/scoreboard-state'
+
+    Themis::Models::init
+
+    case state
+    when :enabled
+        Themis::Controllers::ScoreboardState::enable
+    when :disabled
+        Themis::Controllers::ScoreboardState::disable
+    end
+end
+
+namespace :scoreboard do
+    desc 'Enable scoreboard (for team and guest networks)'
+    task :enable do
+        change_scoreboard_state :enabled
+    end
+
+    desc 'Disable scoreboard (for team and guest networks)'
+    task :disable do
+        change_scoreboard_state :disabled
     end
 end
 

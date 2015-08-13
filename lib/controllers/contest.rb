@@ -4,6 +4,7 @@ require './lib/controllers/flag'
 require './lib/controllers/score'
 require './lib/utils/queue'
 require 'themis/checker/result'
+require './lib/controllers/contest-state'
 
 
 module Themis
@@ -138,10 +139,7 @@ module Themis
                 expired_flags = Themis::Controllers::Flag::get_expired
 
                 if living_flags.count == 0 and expired_flags.count == 0
-                    contest_state = Themis::Models::ContestState.create(
-                        state: :completed,
-                        created_at: DateTime.now)
-
+                    Themis::Controllers::ContestState::complete
                     Themis::Controllers::Round::end_last
                 end
             end

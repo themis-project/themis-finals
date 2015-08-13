@@ -114,13 +114,27 @@ module Themis
             end
 
             get '/team/scores' do
-                r = Themis::Models::TotalScore.map do |total_score|
-                    {
-                        id: total_score.id,
-                        team_id: total_score.team_id,
-                        defence_points: total_score.defence_points.to_f,
-                        attack_points: total_score.attack_points.to_f
-                    }
+                scoreboard_state = Themis::Models::ScoreboardState.last
+                scoreboard_enabled = false
+                if scoreboard_state.nil?
+                    scoreboard_enabled = true
+                else
+                    scoreboard_enabled = scoreboard_state.state == :enabled
+                end
+
+                remote_ip = IP.new request.ip
+
+                if scoreboard_enabled or Themis::Controllers::IdentityController.is_internal remote_ip
+                    r = Themis::Models::TotalScore.map do |total_score|
+                        {
+                            id: total_score.id,
+                            team_id: total_score.team_id,
+                            defence_points: total_score.defence_points.to_f,
+                            attack_points: total_score.attack_points.to_f
+                        }
+                    end
+                else
+                    r = scoreboard_state.total_scores
                 end
 
                 json r
@@ -141,12 +155,26 @@ module Themis
             end
 
             get '/team/attacks' do
-                r = Themis::Controllers::Attack::get_recent.map do |attack|
-                    {
-                        id: attack.id,
-                        occured_at: attack.occured_at,
-                        team_id: attack.team_id
-                    }
+                scoreboard_state = Themis::Models::ScoreboardState.last
+                scoreboard_enabled = false
+                if scoreboard_state.nil?
+                    scoreboard_enabled = true
+                else
+                    scoreboard_enabled = scoreboard_state.state == :enabled
+                end
+
+                remote_ip = IP.new request.ip
+
+                if scoreboard_enabled or Themis::Controllers::IdentityController.is_internal remote_ip
+                    r = Themis::Controllers::Attack::get_recent.map do |attack|
+                        {
+                            id: attack.id,
+                            occured_at: attack.occured_at,
+                            team_id: attack.team_id
+                        }
+                    end
+                else
+                    r = scoreboard_state.attacks
                 end
 
                 json r
