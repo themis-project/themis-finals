@@ -56,7 +56,7 @@ class App extends React.Component {
 
         return (
             <div>
-                <AppBar title="VolgaCTF 2015 Finals"/>
+                <AppBar title="Themis Finals"/>
                 <Tabs initialSelectedIndex={ndx}>
                     <Tab label="Index" route="index" onActive={this.onTabActivate}/>
                     <Tab label="Scoreboard" route="scoreboard" onActive={this.onTabActivate}/>
