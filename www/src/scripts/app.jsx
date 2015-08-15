@@ -45,7 +45,7 @@ class App extends React.Component {
     }
 
     render() {
-        let ndx = 0;
+        let ndx = null;
         let routeNames = ['index', 'scoreboard', 'news']
         if (this.props.identity.isInternal()) {
             routeNames.push('logs')
