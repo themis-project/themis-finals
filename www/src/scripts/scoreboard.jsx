@@ -1,7 +1,7 @@
 import React from 'react'
 import DocumentTitle from 'react-document-title'
 import dataManager from './data-manager'
-import { Table } from 'material-ui'
+import { Table, Paper } from 'material-ui'
 import 'array.prototype.find'
 
 
@@ -96,9 +96,13 @@ export default class Scoreboard extends React.Component {
     }
 
     render() {
+        let style = {
+            padding: '15px'
+        }
+
         return (
             <DocumentTitle title="Themis Finals :: Scoreboard">
-                <section>
+                <Paper size={1} style={style}>
                     <h2>Scoreboard</h2>
                     {
                         (() => {
@@ -123,7 +127,7 @@ export default class Scoreboard extends React.Component {
                             }
                         })()
                     }
-                </section>
+                </Paper>
             </DocumentTitle>
         )
     }
