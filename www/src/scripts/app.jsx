@@ -46,7 +46,11 @@ class App extends React.Component {
 
     render() {
         let ndx = 0;
-        let routeNames = ['index', 'scoreboard', 'news', 'logs']
+        let routeNames = ['index', 'scoreboard', 'news']
+        if (this.props.identity.isInternal()) {
+            routeNames.push('logs')
+        }
+
         for (let i=0; i<routeNames.length; ++i) {
             if (this.context.router.isActive(routeNames[i], '', '')) {
                 ndx = i;
@@ -54,19 +58,26 @@ class App extends React.Component {
             }
         }
 
+        let tabs = [
+            <Tab key="index" label="Index" route="index" onActive={this.onTabActivate}/>,
+            <Tab key="scoreboard" label="Scoreboard" route="scoreboard" onActive={this.onTabActivate}/>,
+            <Tab key="news" label="News" route="news" onActive={this.onTabActivate}/>
+        ]
+
+        if (this.props.identity.isInternal()) {
+            tabs.push(<Tab key="logs" label="Logs" route="logs" onActive={this.onTabActivate}/>)
+        }
+
         return (
             <DocumentTitle title="Themis Finals">
                 <section>
                     <AppBar title="Themis Finals"/>
                     <Tabs initialSelectedIndex={ndx}>
-                        <Tab label="Index" route="index" onActive={this.onTabActivate}/>
-                        <Tab label="Scoreboard" route="scoreboard" onActive={this.onTabActivate}/>
-                        <Tab label="News" route="news" onActive={this.onTabActivate}/>
-                        <Tab label="Logs" route="logs" onActive={this.onTabActivate}/>
+                        {tabs}
                     </Tabs>
                     <ContestState/>
                     <main>
-                        <RouteHandler/>
+                        <RouteHandler identity={this.props.identity}/>
                     </main>
                 </section>
             </DocumentTitle>
@@ -84,20 +95,23 @@ function ready(callback) {
 }
 
 
-let routes = (
-    <Route handler={App}>
-        <DefaultRoute name="index" handler={Index}/>
-        <NotFoundRoute handler={NotFound}/>
+function getRoutes(identity) {
+    return (
+        <Route handler={App}>
+            <DefaultRoute name="index" handler={Index}/>
+            <NotFoundRoute handler={NotFound}/>
 
-        <Route name="scoreboard" handler={Scoreboard}/>
-        <Route name="news" handler={News}/>
-        <Route name="logs" handler={Logs}/>
-    </Route>
-)
+            <Route name="scoreboard" handler={Scoreboard}/>
+            <Route name="news" handler={News}/>
+            <Route name="logs" handler={identity.isInternal() ? Logs : NotFound}/>
+        </Route>
+    )
+}
 
-function render() {
-    Router.run(routes, HistoryLocation, (Root) => {
-        React.render(<Root/>, document.getElementById('app'))
+
+function render(identity) {
+    Router.run(getRoutes(identity), HistoryLocation, (Root) => {
+        React.render(<Root identity={identity}/>, document.getElementById('app'))
     })
 }
 
@@ -105,12 +119,10 @@ ready(() => {
     dataManager
     .getIdentity()
     .then((identity) => {
-        console.log('Identity', identity)
+        injectTapEventPlugin()
+        render(identity)
     })
     .catch((err) => {
         console.log('Error', err)
     })
-
-    injectTapEventPlugin()
-    render()
 })

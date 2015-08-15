@@ -7,6 +7,7 @@ import Post from './models/post'
 import TeamScore from './models/team-score'
 import TeamServiceState from './models/team-service-state'
 import TeamAttack from './models/team-attack'
+import Identity from './models/identity'
 
 
 class DataManager {
@@ -37,7 +38,7 @@ class DataManager {
                     }
                 })
                 .then((data) => {
-                    this.identity = data
+                    this.identity = new Identity(data)
                     resolve(this.identity)
                 })
                 .catch((err) => {
