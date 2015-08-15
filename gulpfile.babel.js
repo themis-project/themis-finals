@@ -1,20 +1,26 @@
-import gulp from 'gulp';
-import del from 'del';
-import browserify from 'browserify';
-import babelify from 'babelify';
-import source from 'vinyl-source-stream';
+import gulp from 'gulp'
+import del from 'del'
+import browserify from 'browserify'
+import babelify from 'babelify'
+import source from 'vinyl-source-stream'
+import buffer from 'vinyl-buffer'
+import gulpIf from 'gulp-if'
+import uglify from 'gulp-uglify'
+import minifyHTML from 'gulp-minify-html'
+import minifyCSS from 'gulp-minify-css'
 
 
 var paths = {
     html: [
         'www/src/index.html'
     ],
-    scripts: 'www/src/scripts/app.jsx',
-    vendor: {
-        scripts: [],
-        stylesheets: []
-    }
-};
+    scripts: [
+        'www/src/scripts/app.jsx'
+    ],
+    styles: [
+        'www/src/styles/app.css'
+    ]
+}
 
 
 function isProduction() {
@@ -23,54 +29,47 @@ function isProduction() {
 
 
 gulp.task('clean_html', (callback) => {
-    del(['www/build/html/*'], callback);
-});
+    del(['www/build/html/*'], callback)
+})
 
 
 gulp.task('html', ['clean_html'], () => {
     return gulp.src(paths.html)
-        .pipe(gulp.dest('www/build/html'));
-});
+        .pipe(gulpIf(isProduction, minifyHTML()))
+        .pipe(gulp.dest('www/build/html'))
+})
 
 
 gulp.task('clean_scripts', (callback) => {
-    del(['www/build/assets/js/*.js'], callback);
-});
+    del(['www/build/assets/js/*.js'], callback)
+})
 
 
 gulp.task('scripts', ['clean_scripts'], () => {
     return browserify({
         entries: paths.scripts,
         extensions: ['.jsx'],
-        debug: true
+        debug: !isProduction()
     })
     .transform(babelify)
     .bundle()
-    .pipe(source('bundle.js'))
-    .pipe(gulp.dest('www/build/assets/js'));
-});
+    .pipe(source('app.js'))
+    .pipe(buffer())
+    .pipe(gulpIf(isProduction, uglify()))
+    .pipe(gulp.dest('www/build/assets/js'))
+})
 
 
-gulp.task('clean_vendor_stylesheets', (callback) => {
-    del(['www/build/assets/css/vendor/*'], callback);
-});
+gulp.task('clean_styles', (callback) => {
+    del(['www/build/assets/css/*.css'], callback)
+})
 
 
-gulp.task('vendor_stylesheets', ['clean_vendor_stylesheets'], () => {
-    return gulp.src(paths.vendor.stylesheets)
-        .pipe(gulp.dest('www/build/assets/css/vendor'));
-});
+gulp.task('styles', ['clean_styles'], () => {
+    return gulp.src(paths.styles)
+        .pipe(gulpIf(isProduction, minifyCSS()))
+        .pipe(gulp.dest('www/build/assets/css'))
+})
 
 
-gulp.task('clean_vendor_scripts', (callback) => {
-    del(['www/build/assets/js/vendor/*'], callback);
-});
-
-
-gulp.task('vendor_scripts', ['clean_vendor_scripts'], () => {
-    return gulp.src(paths.vendor.scripts)
-        .pipe(gulp.dest('www/build/assets/js/vendor'));
-});
-
-
-gulp.task('default', ['html', 'scripts', 'vendor_stylesheets', 'vendor_scripts']);
+gulp.task('default', ['html', 'scripts', 'styles'])

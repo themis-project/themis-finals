@@ -20,10 +20,14 @@
   "dependencies": {
     "array.prototype.find": "^1.0.0",
     "es6-promise": "^2.3.0",
+    "markdown-it": "^4.4.0",
+    "markdown-it-emoji": "^1.1.0",
     "material-ui": "^0.10.2",
+    "moment": "^2.10.6",
     "react": "^0.13.3",
     "react-router": "^0.13.3",
     "react-tap-event-plugin": "^0.1.7",
+    "twemoji": "^1.4.1",
     "whatwg-fetch": "^0.9.0"
   },
   "devDependencies": {
@@ -33,6 +37,8 @@
     "del": "^1.2.0",
     "gulp": "^3.9.0",
     "gulp-if": "^1.2.5",
+    "gulp-minify-css": "^1.2.0",
+    "gulp-minify-html": "^1.0.4",
     "gulp-uglify": "^1.2.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
