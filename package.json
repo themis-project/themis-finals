@@ -25,6 +25,7 @@
     "material-ui": "^0.10.2",
     "moment": "^2.10.6",
     "react": "^0.13.3",
+    "react-document-title": "^1.0.3",
     "react-router": "^0.13.3",
     "react-tap-event-plugin": "^0.1.7",
     "twemoji": "^1.4.1",

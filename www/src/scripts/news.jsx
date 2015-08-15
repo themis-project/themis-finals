@@ -1,4 +1,5 @@
 import React from 'react'
+import DocumentTitle from 'react-document-title'
 import dataManager from './data-manager'
 import MarkdownRenderer from './utils/markdown'
 import moment from 'moment'
@@ -66,18 +67,20 @@ export default class News extends React.Component {
 
     render() {
         return (
-            <section>
-                <h2>News</h2>
-                {
-                    (() => {
-                        if (this.state.loaded) {
-                            return <ArticleList posts={this.state.posts}/>
-                        } else {
-                            return <p>Loading</p>
-                        }
-                    })()
-                }
-            </section>
+            <DocumentTitle title="Themis Finals :: News">
+                <section>
+                    <h2>News</h2>
+                    {
+                        (() => {
+                            if (this.state.loaded) {
+                                return <ArticleList posts={this.state.posts}/>
+                            } else {
+                                return <p>Loading</p>
+                            }
+                        })()
+                    }
+                </section>
+            </DocumentTitle>
         )
     }
 }

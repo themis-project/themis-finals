@@ -1,6 +1,6 @@
 import React from 'react'
 import Router, { Route, DefaultRoute, NotFoundRoute, Link, RouteHandler, HistoryLocation } from 'react-router'
-
+import DocumentTitle from 'react-document-title'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import mui, { AppBar, Tab, Tabs } from 'material-ui'
 
@@ -55,19 +55,21 @@ class App extends React.Component {
         }
 
         return (
-            <div>
-                <AppBar title="Themis Finals"/>
-                <Tabs initialSelectedIndex={ndx}>
-                    <Tab label="Index" route="index" onActive={this.onTabActivate}/>
-                    <Tab label="Scoreboard" route="scoreboard" onActive={this.onTabActivate}/>
-                    <Tab label="News" route="news" onActive={this.onTabActivate}/>
-                    <Tab label="Logs" route="logs" onActive={this.onTabActivate}/>
-                </Tabs>
-                <ContestState/>
-                <main>
-                    <RouteHandler/>
-                </main>
-            </div>
+            <DocumentTitle title="Themis Finals">
+                <section>
+                    <AppBar title="Themis Finals"/>
+                    <Tabs initialSelectedIndex={ndx}>
+                        <Tab label="Index" route="index" onActive={this.onTabActivate}/>
+                        <Tab label="Scoreboard" route="scoreboard" onActive={this.onTabActivate}/>
+                        <Tab label="News" route="news" onActive={this.onTabActivate}/>
+                        <Tab label="Logs" route="logs" onActive={this.onTabActivate}/>
+                    </Tabs>
+                    <ContestState/>
+                    <main>
+                        <RouteHandler/>
+                    </main>
+                </section>
+            </DocumentTitle>
         )
     }
 }

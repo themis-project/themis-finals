@@ -1,4 +1,5 @@
 import React from 'react'
+import DocumentTitle from 'react-document-title'
 import dataManager from './data-manager'
 import { Table } from 'material-ui'
 import 'array.prototype.find'
@@ -11,7 +12,6 @@ export default class Scoreboard extends React.Component {
             loaded: false
         }
     }
-
 
     componentDidMount() {
         Promise
@@ -97,32 +97,34 @@ export default class Scoreboard extends React.Component {
 
     render() {
         return (
-            <div>
-                <h2>Scoreboard</h2>
-                {
-                    (() => {
-                        if (this.state.loaded) {
-                            return <Table
-                                headerColumns={this.state.scoreboard.headerCols}
-                                columnOrder={this.state.scoreboard.colOrder}
-                                rowData={this.state.scoreboard.rowData}
-                                height={this.state.scoreboard.height}
-                                fixedHeader={this.state.scoreboard.fixedHeader}
-                                fixedFooter={false}
-                                stripedRows={this.state.scoreboard.stripedRows}
-                                showRowHover={this.state.scoreboard.showRowHover}
-                                selectable={false}
-                                multiSelectable={false}
-                                canSelectAll={false}
-                                deselectOnClickaway={false}
-                                displayRowCheckbox={false}
-                            />
-                        } else {
-                            return <p>Loading</p>
-                        }
-                    })()
-                }
-            </div>
+            <DocumentTitle title="Themis Finals :: Scoreboard">
+                <section>
+                    <h2>Scoreboard</h2>
+                    {
+                        (() => {
+                            if (this.state.loaded) {
+                                return <Table
+                                    headerColumns={this.state.scoreboard.headerCols}
+                                    columnOrder={this.state.scoreboard.colOrder}
+                                    rowData={this.state.scoreboard.rowData}
+                                    height={this.state.scoreboard.height}
+                                    fixedHeader={this.state.scoreboard.fixedHeader}
+                                    fixedFooter={false}
+                                    stripedRows={this.state.scoreboard.stripedRows}
+                                    showRowHover={this.state.scoreboard.showRowHover}
+                                    selectable={false}
+                                    multiSelectable={false}
+                                    canSelectAll={false}
+                                    deselectOnClickaway={false}
+                                    displayRowCheckbox={false}
+                                />
+                            } else {
+                                return <p>Loading</p>
+                            }
+                        })()
+                    }
+                </section>
+            </DocumentTitle>
         )
     }
 }
