@@ -8,6 +8,7 @@ import gulpIf from 'gulp-if'
 import uglify from 'gulp-uglify'
 import minifyHTML from 'gulp-minify-html'
 import minifyCSS from 'gulp-minify-css'
+import concat from 'gulp-concat'
 
 
 var paths = {
@@ -18,6 +19,7 @@ var paths = {
         'www/src/scripts/app.jsx'
     ],
     styles: [
+        'node_modules/normalize.css/normalize.css',
         'www/src/styles/app.css'
     ]
 }
@@ -67,6 +69,7 @@ gulp.task('clean_styles', (callback) => {
 
 gulp.task('styles', ['clean_styles'], () => {
     return gulp.src(paths.styles)
+        .pipe(concat('app.css'))
         .pipe(gulpIf(isProduction, minifyCSS()))
         .pipe(gulp.dest('www/build/assets/css'))
 })

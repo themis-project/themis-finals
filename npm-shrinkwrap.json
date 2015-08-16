@@ -83,6 +83,11 @@
       "from": "moment@*",
       "resolved": "https://registry.npmjs.org/moment/-/moment-2.10.6.tgz"
     },
+    "normalize.css": {
+      "version": "3.0.3",
+      "from": "normalize.css@*",
+      "resolved": "https://registry.npmjs.org/normalize.css/-/normalize.css-3.0.3.tgz"
+    },
     "react": {
       "version": "0.13.3",
       "from": "https://registry.npmjs.org/react/-/react-0.13.3.tgz",
@@ -164,6 +169,11 @@
       "version": "0.1.7",
       "from": "https://registry.npmjs.org/react-tap-event-plugin/-/react-tap-event-plugin-0.1.7.tgz",
       "resolved": "https://registry.npmjs.org/react-tap-event-plugin/-/react-tap-event-plugin-0.1.7.tgz"
+    },
+    "string.prototype.startswith": {
+      "version": "0.2.0",
+      "from": "string.prototype.startswith@*",
+      "resolved": "https://registry.npmjs.org/string.prototype.startswith/-/string.prototype.startswith-0.2.0.tgz"
     },
     "twemoji": {
       "version": "1.4.1",

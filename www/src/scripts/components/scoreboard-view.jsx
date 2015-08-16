@@ -4,6 +4,7 @@ import { Table, Paper } from 'material-ui'
 import 'array.prototype.find'
 
 import dataManager from '../data-manager'
+import ScoreTableView from './score-table-view'
 
 
 export default class ScoreboardView extends React.Component {
@@ -22,23 +23,29 @@ export default class ScoreboardView extends React.Component {
         .then((data) => {
             let [teams, services, teamScores, teamServiceStates, teamAttacks] = data
 
-            let headerCols = {
-                position: { content: '#' },
-                team: { content: 'Team' },
-                score: { content: 'Score' },
-                attack: { content: 'Attack' },
-                defence: { content: 'Defence' }
-            }
+            let order = [
+                'position',
+                'team',
+                'score',
+                'attack',
+                'defence'
+            ]
 
-            let colOrder = ['position', 'team', 'score', 'attack', 'defence']
+            let headers = {
+                position: '#',
+                team: 'Team',
+                score: 'Score',
+                attack: 'Attack',
+                defence: 'Defence'
+            }
 
             for (let service of services) {
-                let serviceId = `service_${service.id}`
-                headerCols[serviceId] = { content: service.name }
-                colOrder.push(serviceId)
+                let serviceId = `#service_${service.id}`
+                headers[serviceId] = service.name
+                order.push(serviceId)
             }
 
-            let rows = []
+            let rowData = []
 
             for (let team of teams) {
                 let teamScore = teamScores.find((score) => {
@@ -46,48 +53,39 @@ export default class ScoreboardView extends React.Component {
                 })
 
                 let row = {
-                    team: { content: team.name },
-                    score: { content: teamScore ? teamScore.totalPoints: 0 },
-                    attack: { content: teamScore ? teamScore.attackPoints : 0 },
-                    defence: { content: teamScore ? teamScore.defencePoints : 0 }
+                    id: team.id,
+                    team: team.name,
+                    score: teamScore ? teamScore.totalPoints: 0,
+                    attack: teamScore ? teamScore.attackPoints : 0,
+                    defence: teamScore ? teamScore.defencePoints : 0
                 }
 
                 for (let service of services) {
-                    let serviceId = `service_${service.id}`
+                    let serviceId = `#service_${service.id}`
                     let teamServiceState = teamServiceStates.find((state) => {
                         return state.teamId === team.id && state.serviceId === service.id
                     })
-                    row[serviceId] = { content: teamServiceState ? teamServiceState.state : 'unknown' }
+                    row[serviceId] = teamServiceState ? teamServiceState.state : 'unknown'
                 }
 
-                rows.push(row)
+                rowData.push(row)
             }
 
-            rows = rows.sort((row1, row2) => {
-                return row2.score.content - row1.score.content
+            rowData = rowData.sort((row1, row2) => {
+                return row2.score - row1.score
             })
 
-            let rowData = rows.map((row, ndx) => {
-                row['position'] = { content: ndx + 1 }
+            let rows = rowData.map((row, ndx) => {
+                row['position'] = ndx + 1
                 return row
             })
 
             this.setState({
                 loaded: true,
                 scoreboard: {
-                    fixedHeader: true,
-                    fixedFooter: false,
-                    stripedRows: false,
-                    showRowHover: false,
-                    selectable: false,
-                    multiSelectable: false,
-                    canSelectAll: false,
-                    deselectOnClickaway: true,
-                    displayRowCheckbox: false,
-                    height: 'auto',
-                    rowData: rowData,
-                    headerCols: headerCols,
-                    colOrder: colOrder
+                    order: order,
+                    rows: rows,
+                    headers: headers
                 }
             })
         })
@@ -108,21 +106,7 @@ export default class ScoreboardView extends React.Component {
                     {
                         (() => {
                             if (this.state.loaded) {
-                                return <Table
-                                    headerColumns={this.state.scoreboard.headerCols}
-                                    columnOrder={this.state.scoreboard.colOrder}
-                                    rowData={this.state.scoreboard.rowData}
-                                    height={this.state.scoreboard.height}
-                                    fixedHeader={this.state.scoreboard.fixedHeader}
-                                    fixedFooter={false}
-                                    stripedRows={this.state.scoreboard.stripedRows}
-                                    showRowHover={this.state.scoreboard.showRowHover}
-                                    selectable={false}
-                                    multiSelectable={false}
-                                    canSelectAll={false}
-                                    deselectOnClickaway={false}
-                                    displayRowCheckbox={false}
-                                />
+                                return <ScoreTableView scoreboard={this.state.scoreboard}/>
                             } else {
                                 return <p>Loading</p>
                             }

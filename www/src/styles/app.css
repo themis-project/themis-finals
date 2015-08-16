@@ -1,9 +1,76 @@
-body {
-    margin: 0;
-    padding: 0;
-}
-
 .emoji {
     height: 1.2em;
-    vertical-align: middle;
+    vertical-align: middle
+}
+
+.themis-table {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px
+}
+
+.themis-table > tbody > tr > td,
+.themis-table > thead > tr > th {
+    padding: 6px;
+    line-height: 1.4;
+    vertical-align: top;
+    border-top: 1px solid #ddd
+}
+
+.themis-table > thead > tr > th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #ddd
+}
+
+.themis-table > thead:first-child > tr:first-child > th {
+    border-top: 0
+}
+
+.themis-table > thead > tr > th {
+    text-align: left
+}
+
+.themis-position {
+    font-weight: bold
+}
+
+.themis-position-gold {
+    color: #d4af37
+}
+
+.themis-position-silver {
+    color: #c0c0c0
+}
+
+.themis-position-bronze {
+    color: #cd7f32
+}
+
+.themis-service-state {
+    padding: 4px 8px
+}
+
+.themis-service-state-down {
+    color: #c7254e;
+    background-color: #f9f2f4
+}
+
+.themis-service-state-up {
+    color: #3c763d;
+    background-color: #f4f9f2
+}
+
+.themis-service-state-corrupt {
+    color: #8a6d3b;
+    background-color: #f9f9f2
+}
+
+.themis-service-state-mumble {
+    color: #31708f;
+    background-color: #f2f4f9
+}
+
+.themis-service-state-other {
+    color: #777;
+    background-color: #f4f4f4
 }
