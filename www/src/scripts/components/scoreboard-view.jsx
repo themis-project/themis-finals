@@ -2,6 +2,7 @@ import React from 'react'
 import DocumentTitle from 'react-document-title'
 import { Table, Paper } from 'material-ui'
 import 'array.prototype.find'
+import { Promise } from 'es6-promise'
 
 import dataManager from '../data-manager'
 import ScoreTableView from './score-table-view'

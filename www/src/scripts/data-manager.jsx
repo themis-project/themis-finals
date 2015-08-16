@@ -1,5 +1,5 @@
 import 'whatwg-fetch'
-// import 'es6-promise'
+import { Promise } from 'es6-promise'
 
 import Team from './models/team'
 import Service from './models/service'

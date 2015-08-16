@@ -1,3 +1,4 @@
+import 'babel/polyfill'
 import React from 'react'
 import Router, { Route, DefaultRoute, NotFoundRoute, Link, RouteHandler, HistoryLocation } from 'react-router'
 import DocumentTitle from 'react-document-title'
