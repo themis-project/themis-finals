@@ -25,6 +25,7 @@
     "material-ui": "^0.10.2",
     "moment": "^2.10.6",
     "normalize.css": "^3.0.3",
+    "numeral": "^1.5.3",
     "react": "^0.13.3",
     "react-document-title": "^1.0.3",
     "react-router": "^0.13.3",

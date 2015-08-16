@@ -88,6 +88,11 @@
       "from": "normalize.css@*",
       "resolved": "https://registry.npmjs.org/normalize.css/-/normalize.css-3.0.3.tgz"
     },
+    "numeral": {
+      "version": "1.5.3",
+      "from": "numeral@*",
+      "resolved": "https://registry.npmjs.org/numeral/-/numeral-1.5.3.tgz"
+    },
     "react": {
       "version": "0.13.3",
       "from": "https://registry.npmjs.org/react/-/react-0.13.3.tgz",

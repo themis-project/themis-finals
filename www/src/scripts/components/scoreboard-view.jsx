@@ -47,17 +47,37 @@ export default class ScoreboardView extends React.Component {
 
             let rowData = []
 
+            let maxAttackPoints = 0
+            let maxDefencePoints = 0
+
+            for (let teamScore of teamScores) {
+                if (teamScore.attackPoints > maxAttackPoints) {
+                    maxAttackPoints = teamScore.attackPoints
+                }
+                if (teamScore.defencePoints > maxDefencePoints) {
+                    maxDefencePoints = teamScore.defencePoints
+                }
+            }
+
             for (let team of teams) {
                 let teamScore = teamScores.find((score) => {
                     return score.teamId === team.id
                 })
 
+                let attackPoints = teamScore ? teamScore.attackPoints : 0
+                let defencePoints = teamScore ? teamScore.defencePoints : 0
+
+                let attackScore = (maxAttackPoints < 0.001) ? 0 : attackPoints / maxAttackPoints
+                let defenceScore = (maxDefencePoints < 0.001) ? 0 : defencePoints / maxDefencePoints
+
                 let row = {
                     id: team.id,
                     team: team.name,
-                    score: teamScore ? teamScore.totalPoints: 0,
-                    attack: teamScore ? teamScore.attackPoints : 0,
-                    defence: teamScore ? teamScore.defencePoints : 0
+                    score: 0.5 * (attackScore + defenceScore),
+                    attackPoints: attackPoints,
+                    defencePoints: defencePoints,
+                    attackScore: attackScore,
+                    defenceScore: defenceScore
                 }
 
                 for (let service of services) {
