@@ -45,7 +45,7 @@ class App extends React.Component {
     }
 
     render() {
-        let ndx = null;
+        let ndx = null
         let routeNames = ['index', 'scoreboard', 'news']
         if (this.props.identity.isInternal()) {
             routeNames.push('logs')
@@ -53,28 +53,36 @@ class App extends React.Component {
 
         for (let i=0; i<routeNames.length; ++i) {
             if (this.context.router.isActive(routeNames[i], '', '')) {
-                ndx = i;
-                break;
+                ndx = i
+                break
             }
         }
 
-        let tabs = [
-            <Tab key="index" label="Index" route="index" onActive={this.onTabActivate}/>,
-            <Tab key="scoreboard" label="Scoreboard" route="scoreboard" onActive={this.onTabActivate}/>,
-            <Tab key="news" label="News" route="news" onActive={this.onTabActivate}/>
-        ]
+        let tabContainer = ''
 
-        if (this.props.identity.isInternal()) {
-            tabs.push(<Tab key="logs" label="Logs" route="logs" onActive={this.onTabActivate}/>)
+        if (ndx != null) {
+            let tabs = [
+                <Tab key="index" label="Index" route="index" onActive={this.onTabActivate}/>,
+                <Tab key="scoreboard" label="Scoreboard" route="scoreboard" onActive={this.onTabActivate}/>,
+                <Tab key="news" label="News" route="news" onActive={this.onTabActivate}/>
+            ]
+
+            if (this.props.identity.isInternal()) {
+                tabs.push(<Tab key="logs" label="Logs" route="logs" onActive={this.onTabActivate}/>)
+            }
+
+            tabContainer = (
+                <Tabs initialSelectedIndex={ndx}>
+                    {tabs}
+                </Tabs>
+            )
         }
 
         return (
             <DocumentTitle title="Themis Finals">
                 <section>
                     <AppBar title="Themis Finals"/>
-                    <Tabs initialSelectedIndex={ndx}>
-                        {tabs}
-                    </Tabs>
+                    {tabContainer}
                     <ContestState/>
                     <main>
                         <RouteHandler identity={this.props.identity}/>
