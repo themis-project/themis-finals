@@ -4,12 +4,12 @@ import DocumentTitle from 'react-document-title'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import mui, { AppBar, Tab, Tabs } from 'material-ui'
 
-import Index from './index'
-import Scoreboard from './scoreboard'
-import News from './news'
-import Logs from './logs'
-import NotFound from './not-found'
-import ContestState from './contest-state'
+import IndexView from './components/index-view'
+import ScoreboardView from './components/scoreboard-view'
+import NewsView from './components/news-view'
+import LogsView from './components/logs-view'
+import NotFoundView from './components/not-found-view'
+import ContestStateView from './components/contest-state-view'
 
 import dataManager from './data-manager'
 
@@ -83,7 +83,7 @@ class App extends React.Component {
                 <section>
                     <AppBar title="Themis Finals"/>
                     {tabContainer}
-                    <ContestState/>
+                    <ContestStateView/>
                     <main>
                         <RouteHandler identity={this.props.identity}/>
                     </main>
@@ -106,12 +106,12 @@ function ready(callback) {
 function getRoutes(identity) {
     return (
         <Route handler={App}>
-            <DefaultRoute name="index" handler={Index}/>
-            <NotFoundRoute handler={NotFound}/>
+            <DefaultRoute name="index" handler={IndexView}/>
+            <NotFoundRoute handler={NotFoundView}/>
 
-            <Route name="scoreboard" handler={Scoreboard}/>
-            <Route name="news" handler={News}/>
-            <Route name="logs" handler={identity.isInternal() ? Logs : NotFound}/>
+            <Route name="scoreboard" handler={ScoreboardView}/>
+            <Route name="news" handler={NewsView}/>
+            <Route name="logs" handler={identity.isInternal() ? LogsView : NotFoundView}/>
         </Route>
     )
 }

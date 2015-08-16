@@ -1,9 +1,10 @@
 import React from 'react'
-import dataManager from './data-manager'
 import { Paper } from 'material-ui'
 
+import dataManager from '../data-manager'
 
-export default class ContestState extends React.Component {
+
+export default class ContestStateView extends React.Component {
     constructor(props) {
         super(props)
         this.state = {

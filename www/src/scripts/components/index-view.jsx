@@ -3,7 +3,7 @@ import DocumentTitle from 'react-document-title'
 import { Paper } from 'material-ui'
 
 
-export default class Index extends React.Component {
+export default class IndexView extends React.Component {
     render() {
         let style = {
             padding: '15px'

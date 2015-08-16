@@ -3,7 +3,7 @@ import DocumentTitle from 'react-document-title'
 import { Paper, List, ListItem } from 'material-ui'
 
 
-export default class NotFound extends React.Component {
+export default class NotFoundView extends React.Component {
     constructor(props) {
         super(props)
         this.getOnNavigate = this.getOnNavigate.bind(this)
