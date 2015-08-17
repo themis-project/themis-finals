@@ -74,3 +74,10 @@
     color: #777;
     background-color: #f4f4f4
 }
+
+.themis-team-other {
+}
+
+.themis-team-marked {
+    font-weight: bold
+}

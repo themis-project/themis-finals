@@ -8,6 +8,10 @@ export default class Identity {
         return this.name === 'team'
     }
 
+    getId() {
+        return this.id
+    }
+
     isInternal() {
         return this.name === 'internal'
     }

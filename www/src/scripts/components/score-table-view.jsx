@@ -8,7 +8,7 @@ export default class ScoreTableView extends React.Component {
     render() {
         let rows = this.props.scoreboard.rows.map((row, ndx) => {
             return (
-                <ScoreTableRowView key={row.id} order={this.props.scoreboard.order} data={row}/>
+                <ScoreTableRowView key={row.id} identity={this.props.identity} order={this.props.scoreboard.order} data={row}/>
             )
         })
 

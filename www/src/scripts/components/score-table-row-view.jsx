@@ -5,6 +5,7 @@ import ScoreTablePositionCellView from './score-table-position-cell-view'
 import ScoreTableServiceStateCellView from './score-table-service-state-cell-view'
 import ScoreTableTotalScoreCellView from './score-table-total-score-cell-view'
 import ScoreTableScoreCellView from './score-table-score-cell-view'
+import ScoreTableTeamCellView from './score-table-team-cell-view'
 
 
 export default class ScoreTableRowView extends React.Component {
@@ -22,6 +23,8 @@ export default class ScoreTableRowView extends React.Component {
                 return <ScoreTableScoreCellView key={ndx} absoluteValue={this.props.data.attackPoints} relativeValue={this.props.data.attackScore}/>
             } else if (column === 'defence') {
                 return <ScoreTableScoreCellView key={ndx} absoluteValue={this.props.data.defencePoints} relativeValue={this.props.data.defenceScore}/>
+            } else if (column === 'team') {
+                return <ScoreTableTeamCellView key={ndx} value={value} marked={this.props.identity.isTeam() && this.props.identity.getId() === this.props.data.id} guest={false}/>
             }
 
             return (

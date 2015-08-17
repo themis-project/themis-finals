@@ -127,7 +127,7 @@ export default class ScoreboardView extends React.Component {
                     {
                         (() => {
                             if (this.state.loaded) {
-                                return <ScoreTableView scoreboard={this.state.scoreboard}/>
+                                return <ScoreTableView identity={this.props.identity} scoreboard={this.state.scoreboard}/>
                             } else {
                                 return <p>Loading</p>
                             }
