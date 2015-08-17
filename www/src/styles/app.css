@@ -81,3 +81,18 @@
 .themis-team-marked {
     font-weight: bold
 }
+
+.themis-score-points {
+    font-size: 0.8em
+}
+
+.themis-score-last-attack {
+    font-size: 0.8em
+}
+
+.themis-text-normal {
+}
+
+.themis-text-muted {
+    color: #777
+}

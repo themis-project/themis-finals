@@ -8,6 +8,7 @@ import TeamScore from './models/team-score'
 import TeamServiceState from './models/team-service-state'
 import TeamAttack from './models/team-attack'
 import Identity from './models/identity'
+import ContestState from './models/contest-state'
 
 
 class DataManager {
@@ -148,7 +149,7 @@ class DataManager {
                     }
                 })
                 .then((data) => {
-                    this.contestState = data
+                    this.contestState = new ContestState(data)
                     resolve(this.contestState)
                 })
                 .catch((err) => {

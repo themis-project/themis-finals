@@ -5,10 +5,10 @@ import numeral from 'numeral'
 export default class ScoreTableScoreCellView extends React.Component {
     render() {
         return (
-            <td>
+            <td className={this.props.live ? 'themis-text-normal' : 'themis-text-muted'}>
                 <span>{numeral(this.props.relativeValue).format('0.00%')}</span>
                 <br/>
-                <span>{numeral(this.props.absoluteValue).format('0.00')}</span>
+                <span className="themis-score-points">{numeral(this.props.absoluteValue).format('0.00')} pts</span>
             </td>
         )
     }

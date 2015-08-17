@@ -20,9 +20,9 @@ export default class ScoreboardView extends React.Component {
         Promise
         .all([dataManager.getTeams(), dataManager.getServices(),
               dataManager.getTeamScores(), dataManager.getTeamServiceStates(),
-              dataManager.getTeamAttacks()])
+              dataManager.getTeamAttacks(), dataManager.getContestState])
         .then((data) => {
-            let [teams, services, teamScores, teamServiceStates, teamAttacks] = data
+            let [teams, services, teamScores, teamServiceStates, teamAttacks, contestState] = data
 
             let order = [
                 'position',
@@ -65,6 +65,10 @@ export default class ScoreboardView extends React.Component {
                     return score.teamId === team.id
                 })
 
+                let teamAttack = teamAttacks.find((attack) => {
+                    return attack.teamId === team.id
+                })
+
                 let attackPoints = teamScore ? teamScore.attackPoints : 0
                 let defencePoints = teamScore ? teamScore.defencePoints : 0
 
@@ -78,7 +82,8 @@ export default class ScoreboardView extends React.Component {
                     attackPoints: attackPoints,
                     defencePoints: defencePoints,
                     attackScore: attackScore,
-                    defenceScore: defenceScore
+                    defenceScore: defenceScore,
+                    lastAttack: teamAttack ? teamAttack.occuredAt : null
                 }
 
                 for (let service of services) {
@@ -93,7 +98,24 @@ export default class ScoreboardView extends React.Component {
             }
 
             rowData = rowData.sort((row1, row2) => {
-                return row2.score - row1.score
+                let score1 = row1.score
+                let score2 = row2.score
+                if (Math.abs(score1 - score2) < 0.001) {
+                    let attack1 = row1.lastAttack
+                    let attack2 = row2.lastAttack
+
+                    // == used intentionally
+                    if (attack1 == null && attack2 == null) {
+                        return 0
+                    } else if (attack1 == null && attack2 != null) {
+                        return 1
+                    } else if (attack2 == null && attack1 != null) {
+                        return -1
+                    } else {
+                        return attack1.getTime() - attack2.getTime()
+                    }
+                }
+                return score2 - score1
             })
 
             let rows = rowData.map((row, ndx) => {
@@ -106,8 +128,9 @@ export default class ScoreboardView extends React.Component {
                 scoreboard: {
                     order: order,
                     rows: rows,
-                    headers: headers
-                }
+                    headers: headers,
+                    live: this.props.identity.isInternal() || contestState.scoreboardEnabled
+                },
             })
         })
         .catch((err) => {

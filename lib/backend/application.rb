@@ -61,6 +61,14 @@ module Themis
             get '/contest' do
                 round = Themis::Models::Round.count
                 state = Themis::Models::ContestState.last
+                scoreboard_state = Themis::Models::ScoreboardState.last
+                scoreboard_enabled = false
+                if scoreboard_state.nil?
+                    scoreboard_enabled = true
+                else
+                    scoreboard_enabled = scoreboard_state.state == :enabled
+                end
+
                 r = {}
                 if round == 0
                     r['round'] = nil
@@ -73,6 +81,8 @@ module Themis
                 else
                     r['state'] = state.state
                 end
+
+                r['scoreboard_enabled'] = scoreboard_enabled
 
                 json r
             end
