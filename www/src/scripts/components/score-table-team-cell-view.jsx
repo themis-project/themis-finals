@@ -16,8 +16,12 @@ export default class ScoreTableTeamCellView extends React.Component {
             ]
         }
 
+        let pictureSource = `/api/team/pictures/${this.props.teamId}`
+
         return (
             <td>
+                <img className="themis-team-logo" src={pictureSource}/>
+                &nbsp;
                 <span className={className}>{this.props.value}</span>
                 {extras}
             </td>

@@ -191,6 +191,16 @@ module Themis
                 json r
             end
 
+            get %r{^/team/pictures/(\d{1,2})$} do |team_id_str|
+                team_id = team_id_str.to_i
+                filename = File.join Dir.pwd, 'pictures', "team-#{team_id}.png"
+                unless File.exists? filename
+                    filename = File.join Dir.pwd, 'pictures', '__default.png'
+                end
+
+                send_file filename
+            end
+
             post '/submit' do
                 if request.content_type != 'application/json'
                     halt 400, json(Themis::Attack::Result::ERR_INVALID_FORMAT)

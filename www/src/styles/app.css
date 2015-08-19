@@ -103,3 +103,9 @@
     color: #777;
     background-color: #f4f4f4
 }
+
+.themis-team-logo {
+    width: 36px;
+    height: 36px;
+    vertical-align: middle
+}
