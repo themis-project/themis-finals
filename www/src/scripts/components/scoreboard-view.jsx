@@ -83,7 +83,8 @@ export default class ScoreboardView extends React.Component {
                     defencePoints: defencePoints,
                     attackScore: attackScore,
                     defenceScore: defenceScore,
-                    lastAttack: teamAttack ? teamAttack.occuredAt : null
+                    lastAttack: teamAttack ? teamAttack.occuredAt : null,
+                    guest: team.guest
                 }
 
                 for (let service of services) {

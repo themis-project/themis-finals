@@ -24,7 +24,7 @@ export default class ScoreTableRowView extends React.Component {
             } else if (column === 'defence') {
                 return <ScoreTableScoreCellView key={ndx} absoluteValue={this.props.data.defencePoints} relativeValue={this.props.data.defenceScore} live={this.props.live}/>
             } else if (column === 'team') {
-                return <ScoreTableTeamCellView key={ndx} value={value} marked={this.props.identity.isTeam() && this.props.identity.getId() === this.props.data.id} guest={false}/>
+                return <ScoreTableTeamCellView key={ndx} value={value} marked={this.props.identity.isTeam() && this.props.identity.getId() === this.props.data.id} guest={this.props.data.guest}/>
             }
 
             return (

@@ -7,9 +7,19 @@ export default class ScoreTableTeamCellView extends React.Component {
         if (this.props.marked) {
             className = 'themis-team-marked'
         }
+
+        let extras = ''
+        if (this.props.guest) {
+            extras = [
+                <span key={0}>&nbsp;&nbsp;</span>,
+                <span key={1} className="themis-team-guest">guest</span>
+            ]
+        }
+
         return (
-            <td className={className}>
-                {this.props.value}
+            <td>
+                <span className={className}>{this.props.value}</span>
+                {extras}
             </td>
         )
     }

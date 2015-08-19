@@ -91,7 +91,8 @@ module Themis
                 r = Themis::Models::Team.map do |team|
                     {
                         id: team.id,
-                        name: team.name
+                        name: team.name,
+                        guest: team.guest
                     }
                 end
 

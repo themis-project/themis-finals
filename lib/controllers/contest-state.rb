@@ -9,7 +9,8 @@ module Themis
                     Themis::Models::Team.create(
                         name: team_opts.name,
                         network: team_opts.network,
-                        host: team_opts.host)
+                        host: team_opts.host,
+                        guest: team_opts.guest)
                 end
 
                 Themis::Configuration.get_services.each do |service_opts|
