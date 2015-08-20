@@ -58,31 +58,32 @@ module Themis
                 json identity
             end
 
-            get '/contest' do
+            get '/contest/round' do
                 round = Themis::Models::Round.count
+
+                r = {
+                    value: (round == 0) ? nil : round
+                }
+
+                json r
+            end
+
+            get '/contest/state' do
                 state = Themis::Models::ContestState.last
+
+                r = {
+                    value: state.nil? ? nil : state.state
+                }
+
+                json r
+            end
+
+            get '/contest/scoreboard' do
                 scoreboard_state = Themis::Models::ScoreboardState.last
-                scoreboard_enabled = false
-                if scoreboard_state.nil?
-                    scoreboard_enabled = true
-                else
-                    scoreboard_enabled = scoreboard_state.state == :enabled
-                end
 
-                r = {}
-                if round == 0
-                    r['round'] = nil
-                else
-                    r['round'] = round
-                end
-
-                if state.nil?
-                    r['state'] = nil
-                else
-                    r['state'] = state.state
-                end
-
-                r['scoreboard_enabled'] = scoreboard_enabled
+                r = {
+                    enabled: scoreboard_state.nil? ? true : (scoreboard_state.state == :enabled)
+                }
 
                 json r
             end

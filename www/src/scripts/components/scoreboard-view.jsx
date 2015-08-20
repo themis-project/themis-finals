@@ -20,9 +20,9 @@ export default class ScoreboardView extends React.Component {
         Promise
         .all([dataManager.getTeams(), dataManager.getServices(),
               dataManager.getTeamScores(), dataManager.getTeamServiceStates(),
-              dataManager.getTeamAttacks(), dataManager.getContestState])
+              dataManager.getTeamAttacks(), dataManager.getContestScoreboard()])
         .then((data) => {
-            let [teams, services, teamScores, teamServiceStates, teamAttacks, contestState] = data
+            let [teams, services, teamScores, teamServiceStates, teamAttacks, contestScoreboard] = data
 
             let order = [
                 'position',
@@ -130,7 +130,7 @@ export default class ScoreboardView extends React.Component {
                     order: order,
                     rows: rows,
                     headers: headers,
-                    live: this.props.identity.isInternal() || contestState.scoreboardEnabled
+                    live: this.props.identity.isInternal() || contestScoreboard.enabled
                 },
             })
         })

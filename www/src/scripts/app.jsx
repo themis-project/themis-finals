@@ -10,7 +10,7 @@ import ScoreboardView from './components/scoreboard-view'
 import NewsView from './components/news-view'
 import LogsView from './components/logs-view'
 import NotFoundView from './components/not-found-view'
-import ContestStateView from './components/contest-state-view'
+import ContestInfoBarView from './components/contest-info-bar-view'
 
 import dataManager from './data-manager'
 
@@ -84,7 +84,7 @@ class App extends React.Component {
                 <section>
                     <AppBar title="Themis Finals"/>
                     {tabContainer}
-                    <ContestStateView/>
+                    <ContestInfoBarView/>
                     <main>
                         <RouteHandler identity={this.props.identity}/>
                     </main>

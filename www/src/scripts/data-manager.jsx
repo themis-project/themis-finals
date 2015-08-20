@@ -9,6 +9,8 @@ import TeamServiceState from './models/team-service-state'
 import TeamAttack from './models/team-attack'
 import Identity from './models/identity'
 import ContestState from './models/contest-state'
+import ContestRound from './models/contest-round'
+import ContestScoreboard from './models/contest-scoreboard'
 
 
 class DataManager {
@@ -17,7 +19,9 @@ class DataManager {
         this.teams = null
         this.services = null
         this.posts = null
+        this.contestRound = null
         this.contestState = null
+        this.contestScoreboard = null
         this.teamScores = null
         this.teamServiceStates = null
         this.teamAttacks = null
@@ -138,7 +142,7 @@ class DataManager {
             if (this.contestState !== null) {
                 resolve(this.contestState)
             } else {
-               fetch('/api/contest')
+               fetch('/api/contest/state')
                 .then((response) => {
                     if (response.status >= 200 && response.status < 300) {
                         return response.json()
@@ -151,6 +155,58 @@ class DataManager {
                 .then((data) => {
                     this.contestState = new ContestState(data)
                     resolve(this.contestState)
+                })
+                .catch((err) => {
+                    reject(err)
+                })
+            }
+        })
+    }
+
+    getContestRound() {
+        return new Promise((resolve, reject) => {
+            if (this.contestRound !== null) {
+                resolve(this.contestRound)
+            } else {
+               fetch('/api/contest/round')
+                .then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json()
+                    } else {
+                        let err = new Error(response.statusText)
+                        err.response = response
+                        throw err
+                    }
+                })
+                .then((data) => {
+                    this.contestRound = new ContestRound(data)
+                    resolve(this.contestRound)
+                })
+                .catch((err) => {
+                    reject(err)
+                })
+            }
+        })
+    }
+
+    getContestScoreboard() {
+        return new Promise((resolve, reject) => {
+            if (this.contestScoreboard !== null) {
+                resolve(this.contestScoreboard)
+            } else {
+               fetch('/api/contest/scoreboard')
+                .then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json()
+                    } else {
+                        let err = new Error(response.statusText)
+                        err.response = response
+                        throw err
+                    }
+                })
+                .then((data) => {
+                    this.contestScoreboard = new ContestScoreboard(data)
+                    resolve(this.contestScoreboard)
                 })
                 .catch((err) => {
                     reject(err)
