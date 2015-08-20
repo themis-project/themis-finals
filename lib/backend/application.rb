@@ -193,7 +193,10 @@ module Themis
 
             get %r{^/team/pictures/(\d{1,2})$} do |team_id_str|
                 team_id = team_id_str.to_i
-                filename = File.join Dir.pwd, 'pictures', "team-#{team_id}.png"
+                team = Themis::Models::Team.get team_id
+                halt 404 if team.nil?
+
+                filename = File.join Dir.pwd, 'pictures', "#{team.alias}.png"
                 unless File.exists? filename
                     filename = File.join Dir.pwd, 'pictures', '__default.png'
                 end

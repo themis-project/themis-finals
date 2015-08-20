@@ -8,6 +8,7 @@ module Themis
                 Themis::Configuration.get_teams.each do |team_opts|
                     Themis::Models::Team.create(
                         name: team_opts.name,
+                        alias: team_opts.alias,
                         network: team_opts.network,
                         host: team_opts.host,
                         guest: team_opts.guest)

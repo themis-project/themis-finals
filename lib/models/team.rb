@@ -8,6 +8,7 @@ module Themis
 
             property :id, Serial
             property :name, String, length: 100, required: true, unique_index: true
+            property :alias, String, length: 50, required: true, unique_index: true
             property :network, String, length: 18, required: true, unique_index: true
             property :host, String, length: 15, required: true, unique_index: true
             property :guest, Boolean, required: true, default: false
