@@ -28,9 +28,9 @@ export default class ContestRoundView extends React.Component {
     render() {
         let style = {
             padding: '4px 8px',
-            margin: '0 10px',
-            color: Styles.Colors.deepPurple500,
-            backgroundColor: Styles.Colors.deepPurple50
+            marginRight: '10px',
+            color: Styles.Colors.blueGrey600,
+            backgroundColor: Styles.Colors.blueGrey50
         }
         let el = <span></span>
         if (this.state.round) {
@@ -39,5 +39,4 @@ export default class ContestRoundView extends React.Component {
 
         return el
     }
-
 }

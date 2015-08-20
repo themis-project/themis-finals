@@ -46,35 +46,6 @@
     color: #cd7f32
 }
 
-.themis-service-state {
-    padding: 4px 8px
-}
-
-.themis-service-state-down {
-    color: #c7254e;
-    background-color: #f9f2f4
-}
-
-.themis-service-state-up {
-    color: #3c763d;
-    background-color: #f4f9f2
-}
-
-.themis-service-state-corrupt {
-    color: #8a6d3b;
-    background-color: #f9f9f2
-}
-
-.themis-service-state-mumble {
-    color: #31708f;
-    background-color: #f2f4f9
-}
-
-.themis-service-state-other {
-    color: #777;
-    background-color: #f4f4f4
-}
-
 .themis-team-other {
 }
 
@@ -108,41 +79,4 @@
     width: 36px;
     height: 36px;
     vertical-align: middle
-}
-
-.themis-contest-state {
-    padding: 4px 8px;
-    margin: 0 10px
-}
-
-.themis-contest-state-running {
-    color: #3c763d;
-    background-color: #f4f9f2
-}
-
-.themis-contest-state-other {
-    color: #777;
-    background-color: #f4f4f4
-}
-
-.themis-contest-state-paused {
-    color: #8a6d3b;
-    background-color: #f9f9f2
-}
-
-.themis-contest-state-await-complete {
-    color: #ff5722;
-    background-color: #fbe9e7
-}
-
-.themis-contest-state-completed {
-    color: #f44336;
-    background-color: #ffebee
-}
-
-.themis-contest-round {
-    padding: 4px 8px;
-    margin: 0 10px;
-    color: #673ab7;
-    background-color: #ede7f6
 }

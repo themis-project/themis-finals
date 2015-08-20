@@ -1,30 +1,40 @@
 import React from 'react'
+import { Styles } from 'material-ui'
 
 
 export default class ScoreTableServiceStateCellView extends React.Component {
     render() {
-        let className = null
+        let style = {
+            padding: '4px 8px',
+            fontSize: '0.9em'
+        }
+
         switch (this.props.value) {
             case 'up':
-                className = 'themis-service-state themis-service-state-up'
+                style.color = Styles.Colors.green700
+                style.backgroundColor = Styles.Colors.green50
                 break
             case 'down':
-                className = 'themis-service-state themis-service-state-down'
+                style.color = Styles.Colors.red600
+                style.backgroundColor = Styles.Colors.red50
                 break
             case 'corrupt':
-                className = 'themis-service-state themis-service-state-corrupt'
+                style.color = Styles.Colors.deepOrange500
+                style.backgroundColor = Styles.Colors.deepOrange50
                 break
             case 'mumble':
-                className = 'themis-service-state themis-service-state-mumble'
+                style.color = Styles.Colors.brown600
+                style.backgroundColor = Styles.Colors.brown50
                 break
             default:
-                className = 'themis-service-state themis-service-state-other'
+                style.color = Styles.Colors.grey600
+                style.backgroundColor = Styles.Colors.grey100
                 break
         }
 
         return (
             <td>
-                <span className={className}>{this.props.value}</span>
+                <span style={style}>{this.props.value}</span>
             </td>
         )
     }

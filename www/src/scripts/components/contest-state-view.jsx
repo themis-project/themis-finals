@@ -1,4 +1,5 @@
 import React from 'react'
+import { Styles } from 'material-ui'
 
 import dataManager from '../data-manager'
 
@@ -25,37 +26,48 @@ export default class ContestStateView extends React.Component {
     }
 
     render() {
+        let style = {
+            padding: '4px 8px',
+            marginRight: '10px'
+        }
+
         let text = null
-        let className = null
+
         switch (this.state.state) {
             case 'initial':
                 text = 'Contest not started'
-                className = 'themis-contest-state themis-contest-state-other'
+                style.color = Styles.Colors.grey600
+                style.backgroundColor = Styles.Colors.grey100
                 break
             case 'running':
                 text = 'Contest running'
-                className = 'themis-contest-state themis-contest-state-running'
+                style.color = Styles.Colors.green700
+                style.backgroundColor = Styles.Colors.green50
                 break
             case 'paused':
                 text = 'Contest paused'
-                className = 'themis-contest-state themis-contest-state-paused'
+                style.color = Styles.Colors.brown600
+                style.backgroundColor = Styles.Colors.brown50
                 break
             case 'await_complete':
                 text = 'Contest will be completed soon'
-                className = 'themis-contest-state themis-contest-state-await-complete'
+                style.color = Styles.Colors.deepOrange500
+                style.backgroundColor = Styles.Colors.deepOrange50
                 break
             case 'completed':
                 text = 'Contest completed'
-                className = 'themis-contest-state themis-contest-state-completed'
+                style.color = Styles.Colors.red600
+                style.backgroundColor = Styles.Colors.red50
                 break
             default:
-                text = 'Contest state undefined'
-                className = 'themis-contest-state themis-contest-state-other'
+                text = 'Contest state unknown'
+                style.color = Styles.Colors.grey600
+                style.backgroundColor = Styles.Colors.grey100
                 break
         }
 
         return (
-            <span className={className}>{text}</span>
+            <span style={style}>{text}</span>
         )
     }
 
