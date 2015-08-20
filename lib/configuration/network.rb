@@ -15,23 +15,11 @@ module Themis
         end
 
         class Network
-            attr_accessor :internal, :guest
+            attr_accessor :internal, :other
 
             def initialize
                 @internal = []
-                @guest = []
-                @_teams = []
-            end
-
-            def teams
-                if @_teams.size == 0
-                    Themis::Configuration::get_teams.each do |team|
-                        ip_addr = IP.new team.network
-                        @_teams << ip_addr
-                    end
-                end
-
-                @_teams
+                @other = []
             end
         end
 
@@ -49,10 +37,10 @@ module Themis
                 end
             end
 
-            def guest(*ip_addresses)
+            def other(*ip_addresses)
                 ip_addresses.each do |ip_addr_str|
                     ip_addr = IP.new ip_addr_str
-                    @network.guest << ip_addr
+                    @network.other << ip_addr
                 end
             end
         end

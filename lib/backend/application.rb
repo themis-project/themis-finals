@@ -47,8 +47,8 @@ module Themis
                     identity = { name: 'team', id: identity_team.id }
                 end
 
-                if identity.nil? and Themis::Controllers::IdentityController.is_guest remote_ip
-                    identity = { name: 'guest' }
+                if identity.nil? and Themis::Controllers::IdentityController.is_other remote_ip
+                    identity = { name: 'other' }
                 end
 
                 if identity.nil? and Themis::Controllers::IdentityController.is_internal remote_ip

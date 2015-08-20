@@ -75,12 +75,12 @@ def change_scoreboard_state(state)
 end
 
 namespace :scoreboard do
-    desc 'Enable scoreboard (for team and guest networks)'
+    desc 'Enable scoreboard (for team and other networks)'
     task :enable do
         change_scoreboard_state :enabled
     end
 
-    desc 'Disable scoreboard (for team and guest networks)'
+    desc 'Disable scoreboard (for team and other networks)'
     task :disable do
         change_scoreboard_state :disabled
     end
@@ -97,8 +97,6 @@ task :print_config do
     puts Themis::Configuration::get_contest_flow.to_yaml
     puts Themis::Configuration::get_services.to_yaml
     puts Themis::Configuration::get_teams.to_yaml
-
-    Themis::Configuration::get_network.teams
     puts Themis::Configuration::get_network.to_yaml
 end
 

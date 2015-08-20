@@ -14,7 +14,7 @@ module Themis
 
         network do
             internal '10.0.0.0/24'  # internal network (for contest organizers)
-            guest '10.0.21.0/24', '10.0.22.0/24'  # guest network (for visualization system)
+            other '10.0.21.0/24', '10.0.22.0/24'  # other network (for visualization system)
         end
 
         contest_flow do

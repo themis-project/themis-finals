@@ -18,8 +18,8 @@ module Themis
                 not r.nil?
             end
 
-            def self.is_guest(remote_ip)
-                r = Themis::Configuration::get_network.guest.detect do |network|
+            def self.is_other(remote_ip)
+                r = Themis::Configuration::get_network.other.detect do |network|
                     remote_ip.is_in? network
                 end
                 not r.nil?

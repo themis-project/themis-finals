@@ -16,7 +16,7 @@ export default class Identity {
         return this.name === 'internal'
     }
 
-    isGuest() {
-        return this.name === 'guest'
+    isOther() {
+        return this.name === 'other'
     }
 }
