@@ -1,4 +1,5 @@
 require './lib/controllers/scoreboard-state'
+require './lib/utils/event-emitter'
 
 
 module Themis
@@ -51,6 +52,8 @@ module Themis
                         state: state,
                         created_at: DateTime.now)
                 end
+
+                Themis::Utils::EventEmitter::emit_all 'contest/state', { value: state }
             end
         end
     end

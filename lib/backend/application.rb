@@ -23,7 +23,24 @@ module Themis
             disable :run
 
             get '/stream' do
-                event_stream = EventStream.new 'test'
+                remote_ip = IP.new request.ip
+                channel = nil
+
+                identity_team = Themis::Controllers::IdentityController.is_team remote_ip
+                unless identity_team.nil?
+                    channel = 'themis:teams'
+                end
+
+                if channel.nil? and Themis::Controllers::IdentityController.is_other remote_ip
+                    channel = 'themis:other'
+                end
+
+                if channel.nil? and Themis::Controllers::IdentityController.is_internal remote_ip
+                    channel = 'themis:internal'
+                end
+
+                halt 400 if channel.nil?
+                event_stream = EventStream.new channel
 
                 content_type 'text/event-stream'
                 stream :keep_open do |out|
@@ -33,7 +50,7 @@ module Themis
                             next
                         end
 
-                        out << "event: test\ndata: #{message}\n\n"
+                        out << message
                     end
                 end
             end

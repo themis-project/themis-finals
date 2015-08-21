@@ -1,9 +1,14 @@
+require './lib/utils/event-emitter'
+
+
 module Themis
     module Controllers
         module Round
             def self.start_new
                 end_last
-                return Themis::Models::Round.create started_at: DateTime.now
+                round = Themis::Models::Round.create started_at: DateTime.now
+                Themis::Utils::EventEmitter::emit_all 'contest/round', { value: Themis::Models::Round.count }
+                return round
             end
 
             def self.end_last

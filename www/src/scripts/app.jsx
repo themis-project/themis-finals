@@ -13,6 +13,7 @@ import NotFoundView from './components/not-found-view'
 import ContestInfoBarView from './components/contest-info-bar-view'
 
 import dataManager from './data-manager'
+import eventManager from './event-manager'
 
 
 let ThemeManager = new mui.Styles.ThemeManager()
@@ -128,6 +129,9 @@ ready(() => {
     dataManager
     .getIdentity()
     .then((identity) => {
+        if (eventManager.enabled) {
+            eventManager.start()
+        }
         injectTapEventPlugin()
         render(identity)
     })

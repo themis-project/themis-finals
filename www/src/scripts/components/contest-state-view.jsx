@@ -2,6 +2,7 @@ import React from 'react'
 import { Styles } from 'material-ui'
 
 import dataManager from '../data-manager'
+import eventManager from '../event-manager'
 
 
 export default class ContestStateView extends React.Component {
@@ -9,6 +10,13 @@ export default class ContestStateView extends React.Component {
         super(props)
         this.state = {
             state: null
+        }
+
+        this.onUpdate = (e) => {
+            let data = JSON.parse(e.data)
+            this.setState({
+                state: data.value
+            })
         }
     }
 
@@ -23,6 +31,12 @@ export default class ContestStateView extends React.Component {
         .catch((err) => {
             console.log('Error', err)
         })
+
+        eventManager.eventSource.addEventListener('contest/state', this.onUpdate)
+    }
+
+    componentWillUnmount() {
+        eventManager.eventSource.removeEventListener('contest/round', this.onUpdate)
     }
 
     render() {
