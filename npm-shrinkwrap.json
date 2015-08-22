@@ -2,6 +2,23 @@
   "name": "themis-finals",
   "version": "0.0.1",
   "dependencies": {
+    "alt": {
+      "version": "0.17.1",
+      "from": "alt@*",
+      "resolved": "https://registry.npmjs.org/alt/-/alt-0.17.1.tgz",
+      "dependencies": {
+        "flux": {
+          "version": "2.0.3",
+          "from": "flux@2.0.3",
+          "resolved": "https://registry.npmjs.org/flux/-/flux-2.0.3.tgz"
+        },
+        "transmitter": {
+          "version": "1.0.2",
+          "from": "transmitter@1.0.2",
+          "resolved": "https://registry.npmjs.org/transmitter/-/transmitter-1.0.2.tgz"
+        }
+      }
+    },
     "array.prototype.find": {
       "version": "1.0.0",
       "from": "https://registry.npmjs.org/array.prototype.find/-/array.prototype.find-1.0.0.tgz",

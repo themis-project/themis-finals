@@ -4,39 +4,31 @@ import { Styles } from 'material-ui'
 import dataManager from '../data-manager'
 import eventManager from '../event-manager'
 
+import ContestRoundStore from '../stores/contest-round-store'
+import ContestRoundActions from '../actions/contest-round-actions'
+
 
 export default class ContestRoundView extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
-            round: null
-        }
+        this.state = ContestRoundStore.getState()
 
-        this.onUpdate = (e) => {
-            let data = JSON.parse(e.data)
-            this.setState({
-                round: data.value
-            })
-        }
+        this.onChange = this.onChange.bind(this)
+
+        ContestRoundActions.realtimeContestRound()
     }
 
     componentDidMount() {
-        dataManager
-        .getContestRound()
-        .then((contestRound) => {
-            this.setState({
-                round: contestRound.value
-            })
-        }.bind(this))
-        .catch((err) => {
-            console.log('Error', err)
-        })
-
-        eventManager.eventSource.addEventListener('contest/round', this.onUpdate)
+        ContestRoundStore.listen(this.onChange)
+        ContestRoundActions.fetchContestRound()
     }
 
     componentWillUnmount() {
-        eventManager.eventSource.removeEventListener('contest/round', this.onUpdate)
+        ContestRoundStore.unlisten(this.onChange)
+    }
+
+    onChange(state) {
+        this.setState(state)
     }
 
     render() {
@@ -47,8 +39,8 @@ export default class ContestRoundView extends React.Component {
             backgroundColor: Styles.Colors.blueGrey50
         }
         let el = <span></span>
-        if (this.state.round) {
-            el = <span style={style}>{`Round ${this.state.round}`}</span>
+        if (this.state.contestRound && this.state.contestRound.value) {
+            el = <span style={style}>{`Round ${this.state.contestRound.value}`}</span>
         }
 
         return el

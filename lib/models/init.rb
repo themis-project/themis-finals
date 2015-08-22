@@ -22,6 +22,7 @@ module Themis
             require './lib/models/contest-state'
             require './lib/models/post'
             require './lib/models/scoreboard-state'
+            require './lib/models/server-sent-event'
 
             DataMapper.finalize
         end

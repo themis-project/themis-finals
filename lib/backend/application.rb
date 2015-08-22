@@ -7,6 +7,8 @@ require 'date'
 require './lib/controllers/identity'
 require 'themis/attack/result'
 require './lib/controllers/attack'
+require './lib/utils/event-emitter'
+require 'em-synchrony'
 
 
 module Rack
@@ -21,32 +23,69 @@ end
 module Themis
     module Backend
         class Application < Sinatra::Base
+            configure :production, :development do
+                enable :logging
+            end
+
             disable :run
 
             get '/stream' do
                 remote_ip = IP.new request.ip
-                channel = nil
+                identity = nil
 
                 identity_team = Themis::Controllers::IdentityController.is_team remote_ip
                 unless identity_team.nil?
-                    channel = 'themis:teams'
+                    identity = 'teams'
                 end
 
-                if channel.nil? and Themis::Controllers::IdentityController.is_other remote_ip
-                    channel = 'themis:other'
+                if identity.nil? and Themis::Controllers::IdentityController.is_other remote_ip
+                    identity = 'other'
                 end
 
-                if channel.nil? and Themis::Controllers::IdentityController.is_internal remote_ip
-                    channel = 'themis:internal'
+                if identity.nil? and Themis::Controllers::IdentityController.is_internal remote_ip
+                    identity = 'internal'
                 end
 
-                halt 400 if channel.nil?
-                event_stream = EventStream.new channel
+                halt 400 if identity.nil?
+                event_stream = EventStream.new "themis:#{identity}"
 
                 content_type 'text/event-stream'
                 stream :keep_open do |out|
+                    logger.info 'Client connected!'
+                    last_event_id_str = env['HTTP_LAST_EVENT_ID']
+                    unless last_event_id_str.nil?
+                        last_event_id = last_event_id_str.to_i
+                        logger.info "Client want to fetch all events greater than #{last_event_id}"
+                        last_events = nil
+                        if identity == 'internal'
+                            last_events = Themis::Models::ServerSentEvent.all(
+                                :id.gt => last_event_id,
+                                :internal => true
+                            )
+                        elsif identity == 'teams'
+                            last_events = Themis::Models::ServerSentEvent.all(
+                                :id.gt => last_event_id,
+                                :teams => true
+                            )
+                        elsif identity == 'other'
+                            last_events = Themis::Models::ServerSentEvent.all(
+                                :id.gt => last_event_id,
+                                :other => true
+                            )
+                        end
+
+                        if last_events != nil
+                            last_events.each do |last_event|
+                                message = Themis::Utils::EventEmitter.format last_event.id, last_event.name, last_event.data, 5000
+                                logger.info "Sending message #{message}"
+                                out << message
+                            end
+                        end
+                    end
+
                     event_stream.subscribe do |message|
                         if out.closed?
+                            logger.info 'Client disconnected!'
                             event_stream.unsubscribe
                             next
                         end

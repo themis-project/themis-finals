@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/aspyatkin/themis-finals#readme",
   "dependencies": {
+    "alt": "^0.17.1",
     "array.prototype.find": "^1.0.0",
     "es6-promise": "https://registry.npmjs.org/es6-promise/-/es6-promise-2.3.0.tgz",
     "markdown-it": "^4.4.0",

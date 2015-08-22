@@ -13,9 +13,17 @@ class EventManager {
     start() {
         this.eventSource = new window.EventSource('/api/stream')
 
+        // this.eventSource.onopen = () => {
+        //     console.log('Connected to stream')
+        // }
+
         this.eventSource.onmessage = (e) => {
             console.log(e.data)
         }
+
+        // this.eventSource.onerror = (e) => {
+        //     console.log(e)
+        // }
     }
 }
 

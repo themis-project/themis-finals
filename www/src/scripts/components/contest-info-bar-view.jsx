@@ -3,6 +3,7 @@ import { Paper } from 'material-ui'
 
 import ContestRoundView from './contest-round-view'
 import ContestStateView from './contest-state-view'
+import StreamStatusView from './stream-status-view'
 
 
 export default class ContestInfoBarView extends React.Component {
@@ -19,6 +20,7 @@ export default class ContestInfoBarView extends React.Component {
             <Paper size={1} style={style}>
                 <ContestRoundView/>
                 <ContestStateView/>
+                <StreamStatusView/>
             </Paper>
         )
     }
