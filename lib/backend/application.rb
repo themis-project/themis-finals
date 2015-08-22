@@ -3,6 +3,7 @@ require 'sinatra/json'
 require './lib/backend/event-stream'
 require 'json'
 require 'ip'
+require 'date'
 require './lib/controllers/identity'
 require 'themis/attack/result'
 require './lib/controllers/attack'
@@ -140,6 +141,105 @@ module Themis
                 end
 
                 json r
+            end
+
+            post '/post' do
+                if request.content_type != 'application/json'
+                    halt 400
+                end
+
+                remote_ip = IP.new request.ip
+
+                unless Themis::Controllers::IdentityController.is_internal remote_ip
+                    halt 400
+                end
+
+                payload = nil
+
+                begin
+                    request.body.rewind
+                    payload = JSON.parse request.body.read
+                rescue => e
+                    halt 400
+                end
+
+                unless payload.has_key?('title') and payload.has_key?('description')
+                    halt 400
+                end
+
+                begin
+                    Themis::Models::Post.create(
+                        title: payload['title'],
+                        description: payload['description'],
+                        created_at: DateTime.now,
+                        updated_at: DateTime.now)
+                rescue => e
+                    halt 400
+                end
+
+                status 201
+                body ''
+            end
+
+            delete %r{^/post/(\d+)$} do |post_id_str|
+                remote_ip = IP.new request.ip
+
+                unless Themis::Controllers::IdentityController.is_internal remote_ip
+                    halt 400
+                end
+
+                post_id = post_id_str.to_i
+                post = Themis::Models::Post.get post_id
+                halt 404 if post.nil?
+
+                unless post.destroy
+                    halt 400
+                end
+
+                status 204
+                body ''
+            end
+
+            put %r{^/post/(\d+)$} do |post_id_str|
+                if request.content_type != 'application/json'
+                    halt 400
+                end
+
+                remote_ip = IP.new request.ip
+
+                unless Themis::Controllers::IdentityController.is_internal remote_ip
+                    halt 400
+                end
+
+                payload = nil
+
+                begin
+                    request.body.rewind
+                    payload = JSON.parse request.body.read
+                rescue => e
+                    halt 400
+                end
+
+                unless payload.has_key?('title') and payload.has_key?('description')
+                    halt 400
+                end
+
+                post_id = post_id_str.to_i
+                post = Themis::Models::Post.get post_id
+                halt 404 if post.nil?
+
+                post.title = payload['title']
+                post.description = payload['description']
+                post.updated_at = DateTime.now
+
+                begin
+                    post.save
+                rescue => e
+                    halt 400
+                end
+
+                status 204
+                body ''
             end
 
             get '/team/scores' do
