@@ -1,31 +1,33 @@
+import 'whatwg-fetch'
+import { Promise } from 'es6-promise'
+
 import alt from '../alt'
 import ContestRound from '../models/contest-round'
 import eventManager from '../event-manager'
 
 
-function fetchPromise() {
-    return new Promise((resolve, reject) => {
-       fetch('/api/contest/round')
-        .then((response) => {
-            if (response.status >= 200 && response.status < 300) {
-                return response.json()
-            } else {
-                let err = new Error(response.statusText)
-                err.response = response
-                throw err
-            }
-        })
-        .then((data) => {
-            resolve(new ContestRound(data))
-        })
-        .catch((err) => {
-            reject(err)
-        })
-    })
-}
-
-
 class ContestRoundActions {
+    static fetchPromise() {
+        return new Promise((resolve, reject) => {
+           fetch('/api/contest/round')
+            .then((response) => {
+                if (response.status >= 200 && response.status < 300) {
+                    return response.json()
+                } else {
+                    let err = new Error(response.statusText)
+                    err.response = response
+                    throw err
+                }
+            })
+            .then((data) => {
+                resolve(new ContestRound(data))
+            })
+            .catch((err) => {
+                reject(err)
+            })
+        })
+    }
+
     updateContestRound(contestRound) {
         this.dispatch(contestRound)
     }
@@ -33,7 +35,8 @@ class ContestRoundActions {
     fetchContestRound() {
         this.dispatch()
 
-        fetchPromise()
+        ContestRoundActions
+        .fetchPromise()
         .then((contestRound) => {
             this.actions.updateContestRound(contestRound)
         })
