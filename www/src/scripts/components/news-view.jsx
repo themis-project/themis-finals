@@ -2,31 +2,29 @@ import React from 'react'
 import DocumentTitle from 'react-document-title'
 import { RaisedButton, Paper } from 'material-ui'
 
-import dataManager from '../data-manager'
 import PostListView from './post-list-view'
+import NewsStore from '../stores/news-store'
+import NewsActions from '../actions/news-actions'
 
 
 export default class NewsView extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
-            loaded: false,
-            posts: []
-        }
+        this.state = NewsStore.getState()
+        this.onUpdate = this.onUpdate.bind(this)
     }
 
     componentDidMount() {
-        dataManager
-        .getPosts()
-        .then((posts) => {
-            this.setState({
-                loaded: true,
-                posts: posts
-            })
-        })
-        .catch((err) => {
-            console.log('Error', err)
-        })
+        NewsStore.listen(this.onUpdate)
+        NewsActions.fetch()
+    }
+
+    componentWillUnmount() {
+        NewsStore.unlisten(this.onUpdate)
+    }
+
+    onUpdate(state) {
+        this.setState(state)
     }
 
     render() {
@@ -46,7 +44,11 @@ export default class NewsView extends React.Component {
                     {
                         (() => {
                             if (this.state.loaded) {
-                                return <PostListView posts={this.state.posts} identity={this.props.identity}/>
+                                if (this.state.posts.length === 0) {
+                                    return <p>No posts yet</p>
+                                } else {
+                                    return <PostListView posts={this.state.posts} identity={this.props.identity}/>
+                                }
                             } else {
                                 return <p>Loading</p>
                             }

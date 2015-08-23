@@ -1,0 +1,65 @@
+import 'whatwg-fetch'
+import { Promise } from 'es6-promise'
+
+import alt from '../alt'
+import Post from '../models/post'
+import eventManager from '../event-manager'
+
+
+class NewsActions {
+    static fetchPromise() {
+        return new Promise((resolve, reject) => {
+           fetch('/api/posts')
+            .then((response) => {
+                if (response.status >= 200 && response.status < 300) {
+                    return response.json()
+                } else {
+                    let err = new Error(response.statusText)
+                    err.response = response
+                    throw err
+                }
+            })
+            .then((data) => {
+                let posts = data.map((props) => {
+                    return new Post(props)
+                })
+                resolve(posts)
+            })
+            .catch((err) => {
+                reject(err)
+            })
+        })
+    }
+
+    update(posts) {
+        this.dispatch({
+            loaded: true,
+            posts: posts,
+            err: null
+        })
+    }
+
+    fetch() {
+        this.dispatch()
+
+        NewsActions
+        .fetchPromise()
+        .then((posts) => {
+            this.actions.update(posts)
+        })
+        .catch((err) => {
+            this.actions.failed(err)
+        })
+    }
+
+    failed(err) {
+        this.dispatch({
+            loaded: true,
+            posts: [],
+            err: err
+        })
+    }
+}
+
+
+export default alt.createActions(NewsActions)

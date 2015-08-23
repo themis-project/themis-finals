@@ -3,7 +3,6 @@ import { Promise } from 'es6-promise'
 
 import Team from './models/team'
 import Service from './models/service'
-import Post from './models/post'
 import TeamScore from './models/team-score'
 import TeamServiceState from './models/team-service-state'
 import TeamAttack from './models/team-attack'
@@ -16,7 +15,6 @@ class DataManager {
         this.identity = null
         this.teams = null
         this.services = null
-        this.posts = null
         this.contestScoreboard = null
         this.teamScores = null
         this.teamServiceStates = null
@@ -97,34 +95,6 @@ class DataManager {
                         return new Service(props)
                     })
                     resolve(this.services)
-                })
-                .catch((err) => {
-                    reject(err)
-                })
-            }
-        })
-    }
-
-    getPosts() {
-        return new Promise((resolve, reject) => {
-            if (this.posts !== null) {
-                resolve(this.posts)
-            } else {
-               fetch('/api/posts')
-                .then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json()
-                    } else {
-                        let err = new Error(response.statusText)
-                        err.response = response
-                        throw err
-                    }
-                })
-                .then((data) => {
-                    this.posts = data.map((props) => {
-                        return new Post(props)
-                    })
-                    resolve(this.posts)
                 })
                 .catch((err) => {
                     reject(err)

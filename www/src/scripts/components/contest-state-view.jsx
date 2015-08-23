@@ -1,9 +1,6 @@
 import React from 'react'
 import { Styles } from 'material-ui'
 
-import dataManager from '../data-manager'
-import eventManager from '../event-manager'
-
 import ContestStateStore from '../stores/contest-state-store'
 import ContestStateActions from '../actions/contest-state-actions'
 
