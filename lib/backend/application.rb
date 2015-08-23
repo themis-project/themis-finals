@@ -207,11 +207,19 @@ module Themis
                 end
 
                 begin
-                    Themis::Models::Post.create(
+                    post = Themis::Models::Post.create(
                         title: payload['title'],
                         description: payload['description'],
                         created_at: DateTime.now,
                         updated_at: DateTime.now)
+
+                    Themis::Utils::EventEmitter.emit_all 'posts/add', {
+                        id: post.id,
+                        title: post.title,
+                        description: post.description,
+                        created_at: post.created_at,
+                        updated_at: post.updated_at
+                    }
                 rescue => e
                     halt 400
                 end
@@ -234,6 +242,10 @@ module Themis
                 unless post.destroy
                     halt 400
                 end
+
+                Themis::Utils::EventEmitter.emit_all 'posts/remove', {
+                    id: post_id
+                }
 
                 status 204
                 body ''
@@ -273,6 +285,13 @@ module Themis
 
                 begin
                     post.save
+                    Themis::Utils::EventEmitter.emit_all 'posts/edit', {
+                        id: post.id,
+                        title: post.title,
+                        description: post.description,
+                        created_at: post.created_at,
+                        updated_at: post.updated_at
+                    }
                 rescue => e
                     halt 400
                 end

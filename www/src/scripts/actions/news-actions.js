@@ -4,6 +4,7 @@ import { Promise } from 'es6-promise'
 import alt from '../alt'
 import Post from '../models/post'
 import eventManager from '../event-manager'
+import { List } from 'immutable'
 
 
 class NewsActions {
@@ -23,7 +24,7 @@ class NewsActions {
                 let posts = data.map((props) => {
                     return new Post(props)
                 })
-                resolve(posts)
+                resolve(new List(posts))
             })
             .catch((err) => {
                 reject(err)
@@ -37,6 +38,18 @@ class NewsActions {
             posts: posts,
             err: null
         })
+    }
+
+    add(post) {
+        this.dispatch(post)
+    }
+
+    edit(post) {
+        this.dispatch(post)
+    }
+
+    remove(postId) {
+        this.dispatch(postId)
     }
 
     fetch() {

@@ -29,6 +29,11 @@
       "from": "https://registry.npmjs.org/es6-promise/-/es6-promise-2.3.0.tgz",
       "resolved": "https://registry.npmjs.org/es6-promise/-/es6-promise-2.3.0.tgz"
     },
+    "immutable": {
+      "version": "3.7.4",
+      "from": "immutable@*",
+      "resolved": "https://registry.npmjs.org/immutable/-/immutable-3.7.4.tgz"
+    },
     "markdown-it": {
       "version": "4.4.0",
       "from": "markdown-it@*",

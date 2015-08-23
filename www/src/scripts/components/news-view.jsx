@@ -44,10 +44,11 @@ export default class NewsView extends React.Component {
                     {
                         (() => {
                             if (this.state.loaded) {
-                                if (this.state.posts.length === 0) {
+                                if (this.state.posts.isEmpty()) {
                                     return <p>No posts yet</p>
                                 } else {
-                                    return <PostListView posts={this.state.posts} identity={this.props.identity}/>
+                                    let sortedPosts = this.state.posts.sortBy(x => x.updatedAt.getTime()).reverse()
+                                    return <PostListView posts={sortedPosts} identity={this.props.identity}/>
                                 }
                             } else {
                                 return <p>Loading</p>
