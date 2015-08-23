@@ -28,35 +28,31 @@ class ContestStateActions {
         })
     }
 
-    updateContestState(contestState) {
-        this.dispatch(contestState)
+    update(contestState) {
+        this.dispatch({
+            contestState: contestState,
+            err: null
+        })
     }
 
-    fetchContestState() {
+    fetch() {
         this.dispatch()
 
         ContestStateActions
         .fetchPromise()
         .then((contestState) => {
-            this.actions.updateContestState(contestState)
+            this.actions.update(contestState)
         })
         .catch((err) => {
-            this.actions.contestStateFailed(err)
+            this.actions.failed(err)
         })
     }
 
-    realtimeContestState() {
-        this.dispatch()
-
-        eventManager.eventSource.addEventListener('contest/state', (e) => {
-            let data = JSON.parse(e.data)
-            console.log((new Date()), data)
-            this.actions.updateContestState(new ContestState(data))
+    failed(err) {
+        this.dispatch({
+            contestState: null,
+            err: err
         })
-    }
-
-    contestStateFailed(err) {
-        this.dispatch(err)
     }
 }
 

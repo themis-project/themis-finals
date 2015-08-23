@@ -129,9 +129,6 @@ ready(() => {
     dataManager
     .getIdentity()
     .then((identity) => {
-        if (eventManager.enabled) {
-            eventManager.start()
-        }
         injectTapEventPlugin()
         render(identity)
     })

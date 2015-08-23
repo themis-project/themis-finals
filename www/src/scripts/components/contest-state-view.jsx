@@ -13,21 +13,19 @@ export default class ContestStateView extends React.Component {
         super(props)
         this.state = ContestStateStore.getState()
 
-        this.onChange = this.onChange.bind(this)
-
-        ContestStateActions.realtimeContestState()
+        this.onUpdate = this.onUpdate.bind(this)
     }
 
     componentDidMount() {
-        ContestStateStore.listen(this.onChange)
-        ContestStateActions.fetchContestState()
+        ContestStateStore.listen(this.onUpdate)
+        ContestStateActions.fetch()
     }
 
     componentWillUnmount() {
-        ContestStateStore.unlisten(this.onChange)
+        ContestStateStore.unlisten(this.onUpdate)
     }
 
-    onChange(state) {
+    onUpdate(state) {
         this.setState(state)
     }
 

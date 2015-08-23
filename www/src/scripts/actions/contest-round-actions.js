@@ -28,35 +28,31 @@ class ContestRoundActions {
         })
     }
 
-    updateContestRound(contestRound) {
-        this.dispatch(contestRound)
+    update(contestRound) {
+        this.dispatch({
+            contestRound: contestRound,
+            err: null
+        })
     }
 
-    fetchContestRound() {
+    fetch() {
         this.dispatch()
 
         ContestRoundActions
         .fetchPromise()
         .then((contestRound) => {
-            this.actions.updateContestRound(contestRound)
+            this.actions.update(contestRound)
         })
         .catch((err) => {
-            this.actions.contestRoundFailed(err)
+            this.actions.failed(err)
         })
     }
 
-    realtimeContestRound() {
-        this.dispatch()
-
-        eventManager.eventSource.addEventListener('contest/round', (e) => {
-            let data = JSON.parse(e.data)
-            console.log((new Date()), data)
-            this.actions.updateContestRound(new ContestRound(data))
+    failed(err) {
+        this.dispatch({
+            contestRound: null,
+            err: err
         })
-    }
-
-    contestRoundFailed(err) {
-        this.dispatch(err)
     }
 }
 

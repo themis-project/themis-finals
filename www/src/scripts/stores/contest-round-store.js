@@ -1,34 +1,44 @@
 import alt from '../alt'
 import ContestRoundActions from '../actions/contest-round-actions'
+import eventManager from '../event-manager'
+import ContestRound from '../models/contest-round'
 
 
 class ContestRoundStore {
     constructor() {
-        this.contestRound = null
-        this.err = null
+        this.state = {
+            contestRound: null,
+            err: null
+        }
 
         this.bindListeners({
-            handleUpdateContestRound: ContestRoundActions.UPDATE_CONTEST_ROUND,
-            handleFetchContestRound: ContestRoundActions.FETCH_CONTEST_ROUND,
-            handleContestRoundFailed: ContestRoundActions.CONTEST_ROUND_FAILED,
-            handleRealtimeContestRound: ContestRoundActions.REALTIME_CONTEST_ROUND
+            handleUpdate: ContestRoundActions.UPDATE,
+            handleFetch: ContestRoundActions.FETCH,
+            handleFailed: ContestRoundActions.FAILED
+        })
+
+        if (eventManager.enabled) {
+            eventManager.eventSource.addEventListener('contest/round', (e) => {
+                let data = JSON.parse(e.data)
+                console.log((new Date()), data)
+                ContestRoundActions.update(new ContestRound(data))
+            })
+        }
+    }
+
+    handleUpdate(state) {
+        this.setState(state)
+    }
+
+    handleFetch() {
+        this.setState({
+            contestRound: null,
+            err: null
         })
     }
 
-    handleUpdateContestRound(contestRound) {
-        this.contestRound = contestRound
-        this.err = null
-    }
-
-    handleFetchContestRound() {
-        this.contestRound = null
-    }
-
-    handleContestRoundFailed(err) {
-        this.err = err
-    }
-
-    handleRealtimeContestRound() {
+    handleFailed(state) {
+        this.setState(state)
     }
 }
 

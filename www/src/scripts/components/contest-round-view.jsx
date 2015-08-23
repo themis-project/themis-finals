@@ -13,21 +13,19 @@ export default class ContestRoundView extends React.Component {
         super(props)
         this.state = ContestRoundStore.getState()
 
-        this.onChange = this.onChange.bind(this)
-
-        ContestRoundActions.realtimeContestRound()
+        this.onUpdate = this.onUpdate.bind(this)
     }
 
     componentDidMount() {
-        ContestRoundStore.listen(this.onChange)
-        ContestRoundActions.fetchContestRound()
+        ContestRoundStore.listen(this.onUpdate)
+        ContestRoundActions.fetch()
     }
 
     componentWillUnmount() {
-        ContestRoundStore.unlisten(this.onChange)
+        ContestRoundStore.unlisten(this.onUpdate)
     }
 
-    onChange(state) {
+    onUpdate(state) {
         this.setState(state)
     }
 
