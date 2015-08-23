@@ -4,42 +4,38 @@ import { Styles } from 'material-ui'
 import dataManager from '../data-manager'
 import eventManager from '../event-manager'
 
+import ContestStateStore from '../stores/contest-state-store'
+import ContestStateActions from '../actions/contest-state-actions'
+
 
 export default class ContestStateView extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
-            state: null
-        }
+        this.state = ContestStateStore.getState()
 
-        this.onUpdate = (e) => {
-            let data = JSON.parse(e.data)
-            this.setState({
-                state: data.value
-            })
-        }
+        this.onChange = this.onChange.bind(this)
+
+        ContestStateActions.realtimeContestState()
     }
 
     componentDidMount() {
-        dataManager
-        .getContestState()
-        .then((contestState) => {
-            this.setState({
-                state: contestState.value
-            })
-        }.bind(this))
-        .catch((err) => {
-            console.log('Error', err)
-        })
-
-        eventManager.eventSource.addEventListener('contest/state', this.onUpdate)
+        ContestStateStore.listen(this.onChange)
+        ContestStateActions.fetchContestState()
     }
 
     componentWillUnmount() {
-        eventManager.eventSource.removeEventListener('contest/round', this.onUpdate)
+        ContestStateStore.unlisten(this.onChange)
+    }
+
+    onChange(state) {
+        this.setState(state)
     }
 
     render() {
+        if (this.state.contestState == null) {
+            return <span></span>
+        }
+
         let style = {
             padding: '4px 8px',
             marginRight: '10px'
@@ -47,7 +43,7 @@ export default class ContestStateView extends React.Component {
 
         let text = null
 
-        switch (this.state.state) {
+        switch (this.state.contestState.value) {
             case 'initial':
                 text = 'Contest not started'
                 style.color = Styles.Colors.grey600
@@ -80,9 +76,6 @@ export default class ContestStateView extends React.Component {
                 break
         }
 
-        return (
-            <span style={style}>{text}</span>
-        )
+        return <span style={style}>{text}</span>
     }
-
 }

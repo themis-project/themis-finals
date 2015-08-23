@@ -32,17 +32,17 @@ export default class ContestRoundView extends React.Component {
     }
 
     render() {
+        if (this.state.contestRound == null || this.state.contestRound.value == null) {
+            return <span></span>
+        }
+
         let style = {
             padding: '4px 8px',
             marginRight: '10px',
             color: Styles.Colors.blueGrey600,
             backgroundColor: Styles.Colors.blueGrey50
         }
-        let el = <span></span>
-        if (this.state.contestRound && this.state.contestRound.value) {
-            el = <span style={style}>{`Round ${this.state.contestRound.value}`}</span>
-        }
 
-        return el
+        return <span style={style}>{`Round ${this.state.contestRound.value}`}</span>
     }
 }
