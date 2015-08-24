@@ -7,8 +7,11 @@ import ContestRound from '../models/contest-round'
 class ContestRoundStore {
     constructor() {
         this.state = {
-            contestRound: null,
-            err: null
+            contestRound: {
+                loading: true,
+                err: null,
+                model: null
+            }
         }
 
         this.bindListeners({
@@ -26,19 +29,34 @@ class ContestRoundStore {
         }
     }
 
-    handleUpdate(state) {
-        this.setState(state)
+    handleUpdate(contestRound) {
+        this.setState({
+            contestRound: {
+                loading: false,
+                err: null,
+                model: contestRound
+            }
+        })
     }
 
     handleFetch() {
         this.setState({
-            contestRound: null,
-            err: null
+            contestRound: {
+                loading: true,
+                err: null,
+                model: null
+            }
         })
     }
 
-    handleFailed(state) {
-        this.setState(state)
+    handleFailed(err) {
+        this.setState({
+            contestRound: {
+                loading: false,
+                err: err,
+                model: null
+            }
+        })
     }
 }
 

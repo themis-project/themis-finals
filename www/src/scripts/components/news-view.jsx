@@ -43,15 +43,19 @@ export default class NewsView extends React.Component {
                     {this.props.identity.isInternal() ? <RaisedButton style={buttonStyle} label="Create" primary={true} />: ''}
                     {
                         (() => {
-                            if (this.state.loaded) {
-                                if (this.state.posts.isEmpty()) {
-                                    return <p>No posts yet</p>
-                                } else {
-                                    let sortedPosts = this.state.posts.sortBy(x => x.updatedAt.getTime()).reverse()
-                                    return <PostListView posts={sortedPosts} identity={this.props.identity}/>
-                                }
-                            } else {
+                            if (this.state.posts.loading) {
                                 return <p>Loading</p>
+                            }
+
+                            if (this.state.posts.err) {
+                                return <p>Failed to fetch posts</p>
+                            }
+
+                            if (this.state.posts.collection.isEmpty()) {
+                                return <p>No posts yet</p>
+                            } else {
+                                let sortedPosts = this.state.posts.collection.sortBy(x => x.updatedAt.getTime()).reverse()
+                                return <PostListView posts={sortedPosts} identity={this.props.identity}/>
                             }
                         })()
                     }

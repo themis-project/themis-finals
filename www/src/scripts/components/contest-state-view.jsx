@@ -27,8 +27,12 @@ export default class ContestStateView extends React.Component {
     }
 
     render() {
-        if (this.state.contestState == null) {
+        if (this.state.contestState.loading) {
             return <span></span>
+        }
+
+        if (this.state.contestState.err) {
+            return <span>Failed to fetch contest state</span>
         }
 
         let style = {
@@ -38,7 +42,7 @@ export default class ContestStateView extends React.Component {
 
         let text = null
 
-        switch (this.state.contestState.value) {
+        switch (this.state.contestState.model.value) {
             case 'initial':
                 text = 'Contest not started'
                 style.color = Styles.Colors.grey600

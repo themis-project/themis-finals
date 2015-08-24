@@ -7,8 +7,11 @@ import ContestState from '../models/contest-state'
 class ContestStateStore {
     constructor() {
         this.state = {
-            contestState: null,
-            err: null
+            contestState: {
+                loading: true,
+                err: null,
+                models: null
+            }
         }
 
         this.bindListeners({
@@ -26,19 +29,34 @@ class ContestStateStore {
         }
     }
 
-    handleUpdate(state) {
-        this.setState(state)
+    handleUpdate(contestState) {
+        this.setState({
+            contestState: {
+                loading: false,
+                err: null,
+                model: contestState
+            }
+        })
     }
 
     handleFetch() {
         this.setState({
-            contestState: null,
-            err: null
+            contestState: {
+                loading: true,
+                err: null,
+                model: null
+            }
         })
     }
 
-    handleFailed(state) {
-        this.setState(state)
+    handleFailed(err) {
+        this.setState({
+            contestState: {
+                loading: false,
+                err: err,
+                model: null
+            }
+        })
     }
 }
 

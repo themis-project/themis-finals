@@ -2,14 +2,14 @@ import 'whatwg-fetch'
 import { Promise } from 'es6-promise'
 
 import alt from '../alt'
-import ContestRound from '../models/contest-round'
+import ContestScoreboard from '../models/contest-scoreboard'
 import eventManager from '../event-manager'
 
 
-class ContestRoundActions {
+class ContestScoreboardActions {
     static fetchPromise() {
         return new Promise((resolve, reject) => {
-           fetch('/api/contest/round')
+           fetch('/api/contest/scoreboard')
             .then((response) => {
                 if (response.status >= 200 && response.status < 300) {
                     return response.json()
@@ -20,7 +20,7 @@ class ContestRoundActions {
                 }
             })
             .then((data) => {
-                resolve(new ContestRound(data))
+                resolve(new ContestScoreboard(data))
             })
             .catch((err) => {
                 reject(err)
@@ -28,17 +28,17 @@ class ContestRoundActions {
         })
     }
 
-    update(contestRound) {
-        this.dispatch(contestRound)
+    update(contestScoreboard) {
+        this.dispatch(contestScoreboard)
     }
 
     fetch() {
         this.dispatch()
 
-        ContestRoundActions
+        ContestScoreboardActions
         .fetchPromise()
-        .then((contestRound) => {
-            this.actions.update(contestRound)
+        .then((contestScoreboard) => {
+            this.actions.update(contestScoreboard)
         })
         .catch((err) => {
             this.actions.failed(err)
@@ -51,4 +51,4 @@ class ContestRoundActions {
 }
 
 
-export default alt.createActions(ContestRoundActions)
+export default alt.createActions(ContestScoreboardActions)

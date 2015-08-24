@@ -27,7 +27,15 @@ export default class ContestRoundView extends React.Component {
     }
 
     render() {
-        if (this.state.contestRound == null || this.state.contestRound.value == null) {
+        if (this.state.contestRound.loading) {
+            return <span></span>
+        }
+
+        if (this.state.contestRound.err) {
+            return <span>Failed to fetch contest round</span>
+        }
+
+        if (this.state.contestRound.model.value == null) {
             return <span></span>
         }
 
@@ -38,6 +46,6 @@ export default class ContestRoundView extends React.Component {
             backgroundColor: Styles.Colors.blueGrey50
         }
 
-        return <span style={style}>{`Round ${this.state.contestRound.value}`}</span>
+        return <span style={style}>{`Round ${this.state.contestRound.model.value}`}</span>
     }
 }

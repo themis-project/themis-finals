@@ -3,7 +3,6 @@ import { Promise } from 'es6-promise'
 
 import alt from '../alt'
 import ContestState from '../models/contest-state'
-import eventManager from '../event-manager'
 
 
 class ContestStateActions {
@@ -29,10 +28,7 @@ class ContestStateActions {
     }
 
     update(contestState) {
-        this.dispatch({
-            contestState: contestState,
-            err: null
-        })
+        this.dispatch(contestState)
     }
 
     fetch() {
@@ -49,10 +45,7 @@ class ContestStateActions {
     }
 
     failed(err) {
-        this.dispatch({
-            contestState: null,
-            err: err
-        })
+        this.dispatch(err)
     }
 }
 

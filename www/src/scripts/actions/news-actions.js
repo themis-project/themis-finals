@@ -33,11 +33,7 @@ class NewsActions {
     }
 
     update(posts) {
-        this.dispatch({
-            loaded: true,
-            posts: posts,
-            err: null
-        })
+        this.dispatch(posts)
     }
 
     add(post) {
@@ -66,11 +62,7 @@ class NewsActions {
     }
 
     failed(err) {
-        this.dispatch({
-            loaded: true,
-            posts: [],
-            err: err
-        })
+        this.dispatch(err)
     }
 }
 
