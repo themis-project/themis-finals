@@ -2,14 +2,14 @@ import 'whatwg-fetch'
 import { Promise } from 'es6-promise'
 
 import alt from '../alt'
-import Post from '../models/post'
+import Service from '../models/service'
 import { List } from 'immutable'
 
 
-class NewsActions {
+class ServiceActions {
     static fetchPromise() {
         return new Promise((resolve, reject) => {
-           fetch('/api/posts')
+           fetch('/api/services')
             .then((response) => {
                 if (response.status >= 200 && response.status < 300) {
                     return response.json()
@@ -20,10 +20,10 @@ class NewsActions {
                 }
             })
             .then((data) => {
-                let posts = data.map((props) => {
-                    return new Post(props)
+                let services = data.map((props) => {
+                    return new Service(props)
                 })
-                resolve(new List(posts))
+                resolve(new List(services))
             })
             .catch((err) => {
                 reject(err)
@@ -31,29 +31,17 @@ class NewsActions {
         })
     }
 
-    update(posts) {
-        this.dispatch(posts)
-    }
-
-    add(post) {
-        this.dispatch(post)
-    }
-
-    edit(post) {
-        this.dispatch(post)
-    }
-
-    remove(postId) {
-        this.dispatch(postId)
+    update(services) {
+        this.dispatch(services)
     }
 
     fetch() {
         this.dispatch()
 
-        NewsActions
+        ServiceActions
         .fetchPromise()
-        .then((posts) => {
-            this.actions.update(posts)
+        .then((services) => {
+            this.actions.update(services)
         })
         .catch((err) => {
             this.actions.failed(err)
@@ -66,4 +54,4 @@ class NewsActions {
 }
 
 
-export default alt.createActions(NewsActions)
+export default alt.createActions(ServiceActions)

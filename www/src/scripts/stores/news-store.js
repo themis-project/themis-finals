@@ -8,11 +8,9 @@ import { List } from 'immutable'
 class NewsStore {
     constructor() {
         this.state = {
-            posts: {
-                loading: true,
-                err: null,
-                collection: new List()
-            }
+            loading: true,
+            err: null,
+            collection: new List()
         }
 
         this.bindListeners({
@@ -47,62 +45,50 @@ class NewsStore {
 
     handleUpdate(posts) {
         this.setState({
-            posts: {
-                loading: false,
-                err: null,
-                collection: posts
-            }
+            loading: false,
+            err: null,
+            collection: posts
         })
     }
 
     handleAdd(post) {
         this.setState({
-            posts: {
-                loading: false,
-                err: null,
-                collection: this.state.posts.collection.push(post)
-            }
+            loading: false,
+            err: null,
+            collection: this.state.collection.push(post)
         })
     }
 
     handleEdit(post) {
-        let ndx = this.state.posts.collection.findIndex(x => x.id === post.id)
+        let ndx = this.state.collection.findIndex(x => x.id === post.id)
         this.setState({
-            posts: {
-                loading: false,
-                err: null,
-                collection: (ndx === -1) ? this.state.posts.collection.push(post) : this.state.posts.collection.set(ndx, post)
-            }
+            loading: false,
+            err: null,
+            collection: (ndx === -1) ? this.state.collection.push(post) : this.state.collection.set(ndx, post)
         })
     }
 
     handleRemove(postId) {
         this.setState({
-            posts: {
-                loading: false,
-                err: null,
-                collection: this.state.posts.collection.filter(x => x.id !== postId)
-            }
+            loading: false,
+            err: null,
+            collection: this.state.collection.filter(x => x.id !== postId)
         })
     }
 
     handleFetch() {
         this.setState({
-            posts: {
-                loading: true,
-                err: null,
-                collection: new List()
-            }
+            loading: true,
+            err: null,
+            collection: new List()
         })
     }
 
     handleFailed(err) {
         this.setState({
-            posts: {
-                loading: false,
-                err: err,
-                collection: new List()
-            }
+            loading: false,
+            err: err,
+            collection: new List()
         })
     }
 }

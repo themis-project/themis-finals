@@ -2,14 +2,14 @@ import 'whatwg-fetch'
 import { Promise } from 'es6-promise'
 
 import alt from '../alt'
-import Post from '../models/post'
+import TeamServiceState from '../models/team-service-state'
 import { List } from 'immutable'
 
 
-class NewsActions {
+class TeamServiceStateActions {
     static fetchPromise() {
         return new Promise((resolve, reject) => {
-           fetch('/api/posts')
+           fetch('/api/team/services')
             .then((response) => {
                 if (response.status >= 200 && response.status < 300) {
                     return response.json()
@@ -20,10 +20,10 @@ class NewsActions {
                 }
             })
             .then((data) => {
-                let posts = data.map((props) => {
-                    return new Post(props)
+                let teamServiceStates = data.map((props) => {
+                    return new TeamServiceState(props)
                 })
-                resolve(new List(posts))
+                resolve(new List(teamServiceStates))
             })
             .catch((err) => {
                 reject(err)
@@ -31,29 +31,17 @@ class NewsActions {
         })
     }
 
-    update(posts) {
-        this.dispatch(posts)
-    }
-
-    add(post) {
-        this.dispatch(post)
-    }
-
-    edit(post) {
-        this.dispatch(post)
-    }
-
-    remove(postId) {
-        this.dispatch(postId)
+    update(teamServiceStates) {
+        this.dispatch(teamServiceStates)
     }
 
     fetch() {
         this.dispatch()
 
-        NewsActions
+        TeamServiceStateActions
         .fetchPromise()
-        .then((posts) => {
-            this.actions.update(posts)
+        .then((teamServiceStates) => {
+            this.actions.update(teamServiceStates)
         })
         .catch((err) => {
             this.actions.failed(err)
@@ -66,4 +54,4 @@ class NewsActions {
 }
 
 
-export default alt.createActions(NewsActions)
+export default alt.createActions(TeamServiceStateActions)

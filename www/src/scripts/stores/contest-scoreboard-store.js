@@ -5,11 +5,9 @@ import ContestScoreboardActions from '../actions/contest-scoreboard-actions'
 class ContestScoreboardStore {
     constructor() {
         this.state = {
-            contestRound: {
-                loading: true,
-                err: null,
-                model: null
-            }
+            loading: true,
+            err: null,
+            model: null
         }
 
         this.bindListeners({
@@ -21,31 +19,25 @@ class ContestScoreboardStore {
 
     handleUpdate(contestScoreboard) {
         this.setState({
-            contestScoreboard: {
-                loading: false,
-                err: null,
-                model: contestScoreboard
-            }
+            loading: false,
+            err: null,
+            model: contestScoreboard
         })
     }
 
     handleFetch() {
         this.setState({
-            contestScoreboard: {
-                loading: true,
-                err: null,
-                model: null
-            }
+            loading: true,
+            err: null,
+            model: null
         })
     }
 
     handleFailed(err) {
         this.setState({
-            contestScoreboard: {
-                loading: false,
-                err: err,
-                model: null
-            }
+            loading: false,
+            err: err,
+            model: null
         })
     }
 }
