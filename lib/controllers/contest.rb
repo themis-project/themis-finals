@@ -5,6 +5,7 @@ require './lib/controllers/score'
 require './lib/utils/queue'
 require 'themis/checker/result'
 require './lib/controllers/contest-state'
+require './lib/utils/event-emitter'
 
 
 module Themis
@@ -203,6 +204,14 @@ module Themis
                     team_service_state.updated_at = DateTime.now
                     team_service_state.save
                 end
+
+                Themis::Utils::EventEmitter.emit_all 'team/service', {
+                    id: team_service_state.id,
+                    team_id: team_service_state.team_id,
+                    service_id: team_service_state.service_id,
+                    state: team_service_state.state,
+                    updated_at: team_service_state.updated_at
+                }
             end
         end
     end

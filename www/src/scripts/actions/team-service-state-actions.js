@@ -35,6 +35,10 @@ class TeamServiceStateActions {
         this.dispatch(teamServiceStates)
     }
 
+    updateSingle(teamServiceState) {
+        this.dispatch(teamServiceState)
+    }
+
     fetch() {
         this.dispatch()
 
