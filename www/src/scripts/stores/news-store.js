@@ -1,7 +1,7 @@
 import alt from '../alt'
 import NewsActions from '../actions/news-actions'
 import eventManager from '../event-manager'
-import Post from '../models/post'
+import PostModel from '../models/post-model'
 import { List } from 'immutable'
 
 
@@ -26,7 +26,7 @@ class NewsStore {
             eventManager.eventSource.addEventListener('posts/add', (e) => {
                 let data = JSON.parse(e.data)
                 console.log((new Date()), data)
-                NewsActions.add(new Post(data))
+                NewsActions.add(new PostModel(data))
             })
 
             eventManager.eventSource.addEventListener('posts/remove', (e) => {
@@ -38,7 +38,7 @@ class NewsStore {
             eventManager.eventSource.addEventListener('posts/edit', (e) => {
                 let data = JSON.parse(e.data)
                 console.log((new Date()), data)
-                NewsActions.edit(new Post(data))
+                NewsActions.edit(new PostModel(data))
             })
         }
     }

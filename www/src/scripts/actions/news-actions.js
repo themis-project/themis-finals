@@ -2,7 +2,7 @@ import 'whatwg-fetch'
 import { Promise } from 'es6-promise'
 
 import alt from '../alt'
-import Post from '../models/post'
+import PostModel from '../models/post-model'
 import { List } from 'immutable'
 
 
@@ -21,7 +21,7 @@ class NewsActions {
             })
             .then((data) => {
                 let posts = data.map((props) => {
-                    return new Post(props)
+                    return new PostModel(props)
                 })
                 resolve(new List(posts))
             })

@@ -2,7 +2,7 @@ import 'whatwg-fetch'
 import { Promise } from 'es6-promise'
 
 import alt from '../alt'
-import ContestScoreboard from '../models/contest-scoreboard'
+import ContestScoreboardModel from '../models/contest-scoreboard-model'
 import eventManager from '../event-manager'
 
 
@@ -20,7 +20,7 @@ class ContestScoreboardActions {
                 }
             })
             .then((data) => {
-                resolve(new ContestScoreboard(data))
+                resolve(new ContestScoreboardModel(data))
             })
             .catch((err) => {
                 reject(err)

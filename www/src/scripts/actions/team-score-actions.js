@@ -2,7 +2,7 @@ import 'whatwg-fetch'
 import { Promise } from 'es6-promise'
 
 import alt from '../alt'
-import TeamScore from '../models/team-score'
+import TeamScoreModel from '../models/team-score-model'
 import { List } from 'immutable'
 
 
@@ -21,7 +21,7 @@ class TeamScoreActions {
             })
             .then((data) => {
                 let teamScores = data.map((props) => {
-                    return new TeamScore(props)
+                    return new TeamScoreModel(props)
                 })
                 resolve(new List(teamScores))
             })

@@ -1,4 +1,4 @@
-export default class TeamAttack {
+export default class TeamAttackModel {
     constructor(props) {
         this.id = props.id
         this.occuredAt = new Date(props.occured_at)

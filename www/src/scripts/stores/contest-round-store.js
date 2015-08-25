@@ -1,7 +1,7 @@
 import alt from '../alt'
 import ContestRoundActions from '../actions/contest-round-actions'
 import eventManager from '../event-manager'
-import ContestRound from '../models/contest-round'
+import ContestRoundModel from '../models/contest-round-model'
 
 
 class ContestRoundStore {
@@ -22,7 +22,7 @@ class ContestRoundStore {
             eventManager.eventSource.addEventListener('contest/round', (e) => {
                 let data = JSON.parse(e.data)
                 console.log((new Date()), data)
-                ContestRoundActions.update(new ContestRound(data))
+                ContestRoundActions.update(new ContestRoundModel(data))
             })
         }
     }

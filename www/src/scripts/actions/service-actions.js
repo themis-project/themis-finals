@@ -2,7 +2,7 @@ import 'whatwg-fetch'
 import { Promise } from 'es6-promise'
 
 import alt from '../alt'
-import Service from '../models/service'
+import ServiceModel from '../models/service-model'
 import { List } from 'immutable'
 
 
@@ -21,7 +21,7 @@ class ServiceActions {
             })
             .then((data) => {
                 let services = data.map((props) => {
-                    return new Service(props)
+                    return new ServiceModel(props)
                 })
                 resolve(new List(services))
             })

@@ -2,7 +2,7 @@ import 'whatwg-fetch'
 import { Promise } from 'es6-promise'
 
 import alt from '../alt'
-import TeamServiceState from '../models/team-service-state'
+import TeamServiceStateModel from '../models/team-service-state-model'
 import { List } from 'immutable'
 
 
@@ -21,7 +21,7 @@ class TeamServiceStateActions {
             })
             .then((data) => {
                 let teamServiceStates = data.map((props) => {
-                    return new TeamServiceState(props)
+                    return new TeamServiceStateModel(props)
                 })
                 resolve(new List(teamServiceStates))
             })

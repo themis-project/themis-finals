@@ -2,7 +2,7 @@ import 'whatwg-fetch'
 import { Promise } from 'es6-promise'
 
 import alt from '../alt'
-import TeamAttack from '../models/team-attack'
+import TeamAttackModel from '../models/team-attack-model'
 import { List } from 'immutable'
 
 

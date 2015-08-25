@@ -1,4 +1,4 @@
-export default class TeamScore {
+export default class TeamScoreModel {
     constructor(props) {
         this.id = props.id
         this.teamId = props.team_id

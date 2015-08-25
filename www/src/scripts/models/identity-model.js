@@ -1,4 +1,4 @@
-export default class Identity {
+export default class IdentityModel {
     constructor(props) {
         this.id = props.id
         this.name = props.name

@@ -2,7 +2,7 @@ import 'whatwg-fetch'
 import { Promise } from 'es6-promise'
 
 import alt from '../alt'
-import ContestRound from '../models/contest-round'
+import ContestRoundModel from '../models/contest-round-model'
 import eventManager from '../event-manager'
 
 
@@ -20,7 +20,7 @@ class ContestRoundActions {
                 }
             })
             .then((data) => {
-                resolve(new ContestRound(data))
+                resolve(new ContestRoundModel(data))
             })
             .catch((err) => {
                 reject(err)

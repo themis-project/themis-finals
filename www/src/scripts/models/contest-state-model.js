@@ -1,4 +1,4 @@
-export default class ContestRound {
+export default class ContestStateModel {
     constructor(props) {
         this.value = props.value
     }

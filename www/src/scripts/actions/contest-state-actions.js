@@ -2,7 +2,7 @@ import 'whatwg-fetch'
 import { Promise } from 'es6-promise'
 
 import alt from '../alt'
-import ContestState from '../models/contest-state'
+import ContestStateModel from '../models/contest-state-model'
 
 
 class ContestStateActions {
@@ -19,7 +19,7 @@ class ContestStateActions {
                 }
             })
             .then((data) => {
-                resolve(new ContestState(data))
+                resolve(new ContestStateModel(data))
             })
             .catch((err) => {
                 reject(err)

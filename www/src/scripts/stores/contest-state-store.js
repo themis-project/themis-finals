@@ -1,7 +1,7 @@
 import alt from '../alt'
 import ContestStateActions from '../actions/contest-state-actions'
 import eventManager from '../event-manager'
-import ContestState from '../models/contest-state'
+import ContestStateModel from '../models/contest-state-model'
 
 
 class ContestStateStore {
@@ -22,7 +22,7 @@ class ContestStateStore {
             eventManager.eventSource.addEventListener('contest/state', (e) => {
                 let data = JSON.parse(e.data)
                 console.log((new Date()), data)
-                ContestStateActions.update(new ContestState(data))
+                ContestStateActions.update(new ContestStateModel(data))
             })
         }
     }
