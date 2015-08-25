@@ -34,7 +34,11 @@ module Themis
                     when 'update'
                         contest_state = Themis::Models::ContestState.last
                         if not contest_state.nil? and [:running, :await_complete].include? contest_state.state
-                            Themis::Controllers::Contest::update_scores
+                            begin
+                                Themis::Controllers::Contest::update_scores
+                            rescue => e
+                                @logger.error "#{e}"
+                            end
                         end
                     when 'control_complete'
                         contest_state = Themis::Models::ContestState.last

@@ -149,16 +149,19 @@ module Themis
                 Themis::Controllers::Flag::get_expired.each do |flag|
                     polls = Themis::Models::FlagPoll.all(flag: flag)
 
-                    Themis::Controllers::Score::charge_availability flag, polls
+                    scoreboard_state = Themis::Models::ScoreboardState.last
+                    scoreboard_enabled = scoreboard_state.nil? ? true : (scoreboard_state.state == :enabled)
+
+                    Themis::Controllers::Score::charge_availability flag, polls, scoreboard_enabled
 
                     attacks = flag.attacks
                     if attacks.count == 0
                         if polls.count(state: :error) == 0
-                            Themis::Controllers::Score::charge_defence flag
+                            Themis::Controllers::Score::charge_defence flag, scoreboard_enabled
                         end
                     else
                         attacks.each do |attack|
-                            Themis::Controllers::Score::charge_attack flag, attack
+                            Themis::Controllers::Score::charge_attack flag, attack, scoreboard_enabled
                         end
                     end
 

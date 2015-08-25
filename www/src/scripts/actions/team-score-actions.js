@@ -35,6 +35,10 @@ class TeamScoreActions {
         this.dispatch(teamScores)
     }
 
+    updateSingle(teamScore) {
+        this.dispatch(teamScore)
+    }
+
     fetch() {
         this.dispatch()
 
