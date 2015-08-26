@@ -1,4 +1,5 @@
 require './lib/controllers/attack'
+require './lib/utils/event-emitter'
 
 
 module Themis
@@ -10,6 +11,8 @@ module Themis
                     created_at: DateTime.now,
                     total_scores: {},
                     attacks: {})
+
+                Themis::Utils::EventEmitter::emit_all 'contest/scoreboard', { enabled: true }
             end
 
             def self.disable
@@ -35,6 +38,8 @@ module Themis
                     created_at: DateTime.now,
                     total_scores: total_scores,
                     attacks: attacks)
+
+                Themis::Utils::EventEmitter::emit_all 'contest/scoreboard', { enabled: false }
             end
         end
     end

@@ -1,5 +1,7 @@
 import alt from '../alt'
 import ContestScoreboardActions from '../actions/contest-scoreboard-actions'
+import eventManager from '../event-manager'
+import ContestScoreboardModel from '../models/contest-scoreboard-model'
 
 
 class ContestScoreboardStore {
@@ -15,6 +17,14 @@ class ContestScoreboardStore {
             handleFetch: ContestScoreboardActions.FETCH,
             handleFailed: ContestScoreboardActions.FAILED
         })
+
+        if (eventManager.enabled) {
+            eventManager.eventSource.addEventListener('contest/scoreboard', (e) => {
+                let data = JSON.parse(e.data)
+                console.log((new Date()), data)
+                ContestScoreboardActions.update(new ContestScoreboardModel(data))
+            })
+        }
     }
 
     handleUpdate(contestScoreboard) {
