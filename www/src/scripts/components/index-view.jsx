@@ -1,12 +1,15 @@
 import React from 'react'
 import DocumentTitle from 'react-document-title'
-import { Paper } from 'material-ui'
+import { Paper, Styles } from 'material-ui'
 
 
 export default class IndexView extends React.Component {
     render() {
         let style = {
-            padding: '15px'
+            paddingTop: '15px',
+            paddingBottom: '15px',
+            paddingLeft: Styles.Spacing.desktopGutter,
+            paddingRight: Styles.Spacing.desktopGutter
         }
 
         return (

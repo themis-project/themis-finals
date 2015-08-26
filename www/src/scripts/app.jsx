@@ -3,7 +3,7 @@ import React from 'react'
 import Router, { Route, DefaultRoute, NotFoundRoute, Link, RouteHandler, HistoryLocation } from 'react-router'
 import DocumentTitle from 'react-document-title'
 import injectTapEventPlugin from 'react-tap-event-plugin'
-import mui, { AppBar, Tab, Tabs } from 'material-ui'
+import mui, { AppBar, Tab, Tabs, Styles, Paper } from 'material-ui'
 
 import IndexView from './components/index-view'
 import ScoreboardView from './components/scoreboard-view'
@@ -47,44 +47,82 @@ class App extends React.Component {
     }
 
     render() {
-        let ndx = null
+        let selectedTab = 'notfound'
         let routeNames = ['index', 'scoreboard', 'news']
         if (this.props.identity.isInternal()) {
             routeNames.push('logs')
         }
 
-        for (let i=0; i<routeNames.length; ++i) {
-            if (this.context.router.isActive(routeNames[i], '', '')) {
-                ndx = i
+        for (let routeName of routeNames) {
+            if (this.context.router.isActive(routeName, '', '')) {
+                selectedTab = routeName
                 break
             }
         }
 
-        let tabContainer = ''
+        let rootStyles = {
+            backgroundColor: Styles.Colors.cyan500,
+            position: 'fixed',
+            height: 64,
+            top: 0,
+            right: 0,
+            zIndex: 4,
+            width: '100%'
+        }
 
-        if (ndx != null) {
-            let tabs = [
-                <Tab key="index" label="Index" route="index" onActive={this.onTabActivate}/>,
-                <Tab key="scoreboard" label="Scoreboard" route="scoreboard" onActive={this.onTabActivate}/>,
-                <Tab key="news" label="News" route="news" onActive={this.onTabActivate}/>
-            ]
+        let containerStyles = {
+            position: 'absolute',
+            right: Styles.Spacing.desktopGutter,
+            bottom: 0
+        }
 
-            if (this.props.identity.isInternal()) {
-                tabs.push(<Tab key="logs" label="Logs" route="logs" onActive={this.onTabActivate}/>)
-            }
+        let tabsStyles = {
+            width: 425,
+            bottom: 0
+        }
 
-            tabContainer = (
-                <Tabs initialSelectedIndex={ndx}>
-                    {tabs}
-                </Tabs>
-            )
+        let tabStyle = {
+            height: 64,
+            textTransform: 'uppercase'
+        }
+
+        let headerContainerStyle = {
+            position: 'fixed',
+            width: 300,
+            left: Styles.Spacing.desktopGutter
+        }
+
+        let spanStyle = {
+            color: Styles.Colors.white,
+            fontWeight: Styles.Typography.fontWeightLight,
+            top: 22,
+            position: 'absolute',
+            fontSize: 26
+        }
+
+        let tabs = [
+            <Tab style={tabStyle} key="scoreboard" label="Scoreboard" route="scoreboard" value="scoreboard" onActive={this.onTabActivate}/>,
+            <Tab style={tabStyle} key="news" label="News" route="news" value="news" onActive={this.onTabActivate}/>
+        ]
+
+        if (this.props.identity.isInternal()) {
+            tabs.push(<Tab style={tabStyle} key="logs" label="Logs" route="logs" value="logs" onActive={this.onTabActivate}/>)
         }
 
         return (
             <DocumentTitle title="Themis Finals">
                 <section>
-                    <AppBar title="Themis Finals"/>
-                    {tabContainer}
+                    <Paper zDepth={0} rounded={false} style={rootStyles}>
+                        <div style={headerContainerStyle}>
+                            <span style={spanStyle}>Themis Finals</span>
+                        </div>
+                        <div style={containerStyles}>
+                            <Tabs value={selectedTab} style={tabsStyles}>
+                                {tabs}
+                            </Tabs>
+                        </div>
+                    </Paper>
+
                     <ContestInfoBarView/>
                     <main>
                         <RouteHandler identity={this.props.identity}/>

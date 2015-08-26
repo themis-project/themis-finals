@@ -1,6 +1,6 @@
 import React from 'react'
 import DocumentTitle from 'react-document-title'
-import { Table, Paper } from 'material-ui'
+import { Table, Paper, Styles } from 'material-ui'
 import 'array.prototype.find'
 
 import dataManager from '../data-manager'
@@ -235,7 +235,10 @@ export default class ScoreboardView extends React.Component {
 
     render() {
         let style = {
-            padding: '15px'
+            paddingTop: '15px',
+            paddingBottom: '15px',
+            paddingLeft: Styles.Spacing.desktopGutter,
+            paddingRight: Styles.Spacing.desktopGutter
         }
 
         return (

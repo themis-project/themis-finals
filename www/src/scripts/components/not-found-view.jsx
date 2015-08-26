@@ -1,6 +1,6 @@
 import React from 'react'
 import DocumentTitle from 'react-document-title'
-import { Paper, List, ListItem } from 'material-ui'
+import { Paper, List, ListItem, Styles } from 'material-ui'
 
 
 export default class NotFoundView extends React.Component {
@@ -23,7 +23,10 @@ export default class NotFoundView extends React.Component {
 
     render() {
         let style = {
-            padding: '15px'
+            paddingTop: '15px',
+            paddingBottom: '15px',
+            paddingLeft: Styles.Spacing.desktopGutter,
+            paddingRight: Styles.Spacing.desktopGutter
         }
 
         let listStyle = {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Paper } from 'material-ui'
+import { Paper, Styles } from 'material-ui'
 
 import ContestRoundView from './contest-round-view'
 import ContestStateView from './contest-state-view'
@@ -13,7 +13,11 @@ export default class ContestInfoBarView extends React.Component {
 
     render() {
         let style = {
-            padding: '15px'
+            paddingTop: '15px',
+            paddingBottom: '15px',
+            paddingLeft: Styles.Spacing.desktopGutter,
+            paddingRight: Styles.Spacing.desktopGutter,
+            marginTop: '64px'
         }
 
         return (

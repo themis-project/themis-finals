@@ -1,6 +1,6 @@
 import React from 'react'
 import DocumentTitle from 'react-document-title'
-import { RaisedButton, Paper } from 'material-ui'
+import { RaisedButton, Paper, Styles } from 'material-ui'
 
 import PostListView from './post-list-view'
 import NewsStore from '../stores/news-store'
@@ -29,7 +29,10 @@ export default class NewsView extends React.Component {
 
     render() {
         let style = {
-            padding: '15px'
+            paddingTop: '15px',
+            paddingBottom: '15px',
+            paddingLeft: Styles.Spacing.desktopGutter,
+            paddingRight: Styles.Spacing.desktopGutter
         }
 
         let buttonStyle = {

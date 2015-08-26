@@ -24,7 +24,7 @@
     "immutable": "^3.7.4",
     "markdown-it": "^4.4.0",
     "markdown-it-emoji": "^1.1.0",
-    "material-ui": "^0.10.2",
+    "material-ui": "^0.11.0",
     "moment": "^2.10.6",
     "normalize.css": "^3.0.3",
     "numeral": "^1.5.3",
