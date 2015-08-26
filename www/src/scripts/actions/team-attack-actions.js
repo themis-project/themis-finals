@@ -21,7 +21,7 @@ class TeamAttackActions {
             })
             .then((data) => {
                 let teamAttacks = data.map((props) => {
-                    return new TeamAttack(props)
+                    return new TeamAttackModel(props)
                 })
                 resolve(new List(teamAttacks))
             })
@@ -33,6 +33,10 @@ class TeamAttackActions {
 
     update(teamAttacks) {
         this.dispatch(teamAttacks)
+    }
+
+    updateSingle(teamAttack) {
+        this.dispatch(teamAttack)
     }
 
     fetch() {

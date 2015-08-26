@@ -6,6 +6,7 @@ require './lib/utils/queue'
 require 'themis/checker/result'
 require './lib/controllers/contest-state'
 require './lib/utils/event-emitter'
+require './lib/controllers/attack'
 
 
 module Themis
@@ -166,6 +167,7 @@ module Themis
                     else
                         attacks.each do |attack|
                             Themis::Controllers::Score::charge_attack flag, attack, scoreboard_enabled
+                            Themis::Controllers::Attack::consider_attack attack, scoreboard_enabled
                         end
                     end
 

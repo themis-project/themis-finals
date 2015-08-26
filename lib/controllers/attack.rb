@@ -1,4 +1,5 @@
 require 'themis/attack/result'
+require './lib/utils/event-emitter'
 
 
 module Themis
@@ -7,13 +8,28 @@ module Themis
             def self.get_recent
                 attacks = []
                 Themis::Models::Team.all.each do |team|
-                    attack = Themis::Models::Attack.last :team => team
+                    attack = Themis::Models::Attack.last(
+                        team: team,
+                        considered: true)
+
                     if attack != nil
                         attacks << attack
                     end
                 end
 
                 attacks
+            end
+
+            def self.consider_attack(attack, scoreboard_enabled)
+                attack.considered = true
+                attack.save
+                data = {
+                    id: attack.id,
+                    occured_at: attack.occured_at,
+                    team_id: attack.team_id
+                }
+
+                Themis::Utils::EventEmitter.emit 'team/attack', data, true, scoreboard_enabled, scoreboard_enabled
             end
 
             def self.process(team, data)
@@ -90,6 +106,7 @@ module Themis
                 begin
                     attack = Themis::Models::Attack.create(
                         occured_at: DateTime.now,
+                        considered: false,
                         team: team,
                         flag: flag)
                     r = Themis::Attack::Result::SUCCESS_FLAG_ACCEPTED

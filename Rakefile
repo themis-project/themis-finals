@@ -38,7 +38,7 @@ namespace :contest do
     end
 
     desc 'Enqueue start contest'
-    task :start do
+    task :start_async do
         change_contest_state :start_async
     end
 
