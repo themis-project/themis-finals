@@ -19,7 +19,10 @@ module Themis
                     case job.body
                     when 'push'
                         contest_state = Themis::Models::ContestState.last
-                        if not contest_state.nil? and contest_state.state == :running
+                        if not contest_state.nil? and [:await_start, :running].include? contest_state.state
+                            if contest_state.state == :await_start
+                                Themis::Controllers::Contest::start
+                            end
                             Themis::Controllers::Contest::push_flags
                         end
                     when 'poll'

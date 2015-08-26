@@ -25,6 +25,10 @@ module Themis
                 Themis::Controllers::ScoreboardState::enable
             end
 
+            def self.start_async
+                change_state :await_start
+            end
+
             def self.start
                 change_state :running
             end

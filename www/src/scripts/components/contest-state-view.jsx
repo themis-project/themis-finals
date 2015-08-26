@@ -48,6 +48,11 @@ export default class ContestStateView extends React.Component {
                 style.color = Styles.Colors.grey600
                 style.backgroundColor = Styles.Colors.grey100
                 break
+            case 'await_start':
+                text = 'Contest will start soon'
+                style.color = Styles.Colors.blue900
+                style.backgroundColor = Styles.Colors.blue50
+                break
             case 'running':
                 text = 'Contest running'
                 style.color = Styles.Colors.green700

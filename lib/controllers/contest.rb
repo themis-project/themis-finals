@@ -13,6 +13,10 @@ module Themis
         module Contest
             @logger = Themis::Utils::Logger::get
 
+            def self.start
+                Themis::Controllers::ContestState::start
+            end
+
             def self.push_flag(team, service, round)
                 flag = Themis::Controllers::Flag::issue team, service, round
 

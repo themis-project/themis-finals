@@ -20,8 +20,8 @@ def change_contest_state(command)
     case command
     when :init
         Themis::Controllers::ContestState::init
-    when :start
-        Themis::Controllers::ContestState::start
+    when :start_async
+        Themis::Controllers::ContestState::start_async
     when :resume
         Themis::Controllers::ContestState::resume
     when :pause
@@ -37,9 +37,9 @@ namespace :contest do
         change_contest_state :init
     end
 
-    desc 'Start contest'
+    desc 'Enqueue start contest'
     task :start do
-        change_contest_state :start
+        change_contest_state :start_async
     end
 
     desc 'Resume contest'
@@ -52,7 +52,7 @@ namespace :contest do
         change_contest_state :pause
     end
 
-    desc 'Start completion of contest'
+    desc 'Enqueue complete contest'
     task :complete_async do
         change_contest_state :complete_async
     end
