@@ -4,7 +4,7 @@ import { Dialog, FlatButton, TextField } from 'material-ui'
 import NewsActions from '../actions/news-actions'
 
 
-export default class PostAddDialogView extends React.Component {
+export default class PostEditDialogView extends React.Component {
     constructor(props) {
         super(props)
 
@@ -17,8 +17,8 @@ export default class PostAddDialogView extends React.Component {
         this.onChangeDescription = this.onChangeDescription.bind(this)
 
         this.state = {
-            title: '',
-            description: ''
+            title: this.props.title,
+            description: this.props.description
         }
     }
 
@@ -27,7 +27,7 @@ export default class PostAddDialogView extends React.Component {
     }
 
     onOK() {
-        NewsActions.add(this.state.title, this.state.description)
+        NewsActions.edit(this.props.id, this.state.title, this.state.description)
         this.refs.dlg.dismiss()
     }
 
@@ -45,8 +45,8 @@ export default class PostAddDialogView extends React.Component {
 
     start() {
         this.setState({
-            title: '',
-            description: ''
+            title: this.props.title,
+            description: this.props.description
         })
         this.refs.dlg.show()
     }
@@ -58,7 +58,7 @@ export default class PostAddDialogView extends React.Component {
     render() {
         let actions = [
               <FlatButton key={1} label="Cancel" secondary={true} onTouchTap={this.onCancel}/>,
-              <FlatButton key={2} label="Save" primary={true} onTouchTap={this.onOK}/>
+              <FlatButton key={2} label="Update" primary={true} onTouchTap={this.onOK}/>
         ]
 
         let descriptionFieldStyle = {
@@ -66,7 +66,7 @@ export default class PostAddDialogView extends React.Component {
         }
 
         return (
-            <Dialog ref="dlg" title="Add post" actions={actions} modal={false} onShow={this.onShow}>
+            <Dialog ref="dlg" title="Edit post" actions={actions} modal={false} onShow={this.onShow}>
                 <TextField ref="titleField" fullWidth={true} hintText="post title" value={this.state.title} onChange={this.onChangeTitle}/>
                 <TextField ref="descriptionField" style={descriptionFieldStyle} fullWidth={true} hintText="post description" multiLine={true} value={this.state.description} onChange={this.onChangeDescription}/>
             </Dialog>

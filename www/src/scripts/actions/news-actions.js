@@ -33,7 +33,7 @@ class NewsActions {
 
     static addPromise(postTitle, postDescription) {
         return new Promise((resolve, reject) => {
-            fetch(`/api/post`, {
+            fetch('/api/post', {
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/json'
@@ -45,6 +45,31 @@ class NewsActions {
             })
             .then((response) => {
                 if (response.status === 201) {
+                    resolve()
+                } else {
+                    reject('Unexpected status code')
+                }
+            })
+            .catch((err) => {
+                reject(err)
+            })
+        })
+    }
+
+    static editPromise(postId, postTitle, postDescription) {
+        return new Promise((resolve, reject) => {
+            fetch(`/api/post/${postId}`, {
+                method: 'put',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title: postTitle,
+                    description: postDescription
+                })
+            })
+            .then((response) => {
+                if (response.status === 204) {
                     resolve()
                 } else {
                     reject('Unexpected status code')
@@ -109,7 +134,18 @@ class NewsActions {
         NewsActions
         .addPromise(postTitle, postDescription)
         .then(() => {
+        })
+        .catch((err) => {
+            this.actions.failed(err)
+        })
+    }
 
+    edit(postId, postTitle, postDescription) {
+        this.dispatch()
+
+        NewsActions
+        .editPromise(postId, postTitle, postDescription)
+        .then(() => {
         })
         .catch((err) => {
             this.actions.failed(err)

@@ -21,7 +21,8 @@ class NewsStore {
             handleOnEdit: NewsActions.ON_EDIT,
             handleOnRemove: NewsActions.ON_REMOVE,
             handleRemove: NewsActions.REMOVE,
-            handleAdd: NewsActions.ADD
+            handleAdd: NewsActions.ADD,
+            handleEdit: NewsActions.EDIT
         })
 
         if (eventManager.enabled) {
@@ -87,6 +88,14 @@ class NewsStore {
     }
 
     handleAdd() {
+        this.setState({
+            loading: false,
+            err: null,
+            collection: this.state.collection
+        })
+    }
+
+    handleEdit() {
         this.setState({
             loading: false,
             err: null,

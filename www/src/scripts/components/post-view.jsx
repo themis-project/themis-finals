@@ -4,13 +4,19 @@ import { Card, CardText, CardActions, FlatButton, CardTitle, Paper } from 'mater
 import MarkdownRenderer from '../utils/markdown'
 import moment from 'moment'
 import PostRemoveDialogView from './post-remove-dialog-view'
+import PostEditDialogView from './post-edit-dialog-view'
 
 
 export default class PostView extends React.Component {
     constructor(props) {
         super(props)
 
+        this.onEditDialog = this.onEditDialog.bind(this)
         this.onRemoveDialog = this.onRemoveDialog.bind(this)
+    }
+
+    onEditDialog() {
+        this.refs.editDialog.start()
     }
 
     onRemoveDialog() {
@@ -30,9 +36,10 @@ export default class PostView extends React.Component {
             actions = (
                 <div>
                     <CardActions>
-                        <FlatButton label="Edit"/>
+                        <FlatButton label="Edit" onTouchTap={this.onEditDialog}/>
                         <FlatButton label="Remove" onTouchTap={this.onRemoveDialog}/>
                     </CardActions>
+                    <PostEditDialogView ref="editDialog" id={this.props.id} title={this.props.title} description={this.props.description}/>
                     <PostRemoveDialogView ref="removeDialog" id={this.props.id} title={this.props.title}/>
                 </div>
             )
@@ -41,7 +48,7 @@ export default class PostView extends React.Component {
         return (
             <Card style={style}>
                 <CardTitle title={this.props.title}/>
-                <CardText dangerouslySetInnerHTML={{__html: md.render(this.props.children)}}/>
+                <CardText dangerouslySetInnerHTML={{__html: md.render(this.props.description)}}/>
                 {actions}
                 <CardText>
                     Published on {moment(this.props.updatedAt).format('lll')}
