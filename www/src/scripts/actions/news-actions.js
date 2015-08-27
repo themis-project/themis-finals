@@ -31,19 +31,37 @@ class NewsActions {
         })
     }
 
+    static deletePromise(postId) {
+        return new Promise((resolve, reject) => {
+            fetch(`/api/post/${postId}`, {
+                method: 'delete'
+            })
+            .then((response) => {
+                if (response.status === 204) {
+                    resolve()
+                } else {
+                    reject('Unexpected status code')
+                }
+            })
+            .catch((err) => {
+                reject(err)
+            })
+        })
+    }
+
     update(posts) {
         this.dispatch(posts)
     }
 
-    add(post) {
+    onAdd(post) {
         this.dispatch(post)
     }
 
-    edit(post) {
+    onEdit(post) {
         this.dispatch(post)
     }
 
-    remove(postId) {
+    onRemove(postId) {
         this.dispatch(postId)
     }
 
@@ -54,6 +72,19 @@ class NewsActions {
         .fetchPromise()
         .then((posts) => {
             this.actions.update(posts)
+        })
+        .catch((err) => {
+            this.actions.failed(err)
+        })
+    }
+
+    remove(postId) {
+        this.dispatch()
+
+        NewsActions
+        .deletePromise(postId)
+        .then(() => {
+            this.actions.onRemove(postId)
         })
         .catch((err) => {
             this.actions.failed(err)

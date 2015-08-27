@@ -17,8 +17,9 @@ class NewsStore {
             handleUpdate: NewsActions.UPDATE,
             handleFetch: NewsActions.FETCH,
             handleFailed: NewsActions.FAILED,
-            handleAdd: NewsActions.ADD,
-            handleEdit: NewsActions.EDIT,
+            handleOnAdd: NewsActions.ON_ADD,
+            handleOnEdit: NewsActions.ON_EDIT,
+            handleOnRemove: NewsActions.ON_REMOVE,
             handleRemove: NewsActions.REMOVE
         })
 
@@ -26,19 +27,19 @@ class NewsStore {
             eventManager.eventSource.addEventListener('posts/add', (e) => {
                 let data = JSON.parse(e.data)
                 console.log((new Date()), data)
-                NewsActions.add(new PostModel(data))
+                NewsActions.onAdd(new PostModel(data))
             })
 
             eventManager.eventSource.addEventListener('posts/remove', (e) => {
                 let data = JSON.parse(e.data)
                 console.log((new Date()), data)
-                NewsActions.remove(data.id)
+                NewsActions.onRemove(data.id)
             })
 
             eventManager.eventSource.addEventListener('posts/edit', (e) => {
                 let data = JSON.parse(e.data)
                 console.log((new Date()), data)
-                NewsActions.edit(new PostModel(data))
+                NewsActions.onEdit(new PostModel(data))
             })
         }
     }
@@ -51,7 +52,7 @@ class NewsStore {
         })
     }
 
-    handleAdd(post) {
+    handleOnAdd(post) {
         this.setState({
             loading: false,
             err: null,
@@ -59,7 +60,7 @@ class NewsStore {
         })
     }
 
-    handleEdit(post) {
+    handleOnEdit(post) {
         let ndx = this.state.collection.findIndex(x => x.id === post.id)
         this.setState({
             loading: false,
@@ -68,11 +69,19 @@ class NewsStore {
         })
     }
 
-    handleRemove(postId) {
+    handleOnRemove(postId) {
         this.setState({
             loading: false,
             err: null,
             collection: this.state.collection.filter(x => x.id !== postId)
+        })
+    }
+
+    handleRemove() {
+        this.setState({
+            loading: false,
+            err: null,
+            collection: this.state.collection
         })
     }
 
