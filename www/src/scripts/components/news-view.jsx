@@ -5,6 +5,7 @@ import { RaisedButton, Paper, Styles } from 'material-ui'
 import PostListView from './post-list-view'
 import NewsStore from '../stores/news-store'
 import NewsActions from '../actions/news-actions'
+import PostAddDialogView from './post-add-dialog-view'
 
 
 export default class NewsView extends React.Component {
@@ -12,6 +13,7 @@ export default class NewsView extends React.Component {
         super(props)
         this.state = NewsStore.getState()
         this.onUpdate = this.onUpdate.bind(this)
+        this.onAddDialog = this.onAddDialog.bind(this)
     }
 
     componentDidMount() {
@@ -27,6 +29,10 @@ export default class NewsView extends React.Component {
         this.setState(state)
     }
 
+    onAddDialog() {
+        this.refs.addDialog.start()
+    }
+
     render() {
         let style = {
             paddingTop: '15px',
@@ -35,15 +41,25 @@ export default class NewsView extends React.Component {
             paddingRight: Styles.Spacing.desktopGutter
         }
 
-        let buttonStyle = {
+        let controlAreaStyle = {
             marginBottom: '10px'
+        }
+
+        let controlArea = ''
+        if (this.props.identity.isInternal()) {
+            controlArea = (
+                <div style={controlAreaStyle}>
+                    <RaisedButton label="Add" primary={true} onTouchTap={this.onAddDialog}/>
+                    <PostAddDialogView ref="addDialog"/>
+                </div>
+            )
         }
 
         return (
             <DocumentTitle title="Themis Finals :: News">
                 <Paper size={1} style={style}>
                     <h2>News</h2>
-                    {this.props.identity.isInternal() ? <RaisedButton style={buttonStyle} label="Create" primary={true} />: ''}
+                    {controlArea}
                     {
                         (() => {
                             if (this.state.loading) {

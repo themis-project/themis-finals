@@ -20,7 +20,8 @@ class NewsStore {
             handleOnAdd: NewsActions.ON_ADD,
             handleOnEdit: NewsActions.ON_EDIT,
             handleOnRemove: NewsActions.ON_REMOVE,
-            handleRemove: NewsActions.REMOVE
+            handleRemove: NewsActions.REMOVE,
+            handleAdd: NewsActions.ADD
         })
 
         if (eventManager.enabled) {
@@ -78,6 +79,14 @@ class NewsStore {
     }
 
     handleRemove() {
+        this.setState({
+            loading: false,
+            err: null,
+            collection: this.state.collection
+        })
+    }
+
+    handleAdd() {
         this.setState({
             loading: false,
             err: null,

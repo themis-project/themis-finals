@@ -31,6 +31,31 @@ class NewsActions {
         })
     }
 
+    static addPromise(postTitle, postDescription) {
+        return new Promise((resolve, reject) => {
+            fetch(`/api/post`, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title: postTitle,
+                    description: postDescription
+                })
+            })
+            .then((response) => {
+                if (response.status === 201) {
+                    resolve()
+                } else {
+                    reject('Unexpected status code')
+                }
+            })
+            .catch((err) => {
+                reject(err)
+            })
+        })
+    }
+
     static removePromise(postId) {
         return new Promise((resolve, reject) => {
             fetch(`/api/post/${postId}`, {
@@ -78,13 +103,25 @@ class NewsActions {
         })
     }
 
+    add(postTitle, postDescription) {
+        this.dispatch()
+
+        NewsActions
+        .addPromise(postTitle, postDescription)
+        .then(() => {
+
+        })
+        .catch((err) => {
+            this.actions.failed(err)
+        })
+    }
+
     remove(postId) {
         this.dispatch()
 
         NewsActions
         .removePromise(postId)
         .then(() => {
-            this.actions.onRemove(postId)
         })
         .catch((err) => {
             this.actions.failed(err)
