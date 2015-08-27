@@ -31,7 +31,7 @@ class NewsActions {
         })
     }
 
-    static deletePromise(postId) {
+    static removePromise(postId) {
         return new Promise((resolve, reject) => {
             fetch(`/api/post/${postId}`, {
                 method: 'delete'
@@ -82,7 +82,7 @@ class NewsActions {
         this.dispatch()
 
         NewsActions
-        .deletePromise(postId)
+        .removePromise(postId)
         .then(() => {
             this.actions.onRemove(postId)
         })
