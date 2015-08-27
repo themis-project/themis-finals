@@ -66,7 +66,7 @@ export default class PostAddDialogView extends React.Component {
         }
 
         return (
-            <Dialog ref="dlg" title="Add post" actions={actions} modal={true} onShow={this.onShow}>
+            <Dialog ref="dlg" title="Add post" actions={actions} modal={false} onShow={this.onShow}>
                 <TextField ref="titleField" fullWidth={true} hintText="post title" value={this.state.title} onChange={this.onChangeTitle}/>
                 <TextField ref="descriptionField" style={descriptionFieldStyle} fullWidth={true} hintText="post description" multiLine={true} value={this.props.description} onChange={this.onChangeDescription}/>
             </Dialog>

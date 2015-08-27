@@ -32,7 +32,7 @@ export default class PostRemoveDialogView extends React.Component {
         ]
 
         return (
-            <Dialog ref="dlg" title="Remove post" actions={actions} modal={true}>
+            <Dialog ref="dlg" title="Remove post" actions={actions} modal={false}>
                 <p>Do you really want to remove post <i>{this.props.title}</i>?</p>
             </Dialog>
         )
