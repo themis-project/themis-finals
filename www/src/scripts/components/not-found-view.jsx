@@ -30,7 +30,19 @@ export default class NotFoundView extends React.Component {
         }
 
         let listStyle = {
-            maxWidth: '500px'
+            listStyleType: 'none',
+            paddingLeft: '0',
+            lineHeight: '1.5em'
+        }
+
+        let links = [
+            <li key={0}><a href="/" onTouchTap={this.getOnNavigate('index')}>Main page</a></li>,
+            <li key={1}><a href="/scoreboard" onTouchTap={this.getOnNavigate('scoreboard')}>Scoreboard</a></li>,
+            <li key={2}><a href="/news" onTouchTap={this.getOnNavigate('news')}>News</a></li>
+        ]
+
+        if (this.props.identity.isInternal()) {
+            links.push(<li key={3}><a href="/logs" onTouchTap={this.getOnNavigate('logs')}>Logs</a></li>)
         }
 
         return (
@@ -38,13 +50,10 @@ export default class NotFoundView extends React.Component {
                 <Paper size={1} style={style}>
                     <h2>Not Found</h2>
                     <p>This is not the page you are looking for...</p>
-                    <Paper size={1} style={listStyle}>
-                        <List subheader="Try these">
-                            <ListItem primaryText="Main" onClick={this.getOnNavigate('index')}/>
-                            <ListItem primaryText="Scoreboard" onClick={this.getOnNavigate('scoreboard')}/>
-                            <ListItem primaryText="News" onClick={this.getOnNavigate('news')}/>
-                        </List>
-                    </Paper>
+                    <p>Try these:</p>
+                    <ul style={listStyle}>
+                        {links}
+                    </ul>
                 </Paper>
             </DocumentTitle>
         )
