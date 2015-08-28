@@ -80,3 +80,8 @@
     height: 36px;
     vertical-align: middle
 }
+
+.themis-post > p {
+    margin: 0;
+    line-height: 1.5em;
+}

@@ -1,7 +1,9 @@
 import React from 'react'
-import { Dialog, FlatButton, TextField } from 'material-ui'
+import { Dialog, FlatButton, TextField, Card, CardTitle, CardText } from 'material-ui'
 
 import NewsActions from '../actions/news-actions'
+import MarkdownRenderer from '../utils/markdown'
+import moment from 'moment'
 
 
 export default class PostAddDialogView extends React.Component {
@@ -65,10 +67,33 @@ export default class PostAddDialogView extends React.Component {
             minHeight: '100px'
         }
 
+        let md = new MarkdownRenderer()
+
+        let containerStyle = {
+            display: 'flex'
+        }
+
+        let formStyle = {
+            width: '50%',
+            paddingRight: '10px'
+        }
+
+        let previewStyle = {
+            width: '50%'
+        }
+
         return (
             <Dialog ref="dlg" title="Add post" actions={actions} modal={false} onShow={this.onShow}>
-                <TextField ref="titleField" fullWidth={true} hintText="post title" value={this.state.title} onChange={this.onChangeTitle}/>
-                <TextField ref="descriptionField" style={descriptionFieldStyle} fullWidth={true} hintText="post description" multiLine={true} value={this.state.description} onChange={this.onChangeDescription}/>
+                <div style={containerStyle}>
+                    <div style={formStyle}>
+                        <TextField ref="titleField" fullWidth={true} hintText="post title" value={this.state.title} onChange={this.onChangeTitle}/>
+                        <TextField ref="descriptionField" style={descriptionFieldStyle} fullWidth={true} hintText="post description" multiLine={true} value={this.state.description} onChange={this.onChangeDescription}/>
+                    </div>
+                    <Card style={previewStyle}>
+                        <CardTitle title={this.state.title}/>
+                        <CardText className="themis-post" dangerouslySetInnerHTML={{__html: md.render(this.state.description)}}/>
+                    </Card>
+                </div>
             </Dialog>
         )
     }
