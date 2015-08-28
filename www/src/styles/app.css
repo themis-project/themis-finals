@@ -11,7 +11,7 @@
 
 .themis-table > tbody > tr > td,
 .themis-table > thead > tr > th {
-    padding: 6px;
+    padding: 3px;
     line-height: 1.4;
     vertical-align: middle;
     border-top: 1px solid #ddd
@@ -76,8 +76,8 @@
 }
 
 .themis-team-logo {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     vertical-align: middle
 }
 
