@@ -407,7 +407,7 @@ module Themis
                 end
 
                 state = Themis::Models::ContestState.last
-                if state.nil? or state.state == :initial
+                if state.nil? or [:initial, :await_start].include? state.state
                     halt 400, json(Themis::Attack::Result::ERR_CONTEST_NOT_STARTED)
                 end
 
