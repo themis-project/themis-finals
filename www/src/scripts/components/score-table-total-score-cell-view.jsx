@@ -9,7 +9,7 @@ export default class ScoreTableTotalScoreCellView extends React.Component {
         if (this.props.lastAttack != null) {
             extras = [
                 <br key={0}/>,
-                <span key={1} className="themis-score-last-attack">last attack on {moment(this.props.lastAttack).format('LTS')}</span>
+                <span key={1} className="themis-score-last-attack">last attack at {moment(this.props.lastAttack).format('LTS')}</span>
             ]
         }
         return (

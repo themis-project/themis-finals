@@ -110,6 +110,12 @@ module Themis
                         team: team,
                         flag: flag)
                     r = Themis::Attack::Result::SUCCESS_FLAG_ACCEPTED
+
+                    Themis::Utils::EventEmitter::emit_log 4, {
+                        attack_team_id: team.id,
+                        victim_team_id: flag.team_id,
+                        service_id: flag.service_id
+                    }
                 rescue ::DataObjects::IntegrityError => e
                     r = Themis::Attack::Result::ERR_FLAG_SUBMITTED
                 end

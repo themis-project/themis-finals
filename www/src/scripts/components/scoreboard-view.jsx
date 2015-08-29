@@ -252,7 +252,6 @@ export default class ScoreboardView extends React.Component {
                             }
 
                             if (this.isError()) {
-                                console.log(this.state)
                                 return <p>Failed to fetch scoreboard data</p>
                             }
 

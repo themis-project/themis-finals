@@ -8,6 +8,7 @@ module Themis
                 end_last
                 round = Themis::Models::Round.create started_at: DateTime.now
                 Themis::Utils::EventEmitter::emit_all 'contest/round', { value: Themis::Models::Round.count }
+                Themis::Utils::EventEmitter::emit_log 2, { value: Themis::Models::Round.count }
                 return round
             end
 

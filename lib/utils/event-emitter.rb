@@ -38,6 +38,10 @@ module Themis
             def self.emit_all(name, data)
                 emit name, data, true, true, true
             end
+
+            def self.emit_log(type, params)
+                emit 'log', { type: type, params: params }, true, false, false
+            end
         end
     end
 end

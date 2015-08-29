@@ -58,6 +58,7 @@ module Themis
                 end
 
                 Themis::Utils::EventEmitter::emit_all 'contest/state', { value: state }
+                Themis::Utils::EventEmitter::emit_log 1, { value: state }
             end
         end
     end
