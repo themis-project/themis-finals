@@ -47,7 +47,7 @@ export default class NotFoundView extends React.Component {
 
         return (
             <DocumentTitle title="Themis Finals :: Not Found">
-                <Paper size={1} style={style}>
+                <Paper zDepth={0} style={style}>
                     <h2>Not Found</h2>
                     <p>This is not the page you are looking for...</p>
                     <p>Try these:</p>

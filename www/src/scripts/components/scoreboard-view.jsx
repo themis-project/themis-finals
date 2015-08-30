@@ -243,7 +243,7 @@ export default class ScoreboardView extends React.Component {
 
         return (
             <DocumentTitle title="Themis Finals :: Scoreboard">
-                <Paper size={1} style={style}>
+                <Paper zDepth={0} style={style}>
                     <h2>Scoreboard</h2>
                     {
                         (() => {

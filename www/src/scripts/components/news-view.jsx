@@ -57,7 +57,7 @@ export default class NewsView extends React.Component {
 
         return (
             <DocumentTitle title="Themis Finals :: News">
-                <Paper size={1} style={style}>
+                <Paper zDepth={0} style={style}>
                     <h2>News</h2>
                     {controlArea}
                     {

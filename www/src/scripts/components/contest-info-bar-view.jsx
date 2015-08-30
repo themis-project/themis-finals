@@ -21,7 +21,7 @@ export default class ContestInfoBarView extends React.Component {
         }
 
         return (
-            <Paper size={1} style={style}>
+            <Paper style={style}>
                 <ContestRoundView/>
                 <ContestStateView/>
                 <StreamStatusView/>

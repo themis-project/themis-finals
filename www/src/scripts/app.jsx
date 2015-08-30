@@ -63,9 +63,8 @@ class App extends React.Component {
         let rootStyles = {
             backgroundColor: Styles.Colors.cyan500,
             position: 'fixed',
-            height: 64,
             top: 0,
-            right: 0,
+            height: 64,
             zIndex: 4,
             width: '100%'
         }
@@ -87,7 +86,7 @@ class App extends React.Component {
         }
 
         let headerContainerStyle = {
-            position: 'fixed',
+            position: 'absolute',
             width: 300,
             left: Styles.Spacing.desktopGutter
         }
@@ -109,6 +108,22 @@ class App extends React.Component {
             tabs.push(<Tab style={tabStyle} key="logs" label="Logs" route="logs" value="logs" onActive={this.onTabActivate}/>)
         }
 
+        let footerStyle = {
+            backgroundColor: Styles.Colors.grey800,
+            color: Styles.Colors.grey400,
+            position: 'absolute',
+            bottom: 0,
+            height: '80px',
+            width: '100%',
+            textAlign: 'center',
+            fontSize: '0.9em'
+        }
+
+        let linkStyle = {
+            color: Styles.Colors.grey200,
+            textDecoration: 'none'
+        }
+
         return (
             <DocumentTitle title="Themis Finals">
                 <section>
@@ -127,6 +142,11 @@ class App extends React.Component {
                     <main>
                         <RouteHandler identity={this.props.identity}/>
                     </main>
+
+                    <Paper zDepth={0} rounded={false} style={footerStyle}>
+                        <p>&copy; 2015 <a href="https://github.com/aspyatkin" target="_blank" style={linkStyle}>Alexander Pyatkin</a>. Crafted with passion in Samara, Russia.</p>
+                        <p>Find this on <a href="https://github.com/aspyatkin/themis-finals" target="_blank" style={linkStyle}>GitHub</a></p>
+                    </Paper>
                 </section>
             </DocumentTitle>
         )

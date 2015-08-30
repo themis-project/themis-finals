@@ -85,7 +85,7 @@ export default class LogsView extends React.Component {
 
         return (
             <DocumentTitle title="Themis Finals :: Logs">
-                <Paper size={1} style={style}>
+                <Paper zDepth={0} style={style}>
                     <h2>Logs</h2>
                     {
                         (() => {
