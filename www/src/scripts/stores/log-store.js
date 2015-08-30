@@ -20,13 +20,16 @@ class LogStore {
         if (eventManager.enabled) {
             eventManager.eventSource.addEventListener('log', (e) => {
                 let data = JSON.parse(e.data)
-                console.log((new Date()), data)
                 LogActions.unshift(new LogModel(data))
             })
         }
     }
 
     handleUnshift(log) {
+        while (this.state.collection.size > 500) {
+            this.state.collection = this.state.collection.pop()
+        }
+
         this.setState({
             loading: false,
             err: null,

@@ -23,7 +23,6 @@ class TeamScoreStore {
         if (eventManager.enabled) {
             eventManager.eventSource.addEventListener('team/score', (e) => {
                 let data = JSON.parse(e.data)
-                console.log((new Date()), data)
                 TeamScoreActions.updateSingle(new TeamScoreModel(data))
             })
         }

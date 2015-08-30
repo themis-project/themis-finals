@@ -28,19 +28,16 @@ class NewsStore {
         if (eventManager.enabled) {
             eventManager.eventSource.addEventListener('posts/add', (e) => {
                 let data = JSON.parse(e.data)
-                console.log((new Date()), data)
                 NewsActions.onAdd(new PostModel(data))
             })
 
             eventManager.eventSource.addEventListener('posts/remove', (e) => {
                 let data = JSON.parse(e.data)
-                console.log((new Date()), data)
                 NewsActions.onRemove(data.id)
             })
 
             eventManager.eventSource.addEventListener('posts/edit', (e) => {
                 let data = JSON.parse(e.data)
-                console.log((new Date()), data)
                 NewsActions.onEdit(new PostModel(data))
             })
         }

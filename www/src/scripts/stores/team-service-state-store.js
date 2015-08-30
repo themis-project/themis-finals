@@ -23,7 +23,6 @@ class TeamServiceStateStore {
         if (eventManager.enabled) {
             eventManager.eventSource.addEventListener('team/service', (e) => {
                 let data = JSON.parse(e.data)
-                console.log((new Date()), data)
                 TeamServiceStateActions.updateSingle(new TeamServiceStateModel(data))
             })
         }

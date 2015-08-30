@@ -23,7 +23,6 @@ class TeamAttackStore {
         if (eventManager.enabled) {
             eventManager.eventSource.addEventListener('team/attack', (e) => {
                 let data = JSON.parse(e.data)
-                console.log((new Date()), data)
                 TeamAttackActions.updateSingle(new TeamAttackModel(data))
             })
         }

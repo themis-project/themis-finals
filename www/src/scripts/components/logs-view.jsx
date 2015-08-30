@@ -94,7 +94,6 @@ export default class LogsView extends React.Component {
                             }
 
                             if (this.isError()) {
-                                console.log(this.state)
                                 return <p>Failed to fetch data</p>
                             }
 

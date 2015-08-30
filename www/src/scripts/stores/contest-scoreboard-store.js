@@ -21,7 +21,6 @@ class ContestScoreboardStore {
         if (eventManager.enabled) {
             eventManager.eventSource.addEventListener('contest/scoreboard', (e) => {
                 let data = JSON.parse(e.data)
-                console.log((new Date()), data)
                 ContestScoreboardActions.update(new ContestScoreboardModel(data))
             })
         }

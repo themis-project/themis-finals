@@ -21,7 +21,6 @@ class ContestStateStore {
         if (eventManager.enabled) {
             eventManager.eventSource.addEventListener('contest/state', (e) => {
                 let data = JSON.parse(e.data)
-                console.log((new Date()), data)
                 ContestStateActions.update(new ContestStateModel(data))
             })
         }

@@ -21,7 +21,6 @@ class ContestRoundStore {
         if (eventManager.enabled) {
             eventManager.eventSource.addEventListener('contest/round', (e) => {
                 let data = JSON.parse(e.data)
-                console.log((new Date()), data)
                 ContestRoundActions.update(new ContestRoundModel(data))
             })
         }
