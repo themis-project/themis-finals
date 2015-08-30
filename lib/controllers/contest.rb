@@ -7,6 +7,7 @@ require 'themis/checker/result'
 require './lib/controllers/contest-state'
 require './lib/utils/event-emitter'
 require './lib/controllers/attack'
+require './lib/controllers/scoreboard-state'
 
 
 module Themis
@@ -109,12 +110,20 @@ module Themis
                 end
             end
 
+            def self.prolong_flag_lifetime(flag)
+                flag.expired_at = flag.expired_at.to_time + prolong
+                flag.save
+            end
+
             def self.prolong_flag_lifetimes
                 prolong = Themis::Configuration::get_contest_flow.poll_period
 
                 Themis::Controllers::Flag::get_living.each do |flag|
-                    flag.expired_at = flag.expired_at.to_time + prolong
-                    flag.save
+                    begin
+                        prolong_flag_lifetime flag
+                    rescue => e
+                        @logger.error "#{e}"
+                    end
                 end
             end
 
@@ -150,29 +159,40 @@ module Themis
                 end
             end
 
-            def self.update_scores
-                Themis::Controllers::Flag::get_expired.each do |flag|
-                    polls = Themis::Models::FlagPoll.all(flag: flag)
+            def self.update_score(flag, scoreboard_enabled)
+                polls = Themis::Models::FlagPoll.all(flag: flag)
 
-                    scoreboard_state = Themis::Models::ScoreboardState.last
-                    scoreboard_enabled = scoreboard_state.nil? ? true : (scoreboard_state.state == :enabled)
+                Themis::Controllers::Score::charge_availability flag, polls, scoreboard_enabled
 
-                    Themis::Controllers::Score::charge_availability flag, polls, scoreboard_enabled
-
-                    attacks = flag.attacks
-                    if attacks.count == 0
-                        if polls.count(state: :error) == 0
-                            Themis::Controllers::Score::charge_defence flag, scoreboard_enabled
-                        end
-                    else
-                        attacks.each do |attack|
+                attacks = flag.attacks
+                if attacks.count == 0
+                    if polls.count(state: :error) == 0
+                        Themis::Controllers::Score::charge_defence flag, scoreboard_enabled
+                    end
+                else
+                    attacks.each do |attack|
+                        begin
                             Themis::Controllers::Score::charge_attack flag, attack, scoreboard_enabled
                             Themis::Controllers::Attack::consider_attack attack, scoreboard_enabled
+                        rescue => e
+                            @logger.error "#{e}"
                         end
                     end
+                end
 
-                    flag.considered_at = DateTime.now
-                    flag.save
+                flag.considered_at = DateTime.now
+                flag.save
+            end
+
+            def self.update_scores
+                scoreboard_enabled = Themis::Controllers::ScoreboardState::is_enabled
+
+                Themis::Controllers::Flag::get_expired.each do |flag|
+                    begin
+                        update_score flag, scoreboard_enabled
+                    rescue => e
+                        @logger.error "#{e}"
+                    end
                 end
             end
 

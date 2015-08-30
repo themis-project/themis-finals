@@ -15,7 +15,6 @@ module Themis
             @_database_uri
         end
 
-
         def self.beanstalk_uri(beanstalkd_uri)
             @_beanstalkd_uri = beanstalkd_uri
         end

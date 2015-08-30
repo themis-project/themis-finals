@@ -8,7 +8,7 @@ require './lib/controllers/identity'
 require 'themis/attack/result'
 require './lib/controllers/attack'
 require './lib/utils/event-emitter'
-require 'em-synchrony'
+require './lib/controllers/scoreboard-state'
 
 
 module Rack
@@ -55,7 +55,6 @@ module Themis
                     last_event_id_str = env['HTTP_LAST_EVENT_ID']
                     unless last_event_id_str.nil?
                         last_event_id = last_event_id_str.to_i
-                        logger.info "Client want to fetch all events greater than #{last_event_id}"
                         last_events = nil
                         if identity == 'internal'
                             last_events = Themis::Models::ServerSentEvent.all(
@@ -77,7 +76,6 @@ module Themis
                         if last_events != nil
                             last_events.each do |last_event|
                                 message = Themis::Utils::EventEmitter.format last_event.id, last_event.name, last_event.data, 5000
-                                logger.info "Sending message #{message}"
                                 out << message
                             end
                         end
@@ -85,7 +83,6 @@ module Themis
 
                     event_stream.subscribe do |message|
                         if out.closed?
-                            logger.info 'Client disconnected!'
                             event_stream.unsubscribe
                             next
                         end
@@ -136,10 +133,8 @@ module Themis
             end
 
             get '/contest/scoreboard' do
-                scoreboard_state = Themis::Models::ScoreboardState.last
-
                 r = {
-                    enabled: scoreboard_state.nil? ? true : (scoreboard_state.state == :enabled)
+                    enabled: Themis::Controllers::ScoreboardState::is_enabled
                 }
 
                 json r
@@ -302,12 +297,7 @@ module Themis
 
             get '/team/scores' do
                 scoreboard_state = Themis::Models::ScoreboardState.last
-                scoreboard_enabled = false
-                if scoreboard_state.nil?
-                    scoreboard_enabled = true
-                else
-                    scoreboard_enabled = scoreboard_state.state == :enabled
-                end
+                scoreboard_enabled = scoreboard_state.nil? ? true : (scoreboard_state.state == :enabled)
 
                 remote_ip = IP.new request.ip
 
@@ -343,12 +333,7 @@ module Themis
 
             get '/team/attacks' do
                 scoreboard_state = Themis::Models::ScoreboardState.last
-                scoreboard_enabled = false
-                if scoreboard_state.nil?
-                    scoreboard_enabled = true
-                else
-                    scoreboard_enabled = scoreboard_state.state == :enabled
-                end
+                scoreboard_enabled = scoreboard_state.nil? ? true : (scoreboard_state.state == :enabled)
 
                 remote_ip = IP.new request.ip
 

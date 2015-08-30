@@ -5,6 +5,11 @@ require './lib/utils/event-emitter'
 module Themis
     module Controllers
         module ScoreboardState
+            def self.is_enabled
+                scoreboard_state = Themis::Models::ScoreboardState.last
+                return scoreboard_state.nil? ? true : (scoreboard_state.state == :enabled)
+            end
+
             def self.enable
                 Themis::Models::ScoreboardState.create(
                     state: :enabled,
