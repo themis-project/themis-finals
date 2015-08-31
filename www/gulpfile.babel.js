@@ -13,14 +13,14 @@ import concat from 'gulp-concat'
 
 var paths = {
     html: [
-        'www/src/index.html'
+        'src/index.html'
     ],
     scripts: [
-        'www/src/scripts/app.jsx'
+        'src/scripts/app.jsx'
     ],
     styles: [
         'node_modules/normalize.css/normalize.css',
-        'www/src/styles/app.css'
+        'src/styles/app.css'
     ]
 }
 
@@ -31,19 +31,19 @@ function isProduction() {
 
 
 gulp.task('clean_html', (callback) => {
-    del(['www/build/html/*'], callback)
+    del(['build/html/*'], callback)
 })
 
 
 gulp.task('html', ['clean_html'], () => {
     return gulp.src(paths.html)
         .pipe(gulpIf(isProduction, minifyHTML()))
-        .pipe(gulp.dest('www/build/html'))
+        .pipe(gulp.dest('build/html'))
 })
 
 
 gulp.task('clean_scripts', (callback) => {
-    del(['www/build/assets/js/*.js'], callback)
+    del(['build/assets/js/*.js'], callback)
 })
 
 
@@ -58,12 +58,12 @@ gulp.task('scripts', ['clean_scripts'], () => {
     .pipe(source('app.js'))
     .pipe(buffer())
     .pipe(gulpIf(isProduction, uglify()))
-    .pipe(gulp.dest('www/build/assets/js'))
+    .pipe(gulp.dest('build/assets/js'))
 })
 
 
 gulp.task('clean_styles', (callback) => {
-    del(['www/build/assets/css/*.css'], callback)
+    del(['build/assets/css/*.css'], callback)
 })
 
 
@@ -71,7 +71,7 @@ gulp.task('styles', ['clean_styles'], () => {
     return gulp.src(paths.styles)
         .pipe(concat('app.css'))
         .pipe(gulpIf(isProduction, minifyCSS()))
-        .pipe(gulp.dest('www/build/assets/css'))
+        .pipe(gulp.dest('build/assets/css'))
 })
 
 
