@@ -11,7 +11,10 @@ module Themis
             dbname 'themis'
         end
 
-        beanstalk_uri '127.0.0.1:11300'
+        beanstalk_connection do
+            host '127.0.0.1'
+            port 11300
+        end
 
         redis_connection do
             host '127.0.0.1'
