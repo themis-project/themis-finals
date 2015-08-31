@@ -3,7 +3,13 @@ require './lib/configuration/init'
 
 module Themis
     module Configuration
-        database_uri 'postgres://postgres:100cf32c205cbe9f41af3c738d12a4ee@127.0.0.1:5432/themis'
+        postgres_connection do
+            hostname '127.0.0.1'
+            port 5432
+            username 'postgres'
+            passwd '100cf32c205cbe9f41af3c738d12a4ee'
+            dbname 'themis'
+        end
 
         beanstalk_uri '127.0.0.1:11300'
 
