@@ -10,6 +10,16 @@ module Themis
             "postgres://#{@_postgres_connection.username}:#{@_postgres_connection.passwd}@#{@_postgres_connection.hostname}:#{@_postgres_connection.port}/#{@_postgres_connection.dbname}"
         end
 
+        def self.get_postgres_options
+            {
+                hostname: @_postgres_connection.hostname,
+                port: @_postgres_connection.port,
+                username: @_postgres_connection.username,
+                passwd: @_postgres_connection.passwd,
+                dbname: @_postgres_connection.dbname
+            }
+        end
+
         class PostgresConnection
             attr_accessor :hostname, :port, :username, :passwd, :dbname
 

@@ -1,13 +1,14 @@
 require './lib/controllers/scoreboard-state'
 require './lib/utils/event-emitter'
+require 'json'
 
 
 module Themis
     module Controllers
         module ContestState
             def self.init
-                Themis::Configuration.get_teams.each do |team_opts|
-                    Themis::Models::Team.create(
+                Themis::Configuration::get_teams.each do |team_opts|
+                    Themis::Models::Team::create(
                         name: team_opts.name,
                         alias: team_opts.alias,
                         network: team_opts.network,
@@ -15,14 +16,18 @@ module Themis
                         guest: team_opts.guest)
                 end
 
-                Themis::Configuration.get_services.each do |service_opts|
-                    Themis::Models::Service.create(
+                Themis::Configuration::get_services.each do |service_opts|
+                    Themis::Models::Service::create(
                         name: service_opts.name,
                         alias: service_opts.alias)
                 end
 
                 change_state :initial
                 Themis::Controllers::ScoreboardState::enable
+
+                stream_config_filename = File.join Dir.pwd, 'stream', 'config.js'
+                data = Themis::Configuration::get_stream_config
+                IO.write stream_config_filename, JSON.pretty_generate(data)
             end
 
             def self.start_async
@@ -52,7 +57,7 @@ module Themis
             private
             def self.change_state(state)
                 unless state.nil?
-                    Themis::Models::ContestState.create(
+                    Themis::Models::ContestState::create(
                         state: state,
                         created_at: DateTime.now)
                 end

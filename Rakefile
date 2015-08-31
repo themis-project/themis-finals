@@ -85,26 +85,3 @@ namespace :scoreboard do
         change_scoreboard_state :disabled
     end
 end
-
-
-task :print_config do
-    require './config'
-    require 'yaml'
-
-    puts Themis::Configuration::get_database_uri.to_yaml
-    puts Themis::Configuration::get_beanstalk_uri.to_yaml
-    puts Themis::Configuration::get_redis_options.to_yaml
-    puts Themis::Configuration::get_contest_flow.to_yaml
-    puts Themis::Configuration::get_services.to_yaml
-    puts Themis::Configuration::get_teams.to_yaml
-    puts Themis::Configuration::get_network.to_yaml
-end
-
-# task :test_publisher do
-#     require './config'
-#     require './lib/utils/publisher'
-
-#     p = Themis::Utils::Publisher.new
-#     p.publish 'test', 'HELLO!'
-#     p.publish 'test', 'WORLD!'
-# end
