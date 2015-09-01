@@ -25,7 +25,7 @@ module Themis
                 change_state :initial
                 Themis::Controllers::ScoreboardState::enable
 
-                stream_config_filename = File.join Dir.pwd, 'stream', 'config.js'
+                stream_config_filename = File.join Dir.pwd, 'stream', 'config.json'
                 data = Themis::Configuration::get_stream_config
                 IO.write stream_config_filename, JSON.pretty_generate(data)
             end

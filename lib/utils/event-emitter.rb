@@ -6,10 +6,6 @@ require './lib/utils/publisher'
 module Themis
     module Utils
         module EventEmitter
-            def self.format(id, name, data, retry_interval)
-                "id: #{id}\nevent: #{name}\nretry: #{retry_interval}\ndata: #{data.to_json}\n\n"
-            end
-
             def self.emit(name, data, internal, teams, other)
                 event = Themis::Models::ServerSentEvent.create(
                     name: name,
@@ -20,18 +16,22 @@ module Themis
                 )
 
                 publisher = Themis::Utils::Publisher.new
-                formatted_event = format event.id, name, data, 5000
+                event_data = {
+                    id: event.id,
+                    name: name,
+                    data: data
+                }.to_json
 
                 if internal
-                    publisher.publish 'themis:internal', formatted_event
+                    publisher.publish 'themis:internal', event_data
                 end
 
                 if teams
-                    publisher.publish 'themis:teams', formatted_event
+                    publisher.publish 'themis:teams', event_data
                 end
 
                 if other
-                    publisher.publish 'themis:other', formatted_event
+                    publisher.publish 'themis:other', event_data
                 end
             end
 

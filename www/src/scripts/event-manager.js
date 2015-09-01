@@ -1,7 +1,7 @@
 class EventManager {
     constructor() {
         if (this.enabled) {
-            this.eventSource = new window.EventSource('/api/stream')
+            this.eventSource = new window.EventSource('/stream')
         }
     }
 
