@@ -63,6 +63,8 @@ module Themis
                 else
                     @logger.info "Failed to push flag #{flag.flag} (status code #{status})!"
                 end
+
+                update_team_service_state flag.team, flag.service, status
             end
 
             def self.poll_flag(flag)
