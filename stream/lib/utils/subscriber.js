@@ -4,7 +4,6 @@ import config from './config'
 
 class Subscriber {
     constructor() {
-        console.log(config)
         let host = config.redisConnection.host
         let port = config.redisConnection.port
         let options = {}
