@@ -1,6 +1,5 @@
 require 'thin'
 require 'eventmachine'
-require './lib/backend/event-stream'
 require './lib/backend/application'
 require './lib/utils/logger'
 
@@ -10,7 +9,6 @@ module Themis
         @logger = Themis::Utils::Logger::get
 
         def self.run
-            event_stream = EventStream.new 'test'
             EM.run do
                 Thin::Server.start Application, ENV['LISTEN'], ENV['PORT'].to_i
 

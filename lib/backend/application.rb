@@ -1,6 +1,5 @@
 require 'sinatra/base'
 require 'sinatra/json'
-require './lib/backend/event-stream'
 require 'json'
 require 'ip'
 require 'date'
@@ -28,69 +27,6 @@ module Themis
             end
 
             disable :run
-
-            # get '/stream' do
-            #     remote_ip = IP.new request.ip
-            #     identity = nil
-
-            #     identity_team = Themis::Controllers::IdentityController.is_team remote_ip
-            #     unless identity_team.nil?
-            #         identity = 'teams'
-            #     end
-
-            #     if identity.nil? and Themis::Controllers::IdentityController.is_other remote_ip
-            #         identity = 'other'
-            #     end
-
-            #     if identity.nil? and Themis::Controllers::IdentityController.is_internal remote_ip
-            #         identity = 'internal'
-            #     end
-
-            #     halt 400 if identity.nil?
-            #     event_stream = EventStream.new "themis:#{identity}"
-
-            #     content_type 'text/event-stream'
-            #     stream :keep_open do |out|
-            #         logger.info 'Client connected!'
-            #         last_event_id_str = env['HTTP_LAST_EVENT_ID']
-            #         unless last_event_id_str.nil?
-            #             last_event_id = last_event_id_str.to_i
-            #             last_events = nil
-            #             if identity == 'internal'
-            #                 last_events = Themis::Models::ServerSentEvent.all(
-            #                     :id.gt => last_event_id,
-            #                     :internal => true
-            #                 )
-            #             elsif identity == 'teams'
-            #                 last_events = Themis::Models::ServerSentEvent.all(
-            #                     :id.gt => last_event_id,
-            #                     :teams => true
-            #                 )
-            #             elsif identity == 'other'
-            #                 last_events = Themis::Models::ServerSentEvent.all(
-            #                     :id.gt => last_event_id,
-            #                     :other => true
-            #                 )
-            #             end
-
-            #             if last_events != nil
-            #                 last_events.each do |last_event|
-            #                     message = Themis::Utils::EventEmitter.format last_event.id, last_event.name, last_event.data, 5000
-            #                     out << message
-            #                 end
-            #             end
-            #         end
-
-            #         event_stream.subscribe do |message|
-            #             if out.closed?
-            #                 event_stream.unsubscribe
-            #                 next
-            #             end
-
-            #             out << message
-            #         end
-            #     end
-            # end
 
             get '/identity' do
                 remote_ip = IP.new request.ip
