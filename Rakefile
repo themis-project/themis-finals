@@ -7,35 +7,36 @@ namespace :db do
 
         postgres_uri = Themis::Configuration::get_postgres_uri
 
-        # Sequel.connect(postgres_uri) do |db|
-        #     tables = [
-        #         'themis_models_server_sent_events',
-        #         'themis_models_contest_states',
-        #         'themis_models_posts',
-        #         'themis_models_scoreboard_states',
-        #         'themis_models_attack_attempts',
-        #         'themis_models_attacks',
-        #         'themis_models_total_scores',
-        #         'themis_models_scores',
-        #         'themis_models_team_service_history_states',
-        #         'themis_models_team_service_states',
-        #         'themis_models_flag_polls',
-        #         'themis_models_flags',
-        #         'themis_models_rounds',
-        #         'themis_models_services',
-        #         'themis_models_teams'
-        #     ]
-        #     tables.each do |table|
-        #         db.run "DROP TABLE IF EXISTS #{table}"
-        #     end
-        # end
+        Sequel.connect(postgres_uri) do |db|
+            tables = [
+                'server_sent_events',
+                'contest_states',
+                'posts',
+                'scoreboard_states',
+                'attack_attempts',
+                'attacks',
+                'total_scores',
+                'scores',
+                'team_service_history_states',
+                'team_service_states',
+                'flag_polls',
+                'flags',
+                'rounds',
+                'services',
+                'teams',
+                'schema_info'
+            ]
+            tables.each do |table|
+                db.run "DROP TABLE IF EXISTS #{table}"
+            end
+        end
 
         Sequel.extension :migration
         Sequel.extension :pg_json
 
-        db = Sequel.connect(postgres_uri)
-        Sequel::Migrator.run(db, 'migrations')
-
+        Sequel.connect(postgres_uri) do |db|
+            Sequel::Migrator.run(db, 'migrations')
+        end
 
         # require './lib/models/init'
 
