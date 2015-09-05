@@ -1,5 +1,6 @@
 require 'themis/attack/result'
 require './lib/utils/event-emitter'
+require './lib/constants/team-service-state'
 
 
 module Themis
@@ -9,8 +10,9 @@ module Themis
                 attacks = []
                 Themis::Models::Team.all.each do |team|
                     attack = Themis::Models::Attack.last(
-                        team: team,
-                        considered: true)
+                        :team_id => team.id,
+                        :considered => true
+                    )
 
                     if attack != nil
                         attacks << attack
@@ -34,16 +36,15 @@ module Themis
 
             def self.process(team, data)
                 attempt = Themis::Models::AttackAttempt.create(
-                    occured_at: DateTime.now,
-                    request: data.to_s,
-                    response: Themis::Attack::Result::ERR_GENERIC,
-                    team: team)
+                    :occured_at => DateTime.now,
+                    :request => data.to_s,
+                    :response => Themis::Attack::Result::ERR_GENERIC,
+                    :team_id => team.id
+                )
 
                 threshold = Time.now - Themis::Configuration::get_contest_flow.attack_limit_period
 
-                attempt_count = Themis::Models::AttackAttempt.count(
-                    :occured_at.gte => threshold.to_datetime,
-                    :team => team)
+                attempt_count = Themis::Models::AttackAttempt.where(:team => team).where('occured_at >= ?', threshold.to_datetime).count
 
                 if attempt_count > Themis::Configuration::get_contest_flow.attack_limit_attempts
                     r = Themis::Attack::Result::ERR_ATTEMPTS_LIMIT
@@ -67,8 +68,7 @@ module Themis
                     return r
                 end
 
-                flag = Themis::Models::Flag.first(:flag => match[0],
-                                                  :pushed_at.not => nil)
+                flag = Themis::Models::Flag.exclude(:pushed_at => nil).where(:flag => match[0]).first
 
                 if flag.nil?
                     r = Themis::Attack::Result::ERR_FLAG_NOT_FOUND
@@ -77,7 +77,7 @@ module Themis
                     return r
                 end
 
-                if flag.team == team
+                if flag.team_id == team.id
                     r = Themis::Attack::Result::ERR_FLAG_YOURS
                     attempt.response = r
                     attempt.save
@@ -85,17 +85,18 @@ module Themis
                 end
 
                 team_service_state = Themis::Models::TeamServiceState.first(
-                    team: team,
-                    service: flag.service)
+                    :team_id => team.id,
+                    :service_id => flag.service_id
+                )
 
-                if team_service_state.nil? or team_service_state.state != :up
+                if team_service_state.nil? or team_service_state.state != Themis::Constants::TeamServiceState::UP
                     r = Themis::Attack::Result::ERR_SERVICE_NOT_UP
                     attempt.response = r
                     attempt.save
                     return r
                 end
 
-                if flag.expired_at < DateTime.now
+                if flag.expired_at.to_datetime < DateTime.now
                     r = Themis::Attack::Result::ERR_FLAG_EXPIRED
                     attempt.response = r
                     attempt.save
@@ -105,10 +106,11 @@ module Themis
                 r = nil
                 begin
                     attack = Themis::Models::Attack.create(
-                        occured_at: DateTime.now,
-                        considered: false,
-                        team: team,
-                        flag: flag)
+                        :occured_at => DateTime.now,
+                        :considered => false,
+                        :team_id => team.id,
+                        :flag_id => flag.id
+                    )
                     r = Themis::Attack::Result::SUCCESS_FLAG_ACCEPTED
 
                     Themis::Utils::EventEmitter::emit_log 4, {
@@ -116,7 +118,7 @@ module Themis
                         victim_team_id: flag.team_id,
                         service_id: flag.service_id
                     }
-                rescue ::DataObjects::IntegrityError => e
+                rescue ::Sequel::UniqueConstraintViolation => e
                     r = Themis::Attack::Result::ERR_FLAG_SUBMITTED
                 end
 

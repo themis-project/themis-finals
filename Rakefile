@@ -37,11 +37,6 @@ namespace :db do
         Sequel.connect(postgres_uri) do |db|
             Sequel::Migrator.run(db, 'migrations')
         end
-
-        # require './lib/models/init'
-
-        # Themis::Models::init
-        # DataMapper.auto_migrate!
     end
 end
 

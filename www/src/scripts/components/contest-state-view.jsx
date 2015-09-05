@@ -43,32 +43,32 @@ export default class ContestStateView extends React.Component {
         let text = null
 
         switch (this.state.model.value) {
-            case 'initial':
+            case 0:
                 text = 'Contest not started'
                 style.color = Styles.Colors.grey600
                 style.backgroundColor = Styles.Colors.grey100
                 break
-            case 'await_start':
+            case 1:
                 text = 'Contest will start soon'
                 style.color = Styles.Colors.blue900
                 style.backgroundColor = Styles.Colors.blue50
                 break
-            case 'running':
+            case 2:
                 text = 'Contest running'
                 style.color = Styles.Colors.green700
                 style.backgroundColor = Styles.Colors.green50
                 break
-            case 'paused':
+            case 3:
                 text = 'Contest paused'
                 style.color = Styles.Colors.brown600
                 style.backgroundColor = Styles.Colors.brown50
                 break
-            case 'await_complete':
+            case 4:
                 text = 'Contest will be completed soon'
                 style.color = Styles.Colors.deepOrange500
                 style.backgroundColor = Styles.Colors.deepOrange50
                 break
-            case 'completed':
+            case 5:
                 text = 'Contest completed'
                 style.color = Styles.Colors.red600
                 style.backgroundColor = Styles.Colors.red50

@@ -8,11 +8,11 @@ module Themis
         module EventEmitter
             def self.emit(name, data, internal, teams, other)
                 event = Themis::Models::ServerSentEvent.create(
-                    name: name,
-                    data: data,
-                    internal: internal,
-                    teams: teams,
-                    other: other
+                    :name => name,
+                    :data => data,
+                    :internal => internal,
+                    :teams => teams,
+                    :other => other
                 )
 
                 publisher = Themis::Utils::Publisher.new

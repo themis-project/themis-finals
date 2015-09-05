@@ -16,7 +16,32 @@ export default class LogView extends React.Component {
         let text = ''
         switch (this.props.type) {
             case 1:
-                text = <span style={{color: Styles.Colors.blue900}}>Contest state changed to <code style={{color: Styles.Colors.cyan900}}>{this.props.params.value}</code></span>
+                let status = null
+                switch (this.props.params.value) {
+                    case 0:
+                        status = 'initial'
+                        break
+                    case 1:
+                        status = 'await_start'
+                        break
+                    case 2:
+                        status = 'running'
+                        break
+                    case 3:
+                        status = 'paused'
+                        break
+                    case 4:
+                        status = 'await_complete'
+                        break
+                    case 5:
+                        status = 'completed'
+                        break
+                    default:
+                        status = 'unknown'
+                        break
+                }
+
+                text = <span style={{color: Styles.Colors.blue900}}>Contest state changed to <code style={{color: Styles.Colors.cyan900}}>{status}</code></span>
                 break
             case 2:
                 text = <span style={{color: Styles.Colors.purple900}}>Round <code style={{color: Styles.Colors.red900}}>{this.props.params.value}</code> has started!</span>
@@ -28,25 +53,37 @@ export default class LogView extends React.Component {
                     let style = {
                         color: Styles.Colors.grey600
                     }
+
+                    let status = null
+
                     switch (this.props.params.state) {
-                        case 'up':
+                        case 1:
+                            status = 'up'
                             style.color = Styles.Colors.green700
                             break
-                        case 'down':
+                        case 2:
+                            status = 'down'
                             style.color = Styles.Colors.red600
                             break
-                        case 'corrupt':
+                        case 3:
+                            status = 'corrupt'
                             style.color = Styles.Colors.deepOrange500
                             break
-                        case 'mumble':
+                        case 4:
+                            status = 'mumble'
                             style.color = Styles.Colors.brown600
                             break
+                        case 5:
+                            status = 'internal_error'
+                            style.color = Styles.Colors.grey600
+                            break
                         default:
+                            status = 'unknown'
                             style.color = Styles.Colors.grey600
                             break
                     }
 
-                    text = <span style={{color: Styles.Colors.brown900}}>Team <code style={{color: Styles.Colors.teal900}}>{team.name}</code>, service <code style={{color: Styles.Colors.pink900}}>{service.name}</code> state is <code style={style}>{this.props.params.state}</code></span>
+                    text = <span style={{color: Styles.Colors.brown900}}>Team <code style={{color: Styles.Colors.teal900}}>{team.name}</code>, service <code style={{color: Styles.Colors.pink900}}>{service.name}</code> state is <code style={style}>{status}</code></span>
                 }
                 break
             case 4:

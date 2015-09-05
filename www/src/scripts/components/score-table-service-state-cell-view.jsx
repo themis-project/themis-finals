@@ -9,24 +9,35 @@ export default class ScoreTableServiceStateCellView extends React.Component {
             fontSize: '0.9em'
         }
 
+        let text = null
+
         switch (this.props.value) {
-            case 'up':
+            case 1:
+                text = 'up'
                 style.color = Styles.Colors.green700
                 style.backgroundColor = Styles.Colors.green50
                 break
-            case 'down':
+            case 2:
+                text = 'down'
                 style.color = Styles.Colors.red600
                 style.backgroundColor = Styles.Colors.red50
                 break
-            case 'corrupt':
+            case 3:
+                text = 'corrupt'
                 style.color = Styles.Colors.deepOrange500
                 style.backgroundColor = Styles.Colors.deepOrange50
                 break
-            case 'mumble':
+            case 4:
+                text = 'mumble'
                 style.color = Styles.Colors.brown600
                 style.backgroundColor = Styles.Colors.brown50
                 break
+            case 5:
+                text = 'internal_error'
+                style.color = Styles.Colors.grey600
+                style.backgroundColor = Styles.Colors.grey100
             default:
+                text = 'unknown'
                 style.color = Styles.Colors.grey600
                 style.backgroundColor = Styles.Colors.grey100
                 break
@@ -34,7 +45,7 @@ export default class ScoreTableServiceStateCellView extends React.Component {
 
         return (
             <td>
-                <span style={style}>{this.props.value}</span>
+                <span style={style}>{text}</span>
             </td>
         )
     }

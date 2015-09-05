@@ -1,23 +1,14 @@
-require 'data_mapper'
+require 'sequel'
 
 
 module Themis
     module Models
-        class Team
-            include DataMapper::Resource
-
-            property :id, Serial
-            property :name, String, length: 100, required: true, unique_index: true
-            property :alias, String, length: 50, required: true, unique_index: true
-            property :network, String, length: 18, required: true, unique_index: true
-            property :host, String, length: 15, required: true, unique_index: true
-            property :guest, Boolean, required: true, default: false
-
-            has n, :team_service_states
-            has n, :scores
-            has n, :attack_attempts
-            has n, :attacks
-            has 1, :total_score
+        class Team < Sequel::Model
+            one_to_many :team_service_states
+            one_to_many :scores
+            one_to_many :attack_attempts
+            one_to_many :attacks
+            one_to_one :total_score
         end
     end
 end

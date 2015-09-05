@@ -7,15 +7,16 @@ module Themis
         module ScoreboardState
             def self.is_enabled
                 scoreboard_state = Themis::Models::ScoreboardState.last
-                return scoreboard_state.nil? ? true : (scoreboard_state.state == :enabled)
+                return scoreboard_state.nil? ? true : scoreboard_state.enabled
             end
 
             def self.enable
                 Themis::Models::ScoreboardState.create(
-                    state: :enabled,
-                    created_at: DateTime.now,
-                    total_scores: {},
-                    attacks: {})
+                    :enabled => true,
+                    :created_at => DateTime.now,
+                    :total_scores => {},
+                    :attacks => {}
+                )
 
                 Themis::Utils::EventEmitter::emit_all 'contest/scoreboard', { enabled: true }
             end
@@ -39,10 +40,11 @@ module Themis
                 end
 
                 Themis::Models::ScoreboardState.create(
-                    state: :disabled,
-                    created_at: DateTime.now,
-                    total_scores: total_scores,
-                    attacks: attacks)
+                    :enabled => false,
+                    :created_at => DateTime.now,
+                    :total_scores => total_scores,
+                    :attacks => attacks
+                )
 
                 Themis::Utils::EventEmitter::emit_all 'contest/scoreboard', { enabled: false }
             end

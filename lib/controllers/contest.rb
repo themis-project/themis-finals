@@ -8,6 +8,8 @@ require './lib/controllers/contest-state'
 require './lib/utils/event-emitter'
 require './lib/controllers/attack'
 require './lib/controllers/scoreboard-state'
+require './lib/constants/flag-poll-state'
+require './lib/constants/team-service-state'
 
 
 module Themis
@@ -72,10 +74,11 @@ module Themis
                 service = flag.service
 
                 poll = Themis::Models::FlagPoll.create(
-                    state: :unknown,
-                    created_at: DateTime.now,
-                    updated_at: nil,
-                    flag: flag)
+                    :state => Themis::Constants::FlagPollState::UNKNOWN,
+                    :created_at => DateTime.now,
+                    :updated_at => nil,
+                    :flag_id => flag.id
+                )
 
                 @logger.info "Polling flag '#{flag.flag}' from service #{service.name} of '#{team.name}' ..."
                 job_data = {
@@ -89,14 +92,14 @@ module Themis
             end
 
             def self.poll_flags
-                living_flags = Themis::Controllers::Flag::get_living
+                living_flags = Themis::Models::Flag.all_living.all
 
                 all_services = Themis::Models::Service.all
 
                 Themis::Models::Team.all.each do |team|
                     all_services.each do |service|
                         service_flags = living_flags.select do |flag|
-                            flag.team == team and flag.service == service
+                            flag.team_id == team.id and flag.service_id == service.id
                         end
 
                         flags = service_flags.sample Themis::Configuration::get_contest_flow.poll_count
@@ -112,17 +115,17 @@ module Themis
                 end
             end
 
-            def self.prolong_flag_lifetime(flag)
-                flag.expired_at = flag.expired_at.to_time + prolong
+            def self.prolong_flag_lifetime(flag, prolong_period)
+                flag.expired_at = flag.expired_at.to_time + prolong_period
                 flag.save
             end
 
             def self.prolong_flag_lifetimes
-                prolong = Themis::Configuration::get_contest_flow.poll_period
+                prolong_period = Themis::Configuration::get_contest_flow.poll_period
 
-                Themis::Controllers::Flag::get_living.each do |flag|
+                Themis::Models::Flag.all_living.each do |flag|
                     begin
-                        prolong_flag_lifetime flag
+                        prolong_flag_lifetime flag, prolong_period
                     rescue => e
                         @logger.error "#{e}"
                     end
@@ -131,9 +134,9 @@ module Themis
 
             def self.handle_poll(poll, status)
                 if status == Themis::Checker::Result::UP
-                    poll.state = :success
+                    poll.state = Themis::Constants::FlagPollState::SUCCESS
                 else
-                    poll.state = :error
+                    poll.state = Themis::Constants::FlagPollState::ERROR
                 end
 
                 poll.updated_at = DateTime.now
@@ -152,8 +155,8 @@ module Themis
             end
 
             def self.control_complete
-                living_flags = Themis::Controllers::Flag::get_living
-                expired_flags = Themis::Controllers::Flag::get_expired
+                living_flags = Themis::Models::Flag.all_living
+                expired_flags = Themis::Models::Flag.all_expired
 
                 if living_flags.count == 0 and expired_flags.count == 0
                     Themis::Controllers::ContestState::complete
@@ -162,13 +165,13 @@ module Themis
             end
 
             def self.update_score(flag, scoreboard_enabled)
-                polls = Themis::Models::FlagPoll.all(flag: flag)
+                polls = Themis::Models::FlagPoll.where(:flag_id => flag.id).all
 
                 Themis::Controllers::Score::charge_availability flag, polls, scoreboard_enabled
 
                 attacks = flag.attacks
                 if attacks.count == 0
-                    if polls.count(state: :error) == 0
+                    if polls.count(state: Themis::Constants::FlagPollState::ERROR) == 0
                         Themis::Controllers::Score::charge_defence flag, scoreboard_enabled
                     end
                 else
@@ -189,7 +192,7 @@ module Themis
             def self.update_scores
                 scoreboard_enabled = Themis::Controllers::ScoreboardState::is_enabled
 
-                Themis::Controllers::Flag::get_expired.each do |flag|
+                Themis::Models::Flag.all_expired.each do |flag|
                     begin
                         update_score flag, scoreboard_enabled
                     rescue => e
@@ -201,35 +204,38 @@ module Themis
             def self.update_team_service_state(team, service, status)
                 case status
                 when Themis::Checker::Result::UP
-                    service_state = :up
+                    service_state = Themis::Constants::TeamServiceState::UP
                 when Themis::Checker::Result::CORRUPT
-                    service_state = :corrupt
+                    service_state = Themis::Constants::TeamServiceState::CORRUPT
                 when Themis::Checker::Result::MUMBLE
-                    service_state = :mumble
+                    service_state = Themis::Constants::TeamServiceState::MUMBLE
                 when Themis::Checker::Result::DOWN
-                    service_state = :down
+                    service_state = Themis::Constants::TeamServiceState::DOWN
                 when Themis::Checker::Result::INTERNAL_ERROR
-                    service_state = :internal_error
+                    service_state = Themis::Constants::TeamServiceState::INTERNAL_ERROR
                 else
-                    service_state = :unknown
+                    service_state = Themis::Constants::TeamServiceState::UNKNOWN
                 end
 
                 team_service_history_state = Themis::Models::TeamServiceHistoryState.create(
-                    state: service_state,
-                    created_at: DateTime.now,
-                    team: team,
-                    service: service)
+                    :state => service_state,
+                    :created_at => DateTime.now,
+                    :team_id => team.id,
+                    :service_id => service.id
+                )
 
                 team_service_state = Themis::Models::TeamServiceState.first(
-                    service: service,
-                    team: team)
+                    :service_id => service.id,
+                    :team_id => team.id
+                )
                 if team_service_state.nil?
                     team_service_state = Themis::Models::TeamServiceState.create(
-                        state: service_state,
-                        created_at: DateTime.now,
-                        updated_at: DateTime.now,
-                        team: team,
-                        service: service)
+                        :state => service_state,
+                        :created_at => DateTime.now,
+                        :updated_at => DateTime.now,
+                        :team_id => team.id,
+                        :service_id => service.id
+                    )
                 else
                     team_service_state.state = service_state
                     team_service_state.updated_at = DateTime.now

@@ -1,4 +1,5 @@
 require './lib/utils/event-emitter'
+require './lib/constants/flag-poll-state'
 
 
 module Themis
@@ -6,27 +7,30 @@ module Themis
         module Score
             def self.get_score(round, team)
                 score = Themis::Models::Score.first(
-                    round: round,
-                    team: team)
+                    :round_id => round.id,
+                    :team_id => team.id
+                )
 
                 if score.nil?
                     score = Themis::Models::Score.create(
-                        defence_points: 0,
-                        attack_points: 0,
-                        team: team,
-                        round: round)
+                        :defence_points => 0,
+                        :attack_points => 0,
+                        :team_id => team.id,
+                        :round_id => round.id
+                    )
                 end
 
                 score
             end
 
             def self.get_total_score(team)
-                score = Themis::Models::TotalScore.first(team: team)
+                score = Themis::Models::TotalScore.first(:team_id => team.id)
                 if score.nil?
                     score = Themis::Models::TotalScore.create(
-                        defence_points: 0,
-                        attack_points: 0,
-                        team: team)
+                        :defence_points => 0,
+                        :attack_points => 0,
+                        :team_id => team.id
+                    )
                 end
 
                 score
@@ -57,7 +61,7 @@ module Themis
             end
 
             def self.charge_availability(flag, polls, scoreboard_enabled)
-                success_count = polls.count state: :success
+                success_count = polls.count state: Themis::Constants::FlagPollState::SUCCESS
                 if success_count == 0
                     return
                 end
