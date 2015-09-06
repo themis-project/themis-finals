@@ -27,7 +27,7 @@ module Themis
                     flag = Themis::Controllers::Flag::issue team, service, round
 
                     Themis::Models::DB.after_commit do
-                        @logger.info "Pushing flag '#{flag.flag}' to service #{service.name} of '#{team.name}' ..."
+                        @logger.info "Pushing flag `#{flag.flag}` to service `#{service.name}` of `#{team.name}` ..."
                         job_data = {
                             operation: 'push',
                             endpoint: team.host,
@@ -63,11 +63,11 @@ module Themis
                         flag.expired_at = expires.to_datetime
                         flag.seed = seed
                         flag.save
-                        @logger.info "Successfully pushed flag #{flag.flag}!"
+                        @logger.info "Successfully pushed flag `#{flag.flag}`!"
 
                         poll_flag flag
                     else
-                        @logger.info "Failed to push flag #{flag.flag} (status code #{status})!"
+                        @logger.info "Failed to push flag `#{flag.flag}` (status code #{status})!"
                     end
 
                     update_team_service_state flag.team, flag.service, status
@@ -88,7 +88,7 @@ module Themis
                     )
 
                     Themis::Models::DB.after_commit do
-                        @logger.info "Polling flag '#{flag.flag}' from service #{service.name} of '#{team.name}' ..."
+                        @logger.info "Polling flag `#{flag.flag}` from service `#{service.name}` of `#{team.name}` ..."
                         job_data = {
                             operation: 'pull',
                             request_id: poll.id,
@@ -129,6 +129,10 @@ module Themis
                 Themis::Models::DB.transaction do
                     flag.expired_at = flag.expired_at.to_time + prolong_period
                     flag.save
+
+                    Themis::Models::DB.after_commit do
+                        @logger.info "Prolonged flag `#{flag.flag}` lifetime!"
+                    end
                 end
             end
 
@@ -159,9 +163,9 @@ module Themis
                     update_team_service_state flag.team, flag.service, status
 
                     if status == Themis::Checker::Result::UP
-                        @logger.info "Successfully pulled flag #{flag.flag}!"
+                        @logger.info "Successfully pulled flag `#{flag.flag}`!"
                     else
-                        @logger.info "Failed to pull flag #{flag.flag} (status code #{status})!"
+                        @logger.info "Failed to pull flag `#{flag.flag}` (status code #{status})!"
                     end
                 end
             end
@@ -174,6 +178,54 @@ module Themis
                     Themis::Models::DB.transaction do
                         Themis::Controllers::ContestState::complete
                         Themis::Controllers::Round::end_last
+                    end
+                end
+            end
+
+            def self.update_total_score(team, scoreboard_enabled)
+                Themis::Models::DB.transaction do
+                    total_score = Themis::Models::TotalScore.first(:team_id => team.id)
+                    if total_score.nil?
+                        total_score = Themis::Models::TotalScore.create(
+                            :defence_points => 0,
+                            :attack_points => 0,
+                            :team_id => team.id
+                        )
+                    end
+
+                    defence_points = 0.0
+                    attack_points = 0.0
+
+                    Themis::Models::Score.where(:team_id => team.id).each do |score|
+                        defence_points += score.defence_points
+                        attack_points += score.attack_points
+                    end
+
+                    total_score.defence_points = defence_points
+                    total_score.attack_points = attack_points
+                    total_score.save
+
+                    data = {
+                        id: total_score.id,
+                        team_id: total_score.team_id,
+                        defence_points: total_score.defence_points.to_f,
+                        attack_points: total_score.attack_points.to_f
+                    }
+
+                    Themis::Utils::EventEmitter.emit 'team/score', data, true, scoreboard_enabled, scoreboard_enabled
+
+                    Themis::Models::DB.after_commit do
+                        @logger.info "Total score of team `#{team.name}` has been recalculated: defence - #{defence_points.to_f} pts, attack - #{attack_points.to_f} pts!"
+                    end
+                end
+            end
+
+            def self.update_total_scores(scoreboard_enabled)
+                Themis::Models::Team.all.each do |team|
+                    begin
+                        update_total_score team, scoreboard_enabled
+                    rescue => e
+                        @logger.error "#{e}"
                     end
                 end
             end
@@ -206,9 +258,7 @@ module Themis
                 end
             end
 
-            def self.update_scores
-                scoreboard_enabled = Themis::Controllers::ScoreboardState::is_enabled
-
+            def self.update_scores(scoreboard_enabled)
                 Themis::Models::Flag.all_expired.each do |flag|
                     begin
                         update_score flag, scoreboard_enabled
@@ -216,6 +266,13 @@ module Themis
                         @logger.error "#{e}"
                     end
                 end
+            end
+
+            def self.update_all_scores
+                scoreboard_enabled = Themis::Controllers::ScoreboardState::is_enabled
+
+                update_scores scoreboard_enabled
+                update_total_scores scoreboard_enabled
             end
 
             def self.update_team_service_state(team, service, status)
