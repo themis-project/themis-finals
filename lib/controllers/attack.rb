@@ -27,7 +27,7 @@ module Themis
                 attack.save
                 data = {
                     id: attack.id,
-                    occured_at: attack.occured_at,
+                    occured_at: attack.occured_at.iso8601,
                     team_id: attack.team_id
                 }
 

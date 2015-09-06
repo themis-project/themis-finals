@@ -247,7 +247,7 @@ module Themis
                     team_id: team_service_state.team_id,
                     service_id: team_service_state.service_id,
                     state: team_service_state.state,
-                    updated_at: team_service_state.updated_at
+                    updated_at: team_service_state.updated_at.iso8601
                 }
 
                 Themis::Utils::EventEmitter::emit_log 3, {

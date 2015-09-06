@@ -149,8 +149,8 @@ module Themis
                         id: post.id,
                         title: post.title,
                         description: post.description,
-                        created_at: post.created_at,
-                        updated_at: post.updated_at
+                        created_at: post.created_at.iso8601,
+                        updated_at: post.updated_at.iso8601
                     }
                 rescue => e
                     halt 400
@@ -219,8 +219,8 @@ module Themis
                         id: post.id,
                         title: post.title,
                         description: post.description,
-                        created_at: post.created_at,
-                        updated_at: post.updated_at
+                        created_at: post.created_at.iso8601,
+                        updated_at: post.updated_at.iso8601
                     }
                 rescue => e
                     halt 400
@@ -259,7 +259,7 @@ module Themis
                         team_id: team_service_state.team_id,
                         service_id: team_service_state.service_id,
                         state: team_service_state.state,
-                        updated_at: team_service_state.updated_at
+                        updated_at: team_service_state.updated_at.iso8601
                     }
                 end
 
@@ -276,7 +276,7 @@ module Themis
                     r = Themis::Controllers::Attack::get_recent.map do |attack|
                         {
                             id: attack.id,
-                            occured_at: attack.occured_at,
+                            occured_at: attack.occured_at.iso8601,
                             team_id: attack.team_id
                         }
                     end
