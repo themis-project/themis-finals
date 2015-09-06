@@ -10,6 +10,7 @@ require './lib/controllers/attack'
 require './lib/controllers/scoreboard-state'
 require './lib/constants/flag-poll-state'
 require './lib/constants/team-service-state'
+require './lib/controllers/ctftime'
 
 
 module Themis
@@ -273,6 +274,8 @@ module Themis
 
                 update_scores scoreboard_enabled
                 update_total_scores scoreboard_enabled
+
+                Themis::Controllers::CTFTime::post_scoreboard
             end
 
             def self.update_team_service_state(team, service, status)
