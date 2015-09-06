@@ -37,7 +37,7 @@ export default class LogView extends React.Component {
                         status = 'completed'
                         break
                     default:
-                        status = 'unknown'
+                        status = 'n/a'
                         break
                 }
 
@@ -78,7 +78,7 @@ export default class LogView extends React.Component {
                             style.color = Styles.Colors.grey600
                             break
                         default:
-                            status = 'unknown'
+                            status = 'n/a'
                             style.color = Styles.Colors.grey600
                             break
                     }

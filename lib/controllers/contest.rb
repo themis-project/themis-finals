@@ -74,7 +74,7 @@ module Themis
                 service = flag.service
 
                 poll = Themis::Models::FlagPoll.create(
-                    :state => Themis::Constants::FlagPollState::UNKNOWN,
+                    :state => Themis::Constants::FlagPollState::NOT_AVAILABLE,
                     :created_at => DateTime.now,
                     :updated_at => nil,
                     :flag_id => flag.id
@@ -214,7 +214,7 @@ module Themis
                 when Themis::Checker::Result::INTERNAL_ERROR
                     service_state = Themis::Constants::TeamServiceState::INTERNAL_ERROR
                 else
-                    service_state = Themis::Constants::TeamServiceState::UNKNOWN
+                    service_state = Themis::Constants::TeamServiceState::NOT_AVAILABLE
                 end
 
                 team_service_history_state = Themis::Models::TeamServiceHistoryState.create(

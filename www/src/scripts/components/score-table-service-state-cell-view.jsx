@@ -37,7 +37,7 @@ export default class ScoreTableServiceStateCellView extends React.Component {
                 style.color = Styles.Colors.grey600
                 style.backgroundColor = Styles.Colors.grey100
             default:
-                text = 'unknown'
+                text = 'n/a'
                 style.color = Styles.Colors.grey600
                 style.backgroundColor = Styles.Colors.grey100
                 break

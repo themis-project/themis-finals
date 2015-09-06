@@ -6,7 +6,7 @@ module Themis
         class TeamServiceState
             include Ruby::Enum
 
-            define :UNKNOWN, 0
+            define :NOT_AVAILABLE, 0
             define :UP, 1
             define :DOWN, 2
             define :CORRUPT, 3

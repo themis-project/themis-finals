@@ -150,7 +150,7 @@ export default class ScoreboardView extends React.Component {
                 let teamServiceState = this.state.teamServiceStates.collection.find((state) => {
                     return state.teamId === team.id && state.serviceId === service.id
                 })
-                row[serviceId] = teamServiceState ? teamServiceState.state : 'unknown'
+                row[serviceId] = teamServiceState ? teamServiceState.state : 0
             }
 
             rowData.push(row)

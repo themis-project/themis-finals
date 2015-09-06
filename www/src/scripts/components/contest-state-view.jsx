@@ -74,7 +74,7 @@ export default class ContestStateView extends React.Component {
                 style.backgroundColor = Styles.Colors.red50
                 break
             default:
-                text = 'Contest state unknown'
+                text = 'Contest state n/a'
                 style.color = Styles.Colors.grey600
                 style.backgroundColor = Styles.Colors.grey100
                 break
