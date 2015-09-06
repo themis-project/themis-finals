@@ -16,8 +16,16 @@ module Themis
                     exclude(:expired_at => nil).where('expired_at > ?', DateTime.now)
                 end
 
+                def count_living
+                    all_living.count
+                end
+
                 def all_expired
                     exclude(:expired_at => nil).where(:considered_at => nil).where('expired_at < ?', DateTime.now)
+                end
+
+                def count_expired
+                    all_expired.count
                 end
             end
         end

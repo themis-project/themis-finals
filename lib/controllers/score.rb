@@ -48,47 +48,53 @@ module Themis
             end
 
             def self.charge_defence(flag, scoreboard_enabled)
-                team = flag.team
+                Themis::Models::DB.transaction do
+                    team = flag.team
 
-                score = get_score flag.round, team
-                score.defence_points += 1
-                score.save
+                    score = get_score flag.round, team
+                    score.defence_points += 1
+                    score.save
 
-                total_score = get_total_score team
-                total_score.defence_points += 1
-                total_score.save
-                stream_total_score total_score, scoreboard_enabled
+                    total_score = get_total_score team
+                    total_score.defence_points += 1
+                    total_score.save
+                    stream_total_score total_score, scoreboard_enabled
+                end
             end
 
             def self.charge_availability(flag, polls, scoreboard_enabled)
-                success_count = polls.count { |poll| poll.state == Themis::Constants::FlagPollState::SUCCESS }
-                if success_count == 0
-                    return
+                Themis::Models::DB.transaction do
+                    success_count = polls.count { |poll| poll.state == Themis::Constants::FlagPollState::SUCCESS }
+                    if success_count == 0
+                        return
+                    end
+
+                    points = Float(success_count) / Float(polls.count)
+
+                    team = flag.team
+                    score = get_score flag.round, team
+                    score.defence_points += points.round 2
+                    score.save
+
+                    total_score = get_total_score team
+                    total_score.defence_points += points.round 2
+                    total_score.save
+                    stream_total_score total_score, scoreboard_enabled
                 end
-
-                points = Float(success_count) / Float(polls.count)
-
-                team = flag.team
-                score = get_score flag.round, team
-                score.defence_points += points.round 2
-                score.save
-
-                total_score = get_total_score team
-                total_score.defence_points += points.round 2
-                total_score.save
-                stream_total_score total_score, scoreboard_enabled
             end
 
             def self.charge_attack(flag, attack, scoreboard_enabled)
-                team = attack.team
-                score = get_score flag.round, attack.team
-                score.attack_points += 1
-                score.save
+                Themis::Models::DB.transaction do
+                    team = attack.team
+                    score = get_score flag.round, attack.team
+                    score.attack_points += 1
+                    score.save
 
-                total_score = get_total_score attack.team
-                total_score.attack_points += 1
-                total_score.save
-                stream_total_score total_score, scoreboard_enabled
+                    total_score = get_total_score attack.team
+                    total_score.attack_points += 1
+                    total_score.save
+                    stream_total_score total_score, scoreboard_enabled
+                end
             end
         end
     end

@@ -138,20 +138,22 @@ module Themis
                 end
 
                 begin
-                    post = Themis::Models::Post.create(
-                        :title => payload['title'],
-                        :description => payload['description'],
-                        :created_at => DateTime.now,
-                        :updated_at => DateTime.now
-                    )
+                    Themis::Models::DB.transaction do
+                        post = Themis::Models::Post.create(
+                            :title => payload['title'],
+                            :description => payload['description'],
+                            :created_at => DateTime.now,
+                            :updated_at => DateTime.now
+                        )
 
-                    Themis::Utils::EventEmitter.emit_all 'posts/add', {
-                        id: post.id,
-                        title: post.title,
-                        description: post.description,
-                        created_at: post.created_at.iso8601,
-                        updated_at: post.updated_at.iso8601
-                    }
+                        Themis::Utils::EventEmitter.emit_all 'posts/add', {
+                            id: post.id,
+                            title: post.title,
+                            description: post.description,
+                            created_at: post.created_at.iso8601,
+                            updated_at: post.updated_at.iso8601
+                        }
+                    end
                 rescue => e
                     halt 400
                 end
@@ -171,11 +173,13 @@ module Themis
                 post = Themis::Models::Post[post_id]
                 halt 404 if post.nil?
 
-                post.delete
+                Themis::Models::DB.transaction do
+                    post.destroy
 
-                Themis::Utils::EventEmitter.emit_all 'posts/remove', {
-                    id: post_id
-                }
+                    Themis::Utils::EventEmitter.emit_all 'posts/remove', {
+                        id: post_id
+                    }
+                end
 
                 status 204
                 body ''
@@ -209,19 +213,21 @@ module Themis
                 post = Themis::Models::Post[post_id]
                 halt 404 if post.nil?
 
-                post.title = payload['title']
-                post.description = payload['description']
-                post.updated_at = DateTime.now
-
                 begin
-                    post.save
-                    Themis::Utils::EventEmitter.emit_all 'posts/edit', {
-                        id: post.id,
-                        title: post.title,
-                        description: post.description,
-                        created_at: post.created_at.iso8601,
-                        updated_at: post.updated_at.iso8601
-                    }
+                    Themis::Models::DB.transaction do
+                        post.title = payload['title']
+                        post.description = payload['description']
+                        post.updated_at = DateTime.now
+                        post.save
+
+                        Themis::Utils::EventEmitter.emit_all 'posts/edit', {
+                            id: post.id,
+                            title: post.title,
+                            description: post.description,
+                            created_at: post.created_at.iso8601,
+                            updated_at: post.updated_at.iso8601
+                        }
+                    end
                 rescue => e
                     halt 400
                 end

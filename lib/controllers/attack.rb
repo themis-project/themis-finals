@@ -105,19 +105,21 @@ module Themis
 
                 r = nil
                 begin
-                    attack = Themis::Models::Attack.create(
-                        :occured_at => DateTime.now,
-                        :considered => false,
-                        :team_id => team.id,
-                        :flag_id => flag.id
-                    )
-                    r = Themis::Attack::Result::SUCCESS_FLAG_ACCEPTED
+                    Themis::Models::DB.transaction do
+                        attack = Themis::Models::Attack.create(
+                            :occured_at => DateTime.now,
+                            :considered => false,
+                            :team_id => team.id,
+                            :flag_id => flag.id
+                        )
+                        r = Themis::Attack::Result::SUCCESS_FLAG_ACCEPTED
 
-                    Themis::Utils::EventEmitter::emit_log 4, {
-                        attack_team_id: team.id,
-                        victim_team_id: flag.team_id,
-                        service_id: flag.service_id
-                    }
+                        Themis::Utils::EventEmitter::emit_log 4, {
+                            attack_team_id: team.id,
+                            victim_team_id: flag.team_id,
+                            service_id: flag.service_id
+                        }
+                    end
                 rescue ::Sequel::UniqueConstraintViolation => e
                     r = Themis::Attack::Result::ERR_FLAG_SUBMITTED
                 end

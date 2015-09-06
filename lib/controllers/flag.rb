@@ -9,7 +9,8 @@ module Themis
 
             def self.issue(team, service, round)
                 flag = nil
-                begin
+
+                Themis::Models::DB.transaction do
                     seed, str = Themis::Utils::FlagGenerator::get_flag
                     flag = Themis::Models::Flag.create(
                         :flag => str,
@@ -22,12 +23,9 @@ module Themis
                         :team_id => team.id,
                         :round_id => round.id
                     )
-                rescue ::Sequel::UniqueConstraintViolation => e
-                    @logger.warn "Duplicate flag!"
-                    retry
                 end
 
-                return flag
+                flag
             end
         end
     end
