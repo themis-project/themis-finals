@@ -171,7 +171,8 @@ module Themis
 
                 attacks = flag.attacks
                 if attacks.count == 0
-                    if polls.count(state: Themis::Constants::FlagPollState::ERROR) == 0
+                    error_count = polls.count { |poll| poll.state == Themis::Constants::FlagPollState::ERROR }
+                    if error_count == 0
                         Themis::Controllers::Score::charge_defence flag, scoreboard_enabled
                     end
                 else

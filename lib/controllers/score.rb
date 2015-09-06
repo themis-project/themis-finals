@@ -61,7 +61,7 @@ module Themis
             end
 
             def self.charge_availability(flag, polls, scoreboard_enabled)
-                success_count = polls.count state: Themis::Constants::FlagPollState::SUCCESS
+                success_count = polls.count { |poll| poll.state == Themis::Constants::FlagPollState::SUCCESS }
                 if success_count == 0
                     return
                 end
