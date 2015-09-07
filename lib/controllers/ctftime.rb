@@ -86,21 +86,11 @@ module Themis
                     }
                 end
 
-                {standings: standings}.to_json
+                data = { standings: standings }
+                JSON.pretty_generate data
             end
 
             def self.post_scoreboard
-                if ENV['CTFTIME_SCOREBOARD'] != 'true'
-                    @logger.info "Posting CTFTime.org scoreboard is turned off!"
-                    return
-                end
-
-                unless Themis::Controllers::ScoreboardState::is_enabled
-                    @logger.info "Posting CTFTime.org scoreboard is disabled!"
-                    return
-                end
-
-                file = nil
                 begin
                     @logger.info "Uploading CTFTime.org scoreboard ..."
 
@@ -116,8 +106,6 @@ module Themis
                 rescue => e
                     @logger.error "#{e}"
                     e.backtrace.each { |line| @logger.error line }
-                ensure
-                    file.unlink unless file.nil?
                 end
             end
         end

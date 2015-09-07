@@ -275,7 +275,9 @@ module Themis
                 update_scores scoreboard_enabled
                 update_total_scores scoreboard_enabled
 
-                Themis::Controllers::CTFTime::post_scoreboard
+                if scoreboard_enabled and ENV['CTFTIME_SCOREBOARD'] == 'true'
+                    Themis::Controllers::CTFTime::post_scoreboard
+                end
             end
 
             def self.update_team_service_state(team, service, status)

@@ -115,4 +115,13 @@ namespace :scoreboard do
     task :disable do
         change_scoreboard_state :disabled
     end
+
+    desc 'Post scoreboard on ctftime.org (requires additional settings for AWS S3)'
+    task :post do
+        require './config'
+        require './lib/models/init'
+        require './lib/controllers/ctftime'
+
+        Themis::Controllers::CTFTime::post_scoreboard
+    end
 end
