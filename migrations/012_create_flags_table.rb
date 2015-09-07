@@ -7,7 +7,7 @@ Sequel.migration do
             DateTime :pushed_at, :null => true
             DateTime :expired_at, :null => true
             DateTime :considered_at, :null => true
-            String :seed, :size => 500, :null => false
+            String :seed, :size => 1024, :null => false
 
             foreign_key :team_id, :teams, :index => true, :null => false
             foreign_key :service_id, :services, :index => true, :null => false
