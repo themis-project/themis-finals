@@ -1,6 +1,8 @@
 import React from 'react'
 import DocumentTitle from 'react-document-title'
 import { Paper, Styles } from 'material-ui'
+import Customize from '../../../customize'
+import MarkdownRenderer from '../utils/markdown'
 
 
 export default class IndexView extends React.Component {
@@ -12,10 +14,17 @@ export default class IndexView extends React.Component {
             paddingRight: Styles.Spacing.desktopGutter
         }
 
+        let title = `${Customize.contestTitle} :: Main`
+        let md = new MarkdownRenderer()
+        let divStyle = {
+            lineHeight: '2em'
+        }
+
         return (
-            <DocumentTitle title="Themis Finals :: Main">
+            <DocumentTitle title={title}>
                 <Paper zDepth={0} style={style}>
-                    <h2>Index</h2>
+                    <h2>{Customize.indexTitle}</h2>
+                    <div style={divStyle} dangerouslySetInnerHTML={{__html: md.render(Customize.indexDescription)}}></div>
                 </Paper>
             </DocumentTitle>
         )

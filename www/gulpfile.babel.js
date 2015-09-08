@@ -9,6 +9,8 @@ import uglify from 'gulp-uglify'
 import minifyHTML from 'gulp-minify-html'
 import minifyCSS from 'gulp-minify-css'
 import concat from 'gulp-concat'
+import mustache from 'gulp-mustache'
+import Customize from './customize'
 
 
 var paths = {
@@ -37,6 +39,7 @@ gulp.task('clean_html', (callback) => {
 
 gulp.task('html', ['clean_html'], () => {
     return gulp.src(paths.html)
+        .pipe(mustache({title: Customize.contestTitle}))
         .pipe(gulpIf(isProduction, minifyHTML()))
         .pipe(gulp.dest('build/html'))
 })

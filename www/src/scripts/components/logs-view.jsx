@@ -14,6 +14,8 @@ import TeamStore from '../stores/team-store'
 import ServiceActions from '../actions/service-actions'
 import ServiceStore from '../stores/service-store'
 
+import Customize from '../../../customize'
+
 
 export default class LogsView extends React.Component {
     constructor(props) {
@@ -83,8 +85,10 @@ export default class LogsView extends React.Component {
             paddingRight: Styles.Spacing.desktopGutter
         }
 
+        let title = `${Customize.contestTitle} :: Logs`
+
         return (
-            <DocumentTitle title="Themis Finals :: Logs">
+            <DocumentTitle title={title}>
                 <Paper zDepth={0} style={style}>
                     <h2>Logs</h2>
                     {

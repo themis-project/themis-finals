@@ -24,6 +24,8 @@ import TeamAttackStore from '../stores/team-attack-store'
 import ContestScoreboardActions from '../actions/contest-scoreboard-actions'
 import ContestScoreboardStore from '../stores/contest-scoreboard-store'
 
+import Customize from '../../../customize'
+
 
 export default class ScoreboardView extends React.Component {
     constructor(props) {
@@ -241,8 +243,10 @@ export default class ScoreboardView extends React.Component {
             paddingRight: Styles.Spacing.desktopGutter
         }
 
+        let title = `${Customize.contestTitle} :: Scoreboard`
+
         return (
-            <DocumentTitle title="Themis Finals :: Scoreboard">
+            <DocumentTitle title={title}>
                 <Paper zDepth={0} style={style}>
                     <h2>Scoreboard</h2>
                     {
