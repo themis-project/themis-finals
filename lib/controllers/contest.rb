@@ -35,7 +35,11 @@ module Themis
                             flag_id: flag.seed,
                             flag: flag.flag
                         }.to_json
-                        Themis::Utils::Queue::enqueue "themis.service.#{service.alias}.listen", job_data
+                        opts = {
+                            delay: 0,
+                            ttr: Themis::Configuration::get_beanstalk_ttr
+                        }
+                        Themis::Utils::Queue::enqueue "themis.service.#{service.alias}.listen", job_data, opts
                     end
                 end
             end
@@ -97,7 +101,11 @@ module Themis
                             flag: flag.flag,
                             flag_id: flag.seed
                         }.to_json
-                        Themis::Utils::Queue::enqueue "themis.service.#{service.alias}.listen", job_data
+                        opts = {
+                            delay: 0,
+                            ttr: Themis::Configuration::get_beanstalk_ttr
+                        }
+                        Themis::Utils::Queue::enqueue "themis.service.#{service.alias}.listen", job_data, opts
                     end
                 end
             end
