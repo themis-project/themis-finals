@@ -10,12 +10,17 @@ module Themis
             "#{@_beanstalk_connection.host}:#{@_beanstalk_connection.port}"
         end
 
+        def self.get_beanstalk_ttr
+            @_beanstalk_connection.ttr
+        end
+
         class BeanstalkConnection
-            attr_accessor :host, :port
+            attr_accessor :host, :port, :ttr
 
             def initialize
                 @host = nil
                 @port = nil
+                @ttr = 10
             end
         end
 
@@ -32,6 +37,10 @@ module Themis
 
             def port(port)
                 @beanstalk_connection.port = port
+            end
+
+            def ttr(ttr)
+                @beanstalk_connection.ttr = ttr
             end
         end
 
