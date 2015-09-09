@@ -1,17 +1,12 @@
-require 'data_mapper'
+require 'sequel'
 
 
 module Themis
     module Models
-        class Service
-            include DataMapper::Resource
-
-            property :id, Serial
-            property :name, String, length: 50, required: true, unique_index: true
-            property :alias, String, length: 50, required: true, unique_index: true
-
-            has n, :flags
-            has n, :team_service_states
+        class Service < Sequel::Model
+            one_to_many :flags
+            one_to_many :team_service_states
+            one_to_many :team_service_history_states
         end
     end
 end

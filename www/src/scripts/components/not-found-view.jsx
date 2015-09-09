@@ -2,6 +2,8 @@ import React from 'react'
 import DocumentTitle from 'react-document-title'
 import { Paper, List, ListItem, Styles } from 'material-ui'
 
+import Customize from '../../../customize'
+
 
 export default class NotFoundView extends React.Component {
     constructor(props) {
@@ -45,8 +47,10 @@ export default class NotFoundView extends React.Component {
             links.push(<li key={3}><a href="/logs" onTouchTap={this.getOnNavigate('logs')}>Logs</a></li>)
         }
 
+        let title = `${Customize.contestTitle} :: Not Found`
+
         return (
-            <DocumentTitle title="Themis Finals :: Not Found">
+            <DocumentTitle title={title}>
                 <Paper zDepth={0} style={style}>
                     <h2>Not Found</h2>
                     <p>This is not the page you are looking for...</p>

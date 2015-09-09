@@ -1,5 +1,6 @@
 import redis from 'redis'
 import config from './config'
+import logger from './logger'
 
 
 class Subscriber {
@@ -10,6 +11,14 @@ class Subscriber {
 
         this.client = redis.createClient(port, host)
         this.client.select(0)
+
+        this.client.on('ready', () => {
+            logger.info('Connection to Redis has been established ...')
+        })
+
+        this.client.on('error', (err) => {
+            logger.error(`Redis connection error: ${err}`)
+        })
     }
 
     subscribe(channel) {

@@ -1,6 +1,5 @@
 require 'redis'
 require 'hiredis'
-require 'em-synchrony'
 require './lib/utils/logger'
 
 
@@ -9,10 +8,9 @@ require './lib/utils/logger'
 module Themis
     module Utils
         class Publisher
-            def initialize(synchronize = false)
+            def initialize
                 @_client = nil
                 @_logger = Themis::Utils::Logger::get
-                @_synchronize = synchronize
             end
 
             def publish(channel, message, max_retries = 3)
@@ -38,7 +36,6 @@ module Themis
             def ensure_connection
                 return unless @_client.nil?
                 opts = Themis::Configuration::get_redis_options
-                opts[:driver] = :synchrony if @_synchronize
                 @_client = Redis.new **opts
             end
         end

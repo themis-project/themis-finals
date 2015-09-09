@@ -1,28 +1,33 @@
-require 'data_mapper'
+require 'sequel'
 
 
 module Themis
     module Models
-        class Flag
-            include DataMapper::Resource
+        class Flag < Sequel::Model
+            many_to_one :service
+            many_to_one :team
+            many_to_one :round
 
-            property :id, Serial
-            property :flag, String, length: 40, required: true, index: true, unique_index: true
-            property :created_at, DateTime, required: true
-            property :pushed_at, DateTime
-            property :expired_at, DateTime
-            property :considered_at, DateTime
-            property :seed, String, length: 500, required: true
+            one_to_many :attacks
+            one_to_many :flag_polls
 
-            property :service_id, Integer, unique_index: :ndx_uniq_service_team_round_flag, index: true
-            property :team_id, Integer, unique_index: :ndx_uniq_service_team_round_flag, index: true
-            property :round_id, Integer, unique_index: :ndx_uniq_service_team_round_flag, index: true
-            belongs_to :service
-            belongs_to :team
-            belongs_to :round
+            dataset_module do
+                def all_living
+                    exclude(:expired_at => nil).where('expired_at > ?', DateTime.now)
+                end
 
-            has n, :attacks
-            has n, :flag_polls
+                def count_living
+                    all_living.count
+                end
+
+                def all_expired
+                    exclude(:expired_at => nil).where(:considered_at => nil).where('expired_at < ?', DateTime.now)
+                end
+
+                def count_expired
+                    all_expired.count
+                end
+            end
         end
     end
 end

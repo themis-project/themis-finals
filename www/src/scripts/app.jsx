@@ -15,6 +15,8 @@ import ContestInfoBarView from './components/contest-info-bar-view'
 import dataManager from './data-manager'
 import eventManager from './event-manager'
 
+import Customize from '../../customize'
+
 
 let ThemeManager = new mui.Styles.ThemeManager()
 
@@ -22,6 +24,7 @@ class App extends React.Component {
     constructor() {
         super()
         this.onTabActivate = this.onTabActivate.bind(this)
+        this.onNavigateMain = this.onNavigateMain.bind(this)
     }
 
     static get contextTypes() {
@@ -36,6 +39,13 @@ class App extends React.Component {
         }
     }
 
+    componentWillMount() {
+        ThemeManager.setPalette({
+            primary1Color: Customize.primary1Color,
+            accent1Color: Customize.accent1Color
+        })
+    }
+
     getChildContext() {
         return {
             muiTheme: ThemeManager.getCurrentTheme()
@@ -44,6 +54,10 @@ class App extends React.Component {
 
     onTabActivate(activeTab) {
         this.context.router.transitionTo(activeTab.props.route)
+    }
+
+    onNavigateMain() {
+        this.context.router.transitionTo('index')
     }
 
     render() {
@@ -61,7 +75,8 @@ class App extends React.Component {
         }
 
         let rootStyles = {
-            backgroundColor: Styles.Colors.cyan500,
+            backgroundColor: Customize.primary1Color,
+            color: Customize.headerColor,
             position: 'fixed',
             top: 0,
             height: 64,
@@ -92,11 +107,12 @@ class App extends React.Component {
         }
 
         let spanStyle = {
-            color: Styles.Colors.white,
+            color: Customize.headerColor,
             fontWeight: Styles.Typography.fontWeightLight,
             top: 22,
             position: 'absolute',
-            fontSize: 26
+            fontSize: 26,
+            cursor: 'pointer'
         }
 
         let tabs = [
@@ -124,12 +140,14 @@ class App extends React.Component {
             textDecoration: 'none'
         }
 
+        let title = Customize.contestTitle
+
         return (
-            <DocumentTitle title="Themis Finals">
+            <DocumentTitle title={title}>
                 <section>
                     <Paper zDepth={0} rounded={false} style={rootStyles}>
                         <div style={headerContainerStyle}>
-                            <span style={spanStyle}>Themis Finals</span>
+                            <a style={spanStyle} onTouchTap={this.onNavigateMain}>{title}</a>
                         </div>
                         <div style={containerStyles}>
                             <Tabs value={selectedTab} style={tabsStyles}>

@@ -1,14 +1,9 @@
-require 'data_mapper'
+require 'sequel'
 
 
 module Themis
     module Models
-        class Round
-            include DataMapper::Resource
-
-            property :id, Serial
-            property :started_at, DateTime, required: true
-            property :finished_at, DateTime
+        class Round < Sequel::Model
         end
     end
 end

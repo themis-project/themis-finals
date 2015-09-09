@@ -1,11 +1,42 @@
 namespace :db do
     desc 'Clear database'
     task :reset do
+        require 'rubygems'
         require './config'
-        require './lib/models/init'
+        require 'sequel'
 
-        Themis::Models::init
-        DataMapper.auto_migrate!
+        postgres_uri = Themis::Configuration::get_postgres_uri
+
+        Sequel.connect(postgres_uri) do |db|
+            tables = [
+                'server_sent_events',
+                'contest_states',
+                'posts',
+                'scoreboard_states',
+                'attack_attempts',
+                'attacks',
+                'total_scores',
+                'scores',
+                'team_service_history_states',
+                'team_service_states',
+                'flag_polls',
+                'flags',
+                'rounds',
+                'services',
+                'teams',
+                'schema_info'
+            ]
+            tables.each do |table|
+                db.run "DROP TABLE IF EXISTS #{table}"
+            end
+        end
+
+        Sequel.extension :migration
+        Sequel.extension :pg_json
+
+        Sequel.connect(postgres_uri) do |db|
+            Sequel::Migrator.run(db, 'migrations')
+        end
     end
 end
 
@@ -83,5 +114,14 @@ namespace :scoreboard do
     desc 'Disable scoreboard (for team and other networks)'
     task :disable do
         change_scoreboard_state :disabled
+    end
+
+    desc 'Post scoreboard on ctftime.org (requires additional settings for AWS S3)'
+    task :post do
+        require './config'
+        require './lib/models/init'
+        require './lib/controllers/ctftime'
+
+        Themis::Controllers::CTFTime::post_scoreboard
     end
 end

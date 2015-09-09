@@ -105,8 +105,8 @@ module Themis
                         id: post.id,
                         title: post.title,
                         description: post.description,
-                        created_at: post.created_at,
-                        updated_at: post.updated_at
+                        created_at: post.created_at.iso8601,
+                        updated_at: post.updated_at.iso8601
                     }
                 end
 
@@ -138,19 +138,22 @@ module Themis
                 end
 
                 begin
-                    post = Themis::Models::Post.create(
-                        title: payload['title'],
-                        description: payload['description'],
-                        created_at: DateTime.now,
-                        updated_at: DateTime.now)
+                    Themis::Models::DB.transaction do
+                        post = Themis::Models::Post.create(
+                            :title => payload['title'],
+                            :description => payload['description'],
+                            :created_at => DateTime.now,
+                            :updated_at => DateTime.now
+                        )
 
-                    Themis::Utils::EventEmitter.emit_all 'posts/add', {
-                        id: post.id,
-                        title: post.title,
-                        description: post.description,
-                        created_at: post.created_at,
-                        updated_at: post.updated_at
-                    }
+                        Themis::Utils::EventEmitter.emit_all 'posts/add', {
+                            id: post.id,
+                            title: post.title,
+                            description: post.description,
+                            created_at: post.created_at.iso8601,
+                            updated_at: post.updated_at.iso8601
+                        }
+                    end
                 rescue => e
                     halt 400
                 end
@@ -167,16 +170,16 @@ module Themis
                 end
 
                 post_id = post_id_str.to_i
-                post = Themis::Models::Post.get post_id
+                post = Themis::Models::Post[post_id]
                 halt 404 if post.nil?
 
-                unless post.destroy
-                    halt 400
-                end
+                Themis::Models::DB.transaction do
+                    post.destroy
 
-                Themis::Utils::EventEmitter.emit_all 'posts/remove', {
-                    id: post_id
-                }
+                    Themis::Utils::EventEmitter.emit_all 'posts/remove', {
+                        id: post_id
+                    }
+                end
 
                 status 204
                 body ''
@@ -207,22 +210,24 @@ module Themis
                 end
 
                 post_id = post_id_str.to_i
-                post = Themis::Models::Post.get post_id
+                post = Themis::Models::Post[post_id]
                 halt 404 if post.nil?
 
-                post.title = payload['title']
-                post.description = payload['description']
-                post.updated_at = DateTime.now
-
                 begin
-                    post.save
-                    Themis::Utils::EventEmitter.emit_all 'posts/edit', {
-                        id: post.id,
-                        title: post.title,
-                        description: post.description,
-                        created_at: post.created_at,
-                        updated_at: post.updated_at
-                    }
+                    Themis::Models::DB.transaction do
+                        post.title = payload['title']
+                        post.description = payload['description']
+                        post.updated_at = DateTime.now
+                        post.save
+
+                        Themis::Utils::EventEmitter.emit_all 'posts/edit', {
+                            id: post.id,
+                            title: post.title,
+                            description: post.description,
+                            created_at: post.created_at.iso8601,
+                            updated_at: post.updated_at.iso8601
+                        }
+                    end
                 rescue => e
                     halt 400
                 end
@@ -233,7 +238,7 @@ module Themis
 
             get '/team/scores' do
                 scoreboard_state = Themis::Models::ScoreboardState.last
-                scoreboard_enabled = scoreboard_state.nil? ? true : (scoreboard_state.state == :enabled)
+                scoreboard_enabled = scoreboard_state.nil? ? true : scoreboard_state.enabled
 
                 remote_ip = IP.new request.ip
 
@@ -260,7 +265,7 @@ module Themis
                         team_id: team_service_state.team_id,
                         service_id: team_service_state.service_id,
                         state: team_service_state.state,
-                        updated_at: team_service_state.updated_at
+                        updated_at: team_service_state.updated_at.iso8601
                     }
                 end
 
@@ -269,7 +274,7 @@ module Themis
 
             get '/team/attacks' do
                 scoreboard_state = Themis::Models::ScoreboardState.last
-                scoreboard_enabled = scoreboard_state.nil? ? true : (scoreboard_state.state == :enabled)
+                scoreboard_enabled = scoreboard_state.nil? ? true : scoreboard_state.enabled
 
                 remote_ip = IP.new request.ip
 
@@ -277,7 +282,7 @@ module Themis
                     r = Themis::Controllers::Attack::get_recent.map do |attack|
                         {
                             id: attack.id,
-                            occured_at: attack.occured_at,
+                            occured_at: attack.occured_at.iso8601,
                             team_id: attack.team_id
                         }
                     end
@@ -290,7 +295,7 @@ module Themis
 
             get %r{^/team/pictures/(\d{1,2})$} do |team_id_str|
                 team_id = team_id_str.to_i
-                team = Themis::Models::Team.get team_id
+                team = Themis::Models::Team[team_id]
                 halt 404 if team.nil?
 
                 filename = File.join Dir.pwd, 'pictures', "#{team.alias}.png"
@@ -328,15 +333,15 @@ module Themis
                 end
 
                 state = Themis::Models::ContestState.last
-                if state.nil? or [:initial, :await_start].include? state.state
+                if state.nil? or state.is_initial or state.is_await_start
                     halt 400, json(Themis::Attack::Result::ERR_CONTEST_NOT_STARTED)
                 end
 
-                if state.state == :paused
+                if state.is_paused
                     halt 400, json(Themis::Attack::Result::ERR_CONTEST_PAUSED)
                 end
 
-                if state.state == :completed
+                if state.is_completed
                     halt 400, json(Themis::Attack::Result::ERR_CONTEST_COMPLETED)
                 end
 

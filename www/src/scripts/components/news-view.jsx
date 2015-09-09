@@ -7,6 +7,8 @@ import NewsStore from '../stores/news-store'
 import NewsActions from '../actions/news-actions'
 import PostAddDialogView from './post-add-dialog-view'
 
+import Customize from '../../../customize'
+
 
 export default class NewsView extends React.Component {
     constructor(props) {
@@ -55,8 +57,10 @@ export default class NewsView extends React.Component {
             )
         }
 
+        let title = `${Customize.contestTitle} :: News`
+
         return (
-            <DocumentTitle title="Themis Finals :: News">
+            <DocumentTitle title={title}>
                 <Paper zDepth={0} style={style}>
                     <h2>News</h2>
                     {controlArea}

@@ -1,18 +1,10 @@
-require 'data_mapper'
+require 'sequel'
 
 
 module Themis
     module Models
-        class AttackAttempt
-            include DataMapper::Resource
-
-            property :id, Serial
-            property :occured_at, DateTime, required: true
-
-            property :request, String, length: 1024, required: true
-            property :response, Integer, required: true
-
-            belongs_to :team
+        class AttackAttempt < Sequel::Model
+            many_to_one :team
         end
     end
 end

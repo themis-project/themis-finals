@@ -61,7 +61,7 @@ export default class StreamStatusView extends React.Component {
                 style.backgroundColor = Styles.Colors.red50
                 break
             default:
-                text = 'unknown'
+                text = 'n/a'
                 style.color = Styles.Colors.grey600
                 style.backgroundColor = Styles.Colors.grey100
                 break
