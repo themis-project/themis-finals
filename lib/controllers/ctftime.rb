@@ -13,7 +13,7 @@ module Themis
                 a_total_score = a[:total_score]
                 b_total_score = b[:total_score]
 
-                if (a_total_score - b_total_score).abs < 0.001
+                if (a_total_score - b_total_score).abs < 0.00001
                     a_last_attack = a[:last_attack]
                     b_last_attack = b[:last_attack]
                     if a_last_attack.nil? and b_last_attack.nil?

@@ -161,7 +161,7 @@ export default class ScoreboardView extends React.Component {
         rowData = rowData.sort((row1, row2) => {
             let score1 = row1.score
             let score2 = row2.score
-            if (Math.abs(score1 - score2) < 0.001) {
+            if (Math.abs(score1 - score2) < 0.00001) {
                 let attack1 = row1.lastAttack
                 let attack2 = row2.lastAttack
 
