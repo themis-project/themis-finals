@@ -125,3 +125,75 @@ namespace :scoreboard do
         Themis::Controllers::CTFTime::post_scoreboard
     end
 end
+
+
+namespace :export do
+    task :teams do
+        require './config'
+        require './lib/models/init'
+        require 'json'
+
+        r = Themis::Models::Team.map do |team|
+            {
+                id: team.id,
+                name: team.name,
+                guest: team.guest
+            }
+        end
+
+        IO.write 'teams.json', JSON.pretty_generate(r)
+    end
+
+    task :services do
+        require './config'
+        require './lib/models/init'
+        require 'json'
+
+        r = Themis::Models::Service.map do |service|
+            {
+                id: service.id,
+                name: service.name
+            }
+        end
+
+        IO.write 'services.json', JSON.pretty_generate(r)
+    end
+
+    task :team_service_states do
+        require './config'
+        require './lib/models/init'
+        require 'json'
+
+        r = Themis::Models::TeamServiceHistoryState.map do |team_service_state|
+            {
+                id: team_service_state.id,
+                state: team_service_state.state,
+                team_id: team_service_state.team_id,
+                service_id: team_service_state.service_id,
+                created_at: team_service_state.created_at.iso8601
+            }
+        end
+
+        IO.write 'team_service_states.json', JSON.pretty_generate(r)
+    end
+
+    task :attacks do
+        require './config'
+        require './lib/models/init'
+        require 'json'
+
+        r = Themis::Models::Attack.map do |attack|
+            flag = Themis::Models::Flag[attack.flag_id]
+
+            {
+                id: attack.id,
+                occured_at: attack.occured_at.iso8601,
+                attacker_team_id: attack.team_id,
+                service_id: flag.service_id,
+                victim_team_id: flag.team_id
+            }
+        end
+
+        IO.write 'attacks.json', JSON.pretty_generate(r)
+    end
+end
