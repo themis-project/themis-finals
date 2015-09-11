@@ -1,7 +1,7 @@
 # Themis Finals
 Contest checking system for CTF contests.
 
-This system will be used at [VolgaCTF 2015 Finals](http://volgactf.ru) contest on September 10, 2015.
+This system was used at [VolgaCTF 2015 Finals](http://volgactf.ru) contest on September 10, 2015.
 
 ## See also
 - [themis-finals-guidelines](https://github.com/aspyatkin/themis-finals-guidelines)
