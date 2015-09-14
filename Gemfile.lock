@@ -1,12 +1,12 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    aws-sdk (2.1.19)
-      aws-sdk-resources (= 2.1.19)
-    aws-sdk-core (2.1.19)
+    aws-sdk (2.1.20)
+      aws-sdk-resources (= 2.1.20)
+    aws-sdk-core (2.1.20)
       jmespath (~> 1.0)
-    aws-sdk-resources (2.1.19)
-      aws-sdk-core (= 2.1.19)
+    aws-sdk-resources (2.1.20)
+      aws-sdk-core (= 2.1.20)
     backports (3.6.5)
     beaneater (1.0.0)
     daemons (1.2.3)
@@ -16,7 +16,7 @@ GEM
     jmespath (1.0.2)
       multi_json (~> 1.0)
     json (1.8.3)
-    multi_json (1.11.1)
+    multi_json (1.11.2)
     pg (0.18.2)
     rack (1.6.4)
     rack-protection (1.5.3)
