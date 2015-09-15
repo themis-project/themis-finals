@@ -1,5 +1,5 @@
 # Themis Finals
-[![Latest Version](https://img.shields.io/github/release/qubyte/rubidium.svg?style=flat-square)](https://github.com/aspyatkin/themis-finals/releases)
+[![Latest Version](https://img.shields.io/github/release/aspyatkin/themis-finals.svg?style=flat-square)](https://github.com/aspyatkin/themis-finals/releases)
 [![License](https://img.shields.io/github/license/aspyatkin/themis-finals.svg?style=flat-square)](https://github.com/aspyatkin/themis-finals/blob/master/LICENSE)
 [![Dependencies status](https://img.shields.io/gemnasium/aspyatkin/themis-finals.svg?style=flat-square)](https://gemnasium.com/aspyatkin/themis-finals)  
 Contest checking system for CTF contests.
