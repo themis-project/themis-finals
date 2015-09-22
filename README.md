@@ -1,7 +1,8 @@
 # Themis Finals
 [![Latest Version](https://img.shields.io/github/release/aspyatkin/themis-finals.svg?style=flat-square)](https://github.com/aspyatkin/themis-finals/releases)
 [![License](https://img.shields.io/github/license/aspyatkin/themis-finals.svg?style=flat-square)](https://github.com/aspyatkin/themis-finals/blob/master/LICENSE)
-[![Dependencies status](https://img.shields.io/gemnasium/aspyatkin/themis-finals.svg?style=flat-square)](https://gemnasium.com/aspyatkin/themis-finals)  
+[![Dependencies status](https://img.shields.io/gemnasium/aspyatkin/themis-finals.svg?style=flat-square)](https://gemnasium.com/aspyatkin/themis-finals)
+[![Code Climate](https://img.shields.io/codeclimate/github/aspyatkin/themis-finals.svg?style=flat-square)](https://codeclimate.com/github/aspyatkin/themis-finals)  
 Contest checking system for CTF contests.
 
 This system was used at [VolgaCTF 2015 Finals](http://volgactf.ru) contest on September 10, 2015.
